@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace XRProject.Utils
+namespace XRProject.Utils.Log
 {
     [System.Serializable]
     [CreateAssetMenu(menuName = "XR/XLog/Presets", fileName = "XLogPreset", order = 3)]
     public class XLogPreset : ScriptableObject
     {
-        [XLogFilter][SerializeField] private EXLogFilter filter = EXLogFilter.Debug;
+        [XLogFilter] [SerializeField] private EXLogFilter filter;
         [SerializeField] private string _signature = null;
         [SerializeField] private bool _loggingDate = false;
         [SerializeField] private bool _loggingSignature = false;

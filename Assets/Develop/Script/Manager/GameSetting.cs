@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using XRProject.Utils;
+using XRProject.Utils.Log;
 
 public class GameSetting : MonoBehaviour
 {

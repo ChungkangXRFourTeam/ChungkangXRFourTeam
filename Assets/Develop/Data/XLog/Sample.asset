@@ -9,7 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa7c35e24d6e44af689d9b676f0d9812, type: 3}
-  m_Name: XLogSetting
+  m_Script: {fileID: 11500000, guid: 6953a6ab0d9c64b7aade062898822325, type: 3}
+  m_Name: Sample
   m_EditorClassIdentifier: 
-  _preset: {fileID: 0}
+  filter: 0
+  _signature: f32f
+  _loggingDate: 0
+  _loggingSignature: 1

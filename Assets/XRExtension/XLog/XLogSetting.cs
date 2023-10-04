@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace XRProject.Utils
+namespace XRProject.Utils.Log
 {
     [CreateAssetMenu(menuName = "XR/XLog/Setting", fileName = "XLogSetting", order = 3)]
     public class XLogSetting : ScriptableObject

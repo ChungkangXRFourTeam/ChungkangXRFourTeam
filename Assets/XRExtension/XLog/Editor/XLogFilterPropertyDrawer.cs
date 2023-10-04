@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace XRProject.Utils
+namespace XRProject.Utils.Log
 {
-    [CustomPropertyDrawer(typeof(XLogFilterPropertyDrawer))]
+    [CustomPropertyDrawer(typeof(XLogFilterAttribute))]
     public class XLogFilterPropertyDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect _position, SerializedProperty _property, GUIContent _label)
