@@ -15,6 +15,7 @@ public class PlayerDefaultState : BaseState
             .SetActive<PlayerPhysicsStrategy>(true)
             .SetActive<PlayerMeleeAttackStrategy>(true)
             .SetActive<PlayerSwingAttackStrategy>(true)
+            .SetActive<PlayerBuffStrategy>(true)
             ;
 
     }
@@ -28,6 +29,7 @@ public class PlayerDefaultState : BaseState
             .SetActive<PlayerPhysicsStrategy>(true)
             .SetActive<PlayerMeleeAttackStrategy>(true)
             .SetActive<PlayerSwingAttackStrategy>(true)
+            .SetActive<PlayerBuffStrategy>(true)
             ;
 
     }

@@ -70,6 +70,11 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
         {
             float damage = (com.Properties == Properties ? 1f : 2f);
             hit.DoHit(Interaction.ContractInfo, damage);
+
+            if (info.Transform && info.Transform.gameObject.CompareTag("Player"))
+            {
+                com.SetProperties(Interaction.ContractInfo, Properties);
+            }
         }
     }
 

@@ -59,7 +59,9 @@ public class PlayerMoveStrategy : IStrategy
     }
     public void Update(Blackboard blackboard)
     {
-        var movingVector = GetMovingVector();
+        blackboard.GetProperty("out_buffInfo", out BuffInfo info);
+
+        var movingVector = GetMovingVector() * Mathf.Max(info.SpeedFactor, 1f);
         var jumpingVector = GetJumpingVector();
 
         _rigid.position += movingVector * Time.deltaTime;
@@ -70,7 +72,7 @@ public class PlayerMoveStrategy : IStrategy
             GameSetting.Instance.IsGravityDown = !GameSetting.Instance.IsGravityDown;
         }
         if (Input.GetKeyDown(KeyCode.S))
-        {
+        {            
             _rigid.velocity = Vector2.zero;
             _rigid.AddForce(Vector2.down * _downForce);
         }

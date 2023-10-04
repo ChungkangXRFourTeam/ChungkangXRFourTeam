@@ -34,16 +34,18 @@ public class PlayerMeleeAttackStrategy : IStrategy
             info.TryGetBehaviour(out IBActorHit hit) &&
             info.TryGetBehaviour(out IBActorProperties properties))
         {
-            ;
+            blackboard.GetProperty("out_buffInfo", out BuffInfo buffInfo);
+            float addingDamage = buffInfo.AddingDamage;
+            
             if (propertiesCount > 0)
             {
                 propertiesCount.Value -= 1;
-                float damage = 1f * (properties.Properties == myProperties.Properties ? 1f : 2f);
+                float damage = 1f * (properties.Properties == myProperties.Properties ? 1f : 2f) + addingDamage;
                 hit.DoHit(myInteraction.ContractInfo, damage);
             }
             else
             {
-                hit.DoHit(myInteraction.ContractInfo, 0.5f);
+                hit.DoHit(myInteraction.ContractInfo, 0.5f + addingDamage);
             }
         }
 

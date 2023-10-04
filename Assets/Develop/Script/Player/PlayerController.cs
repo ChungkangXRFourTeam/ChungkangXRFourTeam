@@ -11,11 +11,13 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     [SerializeField] private PlayerPhysicsStrategy _physicsStrategy;
     [SerializeField] private PlayerMeleeAttackStrategy _meleeAttackStrategy;
     [SerializeField] private PlayerSwingAttackStrategy _swingAttackStrategy;
+    [SerializeField] private PlayerBuffStrategy _buffStrategy;
     [SerializeField] private InteractionController _interaction;
     [SerializeField] private EActorPropertiesType _properties;
     [SerializeField] private WrappedValue<int> _propertiesCount;
     [SerializeField] private float _hp;
     [SerializeField] private float _removeDelayWithProperties;
+    [SerializeField] private BuffInfo _buffInfo;
     
     
     private StateExecutor _stateExecutor;
@@ -91,11 +93,13 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             .AddProperty("out_interaction", _interaction)
             .AddProperty("out_remaingProperties", _propertiesCount)
             .AddProperty("out_isAllowedInteraction", _isAllowedInteraction)
+            .AddProperty("out_buffInfo", _buffInfo)
             ;
 
         strategyContainer
             .Add(_moveStrategy)
             .Add(_physicsStrategy)
+            .Add(_buffStrategy)
             .Add(_meleeAttackStrategy)
             .Add(_swingAttackStrategy)
             ;
