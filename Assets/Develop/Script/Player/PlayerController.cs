@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Rendering;
 using XRProject.Helper;
 
 public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IBActorLife
@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     [SerializeField] private EActorPropertiesType _properties;
     [SerializeField] private WrappedValue<int> _propertiesCount;
     [SerializeField] private float _hp;
+    [SerializeField] private float _removeDelayWithProperties;
     
     
     private StateExecutor _stateExecutor;
@@ -145,5 +146,13 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             _propertiesCount.Value = 10;
 
         _properties = type;
+        
+        DOTween.Kill(this, false);
+        Sequence s = DOTween.Sequence();
+        s.SetDelay(_removeDelayWithProperties).OnComplete(() =>
+        {
+            _properties = EActorPropertiesType.None;
+            _propertiesCount.Value = 0;
+        }).SetId(this);
     }
 }

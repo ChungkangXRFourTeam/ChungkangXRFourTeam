@@ -110,16 +110,13 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
         float damage = 1f;
         if (info.TryGetBehaviour(out IBActorProperties properties))
         {
-            if (GameSetting.VER_CASE_1)
+            if (Properties == properties.Properties)
             {
-                if (Properties == properties.Properties)
-                {
-                    damage = 1f;
-                }
-                else
-                {
-                    damage = 2f;
-                }
+                damage = 1f;
+            }
+            else
+            {
+                damage = 2f;
             }
         }
         if (info.TryGetBehaviour(out IBActorHit actorHit))
@@ -130,10 +127,6 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
 
     public void OnContractObject(ObjectContractInfo info)
     {
-        if (info.TryGetBehaviour(out IBObjectInteractive obj))
-        {
-            //DoHit(1);
-        }
     }
 
     [CanBeNull]

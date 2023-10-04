@@ -42,7 +42,7 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
         switch (Properties)
         {
             case EActorPropertiesType.None:
-                Debug.LogError("KnockbackObject´Â ¼Ó¼ºÀÌ NoneÀÏ ¼ö ¾ø½À´Ï´Ù.");
+                Debug.LogError("KnockbackObjectï¿½ï¿½ ï¿½Ó¼ï¿½ï¿½ï¿½ Noneï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
                 color = Color.gray;
                 break;
             case EActorPropertiesType.Flame:
@@ -65,26 +65,11 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
     {
         DoKnockback(info);
 
-        if (GameSetting.VER_CASE_1)
+        if (info.TryGetBehaviour(out IBActorProperties com) &&
+            info.TryGetBehaviour(out IBActorHit hit))
         {
-            if (info.TryGetBehaviour(out IBActorProperties com) &&
-                info.TryGetBehaviour(out IBActorHit hit))
-            {
-                com.SetProperties(Interaction.ContractInfo, Properties);
-                if (com.Properties == EActorPropertiesType.Flame)
-                {
-                    hit.DoHit(Interaction.ContractInfo,10f);
-                }
-            }
-        }
-        else
-        {
-            if (info.TryGetBehaviour(out IBActorProperties com) &&
-                info.TryGetBehaviour(out IBActorHit hit))
-            {
-                float damage = (com.Properties == Properties ? 0f : 2f);
-                hit.DoHit(Interaction.ContractInfo, damage);
-            }
+            float damage = (com.Properties == Properties ? 1f : 2f);
+            hit.DoHit(Interaction.ContractInfo, damage);
         }
     }
 

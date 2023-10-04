@@ -8,8 +8,6 @@ public class PlayerMeleeAttackStrategy : IStrategy
 {
     [SerializeField] private Transform _hand;
     [SerializeField] private float _distanceFromBodyforHand;
-    [SerializeField] private float _normalPunchForce;
-    [SerializeField] private float _weakPunchForce;
 
     private Transform transform;
 
@@ -33,7 +31,6 @@ public class PlayerMeleeAttackStrategy : IStrategy
             myInfo.TryGetBehaviour(out IBActorProperties myProperties) &&
             col.TryGetComponent(out InteractionController com) &&
             com.TryGetContractInfo(out ActorContractInfo info) && 
-            info.TryGetBehaviour(out IBActorPhysics physics) &&
             info.TryGetBehaviour(out IBActorHit hit) &&
             info.TryGetBehaviour(out IBActorProperties properties))
         {
@@ -42,12 +39,10 @@ public class PlayerMeleeAttackStrategy : IStrategy
             {
                 propertiesCount.Value -= 1;
                 float damage = 1f * (properties.Properties == myProperties.Properties ? 1f : 2f);
-                physics.AddForce(dir * _normalPunchForce, ForceMode2D.Force);
                 hit.DoHit(myInteraction.ContractInfo, damage);
             }
             else
             {
-                physics.AddForce(dir * _weakPunchForce, ForceMode2D.Force);
                 hit.DoHit(myInteraction.ContractInfo, 0.5f);
             }
         }

@@ -8,10 +8,6 @@ using XRProject.Utils.Log;
 
 public class GameSetting : MonoBehaviour
 {
-    public const bool VER_CASE_1 = true;
-    
-    
-    
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
     static void Init()
     {
