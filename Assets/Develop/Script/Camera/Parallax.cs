@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
 using UnityEngine;
 using Cinemachine;
 
@@ -7,22 +9,32 @@ public class Parallax : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public float startX, startY;
+    [SerializeField]
+    private float startX, startY;
 
-    public GameObject cam;
+    [SerializeField]
+    private GameObject cam;
+    
+    [Space (10f)]
+    [Header("스크롤 속도")]
+    [SerializeField, Tooltip("이미지가 수평으로 움직이는 속도를 조절합니다.")]
+    private float horizontalSpeed;
+    [SerializeField, Tooltip("이미지가 수직으로 움직이는 속도를 조절합니다.")]
+    private float vericalSpeed;
+    
+    [Space (10f)]
+    [SerializeField]
+    private bool isVerticalChange;
+    [SerializeField]
+    private float previousCamY;
+    
+    [SerializeField]
+    private float nextCamY;
 
-    public float horizontalSpeed;
-    public float vericalSpeed;
+    private float xDist;
+    private float yDist;
 
-    public bool isVerticalChange;
-
-    public float previousCamY;
-    public float nextCamY;
-
-    float xDist;
-    float yDist;
-
-    float camDeflection = 0f;
+    private float camDeflection = 0f;
 
     private void Awake()
     {

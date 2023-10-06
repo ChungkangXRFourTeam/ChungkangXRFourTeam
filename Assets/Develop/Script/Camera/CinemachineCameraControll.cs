@@ -50,9 +50,11 @@ public class CinemachineCameraControll : MonoBehaviour
         {
             _isZoomKeyDown = false;
         }
-        
+
         if (!_camera.orthographic)
+        {
             ZoomWithPerspective();
+        }
         else
         {
             ZoomWithOrthographic();
@@ -68,19 +70,19 @@ public class CinemachineCameraControll : MonoBehaviour
             
             if (_camera.WorldToViewportPoint(_leftWall.position).x > 0.01f)
             {
-                _framingTransposer.m_TrackedObjectOffset.x += 0.1f;
+                _framingTransposer.m_TrackedObjectOffset.x += 0.05f;
             }
             if (_camera.WorldToViewportPoint(_rightWall.position).x < 0.99f)
             {
-                _framingTransposer.m_TrackedObjectOffset.x -= 0.1f;
+                _framingTransposer.m_TrackedObjectOffset.x -= 0.05f;
             }
             if (_camera.WorldToViewportPoint(_upWall.position).y < 0.96f)
             {
-                _framingTransposer.m_TrackedObjectOffset.y -= 0.1f;
+                _framingTransposer.m_TrackedObjectOffset.y -= 0.05f;
             }
             if (_camera.WorldToViewportPoint(_downWall.position).y > 0.03f)
             {
-                _framingTransposer.m_TrackedObjectOffset.y += 0.1f;
+                _framingTransposer.m_TrackedObjectOffset.y += 0.05f;
             }
         }
         else
