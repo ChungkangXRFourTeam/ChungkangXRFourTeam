@@ -23,10 +23,13 @@ namespace XRProject.Utils.Editors
             var h1 = serializedObject.FindProperty("_handle1").vector3Value;
             var h2 = serializedObject.FindProperty("_handle2").vector3Value;
             var transform = _visualizer.transform;
+            
             _visualizer.CalculatePoints(
                 transform.TransformPoint(h1),
                 transform.TransformPoint(h2)
             );
+
+            serializedObject.FindProperty("_isDirty").boolValue = true;
         }
 
         private Vector3 RotatePoint(Vector3 point)
@@ -64,6 +67,8 @@ namespace XRProject.Utils.Editors
             if (handles[0].IsDirty || handles[1].IsDirty)
             {
                 _visualizer.CalculatePoints(handles[0], handles[1]);
+
+                serializedObject.FindProperty("_isDirty").boolValue = true;
 
                 handles[0].SetDirtyOff();
                 handles[1].SetDirtyOff();

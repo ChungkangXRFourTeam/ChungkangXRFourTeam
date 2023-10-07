@@ -7,13 +7,23 @@ using UnityEngine;
 public class TraceVisualizer : MonoBehaviour
 {
     [SerializeField] private bool isDirectionUp = true;
+    [SerializeField] private bool _drawMesh = true;
+    [SerializeField] private bool _drawWireMesh = true;
+    [SerializeField] private bool _drawOutline = true;
     [SerializeField] private Color _meshColor;
+    [SerializeField] private Color _wireMesholor;
+    [SerializeField] private Color _outlineColor;
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private float _rayLength;
     [SerializeField] private int _iteration;
-    [SerializeField] [HideInInspector] private List<Vector2> _hittedPointsInEditor;
     [SerializeField] private Vector3 _handle1;
     [SerializeField] private Vector3 _handle2;
+    
+    [SerializeField] [HideInInspector] private List<Vector2> _hittedPointsInEditor;
+    [SerializeField] [HideInInspector] private bool _isDirty;
+    
+
+    private Mesh _debugRenderMesh;
 
     public void CalculatePoints(Vector3 point1, Vector3 point2)
     {
@@ -88,8 +98,44 @@ public class TraceVisualizer : MonoBehaviour
     {
         if (_hittedPointsInEditor == null || _hittedPointsInEditor.Count <= 2) return;
 
-        var mesh = GenerateMesh();
-        Gizmos.color = _meshColor;
-        Gizmos.DrawMesh(mesh);
+        if(_isDirty || _debugRenderMesh == null)
+        {
+            _debugRenderMesh = GenerateMesh();
+            _isDirty = false;
+        }
+
+        if (_drawMesh)
+        {
+            Gizmos.color = _meshColor;
+            Gizmos.DrawMesh(_debugRenderMesh);
+        }
+        if(_drawWireMesh)
+        {
+            Gizmos.color = _wireMesholor;
+            Gizmos.DrawWireMesh(_debugRenderMesh);
+        }
+
+        // WireMesh가 그려지면 outline은 그려지는게 의미가 없다. 완전히 중복된다.
+        if (_drawOutline && !_drawWireMesh)
+        {
+            var h1 = transform.TransformPoint(_handle1);
+            var h2 = transform.TransformPoint(_handle2);
+            var begin = Vector2.Lerp(h1, h2, 0f);
+            var end = Vector2.Lerp(h1, h2, 1f);
+
+            Gizmos.color = _outlineColor;
+            Gizmos.DrawLine(begin, end);
+            Gizmos.DrawLine(_hittedPointsInEditor[0], begin);
+            Gizmos.DrawLine(_hittedPointsInEditor[^1], end);
+            
+            for (int i = 0; i < _hittedPointsInEditor.Count - 1; i++)
+            {
+                var p1 = _hittedPointsInEditor[i];
+                var p2 = _hittedPointsInEditor[i + 1];
+                Gizmos.DrawLine(p1, p2);
+                
+            }
+
+        }
     }
 }
