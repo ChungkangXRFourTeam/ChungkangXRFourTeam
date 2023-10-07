@@ -9,22 +9,21 @@ public class CinemachineCameraControll : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
     [SerializeField] private CinemachineFramingTransposer _framingTransposer;
     [SerializeField] private CinemachineFollowZoom _followZoom;
-    [SerializeField] private Transform _confiner;
     [SerializeField] private Camera _camera;
     [SerializeField] private Transform _leftWall;
     [SerializeField] private Transform _rightWall;
     [SerializeField] private Transform _upWall;
     [SerializeField] private Transform _downWall;
     [Space(15f), Header("카메라 줌")]
-    [SerializeField, Tooltip("최대 줌 아웃 사이즈를 조절합니다.")] private float _maxZoomOutSize;
-    [SerializeField, Tooltip("최대 줌 인 사이즈를 조절합니다.")] private float _maxZoomInSize;
-    
-    private bool _isZoomKeyDown = false;
+    [SerializeField, Tooltip("최대 줌 아웃 사이즈를 조절합니다.")] private float _maxZoomOutSize = 10f;
+    [SerializeField, Tooltip("최대 줌 인 사이즈를 조절합니다.")] private float _maxZoomInSize = 15f;
+    [SerializeField, Tooltip("카메라가 줌 되는 속도를 조절합니다.")] private float _zoomSpeed = 1f;
+
+    private bool _isZoomKeyDown;
     // Start is called before the first frame update
     private void Awake()
     {
         _virtualCamera = GetComponent<CinemachineVirtualCamera>();
-        _confiner = GameObject.Find("Confiner").transform;
         _camera = Camera.main;
         _leftWall = GameObject.Find("LeftWall").transform;
         _rightWall = GameObject.Find("RightWall").transform;
@@ -33,11 +32,6 @@ public class CinemachineCameraControll : MonoBehaviour
 
         _followZoom = GetComponent<CinemachineFollowZoom>();
         _framingTransposer = _virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-    }
-
-    void Start()
-    {
-        
     }
 
     // Update is called once per frame
@@ -91,7 +85,7 @@ public class CinemachineCameraControll : MonoBehaviour
         {
             _framingTransposer.m_TrackedObjectOffset.y = Mathf.Lerp(_framingTransposer.m_TrackedObjectOffset.y, 0f, Time.deltaTime);
             _framingTransposer.m_TrackedObjectOffset.x = Mathf.Lerp(_framingTransposer.m_TrackedObjectOffset.x, 0f, Time.deltaTime);
-            _followZoom.m_MinFOV = Mathf.Lerp(_followZoom.m_MinFOV, 90f, Time.deltaTime);
+            _followZoom.m_MinFOV = Mathf.Lerp(_followZoom.m_MinFOV, 90f, Time.deltaTime * _zoomSpeed);
         }
     }
 
@@ -100,12 +94,12 @@ public class CinemachineCameraControll : MonoBehaviour
         if (_isZoomKeyDown)
         {
             _virtualCamera.m_Lens.OrthographicSize =
-                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, _maxZoomOutSize, Time.deltaTime);
+                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, _maxZoomOutSize, Time.deltaTime * _zoomSpeed);
         }
         else
         {
             _virtualCamera.m_Lens.OrthographicSize =
-                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, _maxZoomInSize, Time.deltaTime);
+                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, _maxZoomInSize, Time.deltaTime * _zoomSpeed);
         }
     }
 }
