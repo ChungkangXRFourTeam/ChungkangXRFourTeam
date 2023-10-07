@@ -5,12 +5,21 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class ParallaxLayer : MonoBehaviour
 {
-    public float parallaxFactor;
+    [SerializeField, Tooltip("오브젝트의 수평 이동 속도를 조절합니다.")] private float _horizontalFactor;
+    [SerializeField, Tooltip("오브젝트의 수직 이동 속도를 조절합니다.")] private float _verticalFactor;
 
-    public void Move(float delta)
+    public void MoveX(float delta)
     {
         Vector3 newPos = transform.localPosition;
-        newPos.x -= delta * parallaxFactor;
+        newPos.x -= delta * _horizontalFactor;
+
+        transform.localPosition = newPos;
+    }
+    
+    public void MoveY(float delta)
+    {
+        Vector3 newPos = transform.localPosition;
+        newPos.y -= delta * _verticalFactor;
 
         transform.localPosition = newPos;
     }

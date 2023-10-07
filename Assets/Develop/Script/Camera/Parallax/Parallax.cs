@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,23 +9,39 @@ using Cinemachine;
 [ExecuteInEditMode]
 public class Parallax : MonoBehaviour
 {
-    public ParallaxCamera parallaxCamera;
-    List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>();
+    private GameObject _player;
+    private GameObject _virtualCameraObject;
+    private CinemachineVirtualCamera _virtualCamera;
+    private ParallaxCamera _parallaxCamera;
+    [SerializeField]
+    private List<ParallaxLayer> _parallaxLayers = new List<ParallaxLayer>();
+
+    private void Awake()
+    {
+        _player = GameObject.FindGameObjectWithTag("Player");
+        _virtualCameraObject = GameObject.FindGameObjectWithTag("VirtualCamera");
+    }
 
     void Start()
     {
-        if (parallaxCamera == null)
-            parallaxCamera = Camera.main.GetComponent<ParallaxCamera>();
+        if (_virtualCameraObject != null && _virtualCamera == null)
+        {
+            _virtualCamera = _virtualCameraObject.GetComponent<CinemachineVirtualCamera>();
+            _virtualCamera.Follow = _player.transform;
+        }
+        
+        if (_parallaxCamera == null)
+            _parallaxCamera = Camera.main.GetComponent<ParallaxCamera>();
 
-        if (parallaxCamera != null)
-            parallaxCamera.onCameraTranslate += Move;
+        if (_parallaxCamera != null)
+            _parallaxCamera.onCameraTranslate += Move;
 
         SetLayers();
     }
 
     void SetLayers()
     {
-        parallaxLayers.Clear();
+        _parallaxLayers.Clear();
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -33,16 +50,17 @@ public class Parallax : MonoBehaviour
             if (layer != null)
             {
                 layer.name = "Layer-" + i;
-                parallaxLayers.Add(layer);
+                _parallaxLayers.Add(layer);
             }
         }
     }
 
-    void Move(float delta)
+    void Move(float deltaX, float deltaY)
     {
-        foreach (ParallaxLayer layer in parallaxLayers)
+        for (int i = 0; i < _parallaxLayers.Count; i++)
         {
-            layer.Move(delta);
+            _parallaxLayers[i].MoveX(deltaX);
+            _parallaxLayers[i].MoveY(deltaY);
         }
     }
 
