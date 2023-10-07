@@ -15,7 +15,9 @@ public class CinemachineCameraControll : MonoBehaviour
     [SerializeField] private Transform _rightWall;
     [SerializeField] private Transform _upWall;
     [SerializeField] private Transform _downWall;
-    
+    [Space(15f), Header("카메라 줌")]
+    [SerializeField, Tooltip("최대 줌 아웃 사이즈를 조절합니다.")] private float _maxZoomOutSize;
+    [SerializeField, Tooltip("최대 줌 인 사이즈를 조절합니다.")] private float _maxZoomInSize;
     
     private bool _isZoomKeyDown = false;
     // Start is called before the first frame update
@@ -98,12 +100,12 @@ public class CinemachineCameraControll : MonoBehaviour
         if (_isZoomKeyDown)
         {
             _virtualCamera.m_Lens.OrthographicSize =
-                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, 15f, Time.deltaTime);
+                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, _maxZoomOutSize, Time.deltaTime);
         }
         else
         {
             _virtualCamera.m_Lens.OrthographicSize =
-                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, 11f, Time.deltaTime);
+                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, _maxZoomInSize, Time.deltaTime);
         }
     }
 }

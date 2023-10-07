@@ -13,8 +13,7 @@ public class Parallax : MonoBehaviour
     private GameObject _virtualCameraObject;
     private CinemachineVirtualCamera _virtualCamera;
     private ParallaxCamera _parallaxCamera;
-    [SerializeField]
-    private List<ParallaxLayer> _parallaxLayers = new List<ParallaxLayer>();
+    [SerializeField] private GameObject[] _parallaxLayers;
 
     private void Awake()
     {
@@ -36,31 +35,17 @@ public class Parallax : MonoBehaviour
         if (_parallaxCamera != null)
             _parallaxCamera.onCameraTranslate += Move;
 
-        SetLayers();
+        _parallaxLayers = GameObject.FindGameObjectsWithTag("Background");
     }
-
-    void SetLayers()
-    {
-        _parallaxLayers.Clear();
-
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            ParallaxLayer layer = transform.GetChild(i).GetComponent<ParallaxLayer>();
-
-            if (layer != null)
-            {
-                layer.name = "Layer-" + i;
-                _parallaxLayers.Add(layer);
-            }
-        }
-    }
+    
 
     void Move(float deltaX, float deltaY)
     {
-        for (int i = 0; i < _parallaxLayers.Count; i++)
+        for (int i = 0; i < _parallaxLayers.Length; i++)
         {
-            _parallaxLayers[i].MoveX(deltaX);
-            _parallaxLayers[i].MoveY(deltaY);
+            ParallaxLayer layer = _parallaxLayers[i].GetComponent<ParallaxLayer>();
+            layer.MoveX(deltaX);
+            layer.MoveY(deltaY);
         }
     }
 
