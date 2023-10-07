@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class ParallaxLayer : MonoBehaviour
 {
     [SerializeField, Tooltip("오브젝트의 수평 이동 속도를 조절합니다.")] private float _horizontalFactor;
