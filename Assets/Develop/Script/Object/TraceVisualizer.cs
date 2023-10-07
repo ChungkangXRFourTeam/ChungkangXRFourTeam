@@ -12,11 +12,8 @@ public class TraceVisualizer : MonoBehaviour
     [SerializeField] private float _rayLength;
     [SerializeField] private int _iteration;
     [SerializeField] [HideInInspector] private List<Vector2> _hittedPointsInEditor;
-    [SerializeField] [HideInInspector] private Vector3 _savedPosition;
     [SerializeField] private Vector3 _handle1;
     [SerializeField] private Vector3 _handle2;
-
-    public float RayLength => _rayLength;
 
     public void CalculatePoints(Vector3 point1, Vector3 point2)
     {
