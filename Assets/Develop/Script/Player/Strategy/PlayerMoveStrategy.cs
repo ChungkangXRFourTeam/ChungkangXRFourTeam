@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using XRProject.Helper;
 
+
+
 [Serializable]
 public class PlayerMoveStrategy : IStrategy
 {
@@ -28,16 +30,6 @@ public class PlayerMoveStrategy : IStrategy
             dir += Vector2.right;
         }
 
-        //if (Input.GetKey(KeyCode.W))
-        //{
-        //    dir += Vector2.up;
-        //}
-//
-        //if (Input.GetKey(KeyCode.S))
-        //{
-        //    dir += Vector2.down;
-        //}
-
         return dir * _movementSpeed;
     }
 
@@ -52,6 +44,16 @@ public class PlayerMoveStrategy : IStrategy
         
         return Vector2.zero;
     }
+
+    private Vector2 GetFallingVector()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {            
+            return Vector2.down * _downForce;
+        }
+
+        return Vector2.zero;
+    }
     
     
     public void Init(Blackboard blackboard)
@@ -60,21 +62,42 @@ public class PlayerMoveStrategy : IStrategy
     public void Update(Blackboard blackboard)
     {
         blackboard.GetProperty("out_buffInfo", out BuffInfo info);
+        blackboard.GetProperty("out_transform", out Transform transform);
 
         var movingVector = GetMovingVector() * Mathf.Max(info.SpeedFactor, 1f);
         var jumpingVector = GetJumpingVector();
+        var fallingVector = GetFallingVector();
 
         _rigid.position += movingVector * Time.deltaTime;
-        _rigid.AddForce(jumpingVector);
+        _rigid.AddForce(jumpingVector + fallingVector);
 
         if (Input.GetKeyDown(KeyCode.F))
         {
             GameSetting.Instance.IsGravityDown = !GameSetting.Instance.IsGravityDown;
         }
-        if (Input.GetKeyDown(KeyCode.S))
-        {            
+
+        // application effects
+        if (fallingVector.sqrMagnitude > 0f)
+        {
             _rigid.velocity = Vector2.zero;
-            _rigid.AddForce(Vector2.down * _downForce);
+            
+            EffectManager.ImmediateCommand(new EffectCommand()
+            {
+                EffectKey = "player/airDownDash",
+                Position = transform.position,
+                Rotation = Quaternion.Euler(0f, 0f, 180f),
+                Scale = Vector3.one * 2.5f
+            });
+        }
+        if (jumpingVector.sqrMagnitude > 0f)
+        {
+            EffectManager.ImmediateCommand(new EffectCommand()
+            {
+                EffectKey = "player/jumpDust",
+                Position = transform.position,
+                Rotation = Quaternion.Euler(0f, 0f, 0f),
+                Scale = Vector3.one * 1.5f
+            });
         }
     }
 

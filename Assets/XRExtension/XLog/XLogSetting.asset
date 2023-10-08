@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7c35e24d6e44af689d9b676f0d9812, type: 3}
   m_Name: XLogSetting
   m_EditorClassIdentifier: 
-  _preset: {fileID: 11400000, guid: 3cb605b3e3b649b4c81316a95e362d03, type: 2}
+  _presets:
+  - Enabled: 1
+    Preset: {fileID: 11400000, guid: e71191cea202a40e9b113811354ebbd4, type: 2}
+  - Enabled: 1
+    Preset: {fileID: 11400000, guid: 33aee0de96c4dce4bb7a83a0ae165cb4, type: 2}
