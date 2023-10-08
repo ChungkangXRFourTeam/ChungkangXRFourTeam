@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class PlayerCalculation 
@@ -63,9 +64,8 @@ public static class PlayerCalculation
         while (maxIter > currentIter)
         {
             currentIter++;
-            //var hit = Physics2D.Raycast(currentPos, currentDir, Mathf.Infinity, ~LayerMask.GetMask("Player", "Enemy"));
             var hit = Physics2D.BoxCast(currentPos, Vector2.one * 1.3f, 0f, currentDir, Mathf.Infinity,
-                ~LayerMask.GetMask("Player", "Enemy"));
+                ~LayerMask.GetMask("Player", "Enemy", "Confiner"));
             if (!hit) break;
 
             var com = hit.collider.GetComponent<KnockbackObject>();
@@ -76,9 +76,8 @@ public static class PlayerCalculation
             }
 
             currentDir = com.ReflecDirection;
-            currentPos = hit.centroid + com.ReflecDirection * 0.001f;
-
-            points.Add(hit.point + com.ReflecDirection * 0.001f);
+            currentPos = hit.centroid + com.ReflecDirection * 0.01f;
+            points.Add(hit.point + com.ReflecDirection * 0.01f);
         }
 
         return points.ToArray();

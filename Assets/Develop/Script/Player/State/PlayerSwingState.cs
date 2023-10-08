@@ -41,14 +41,13 @@ public class PlayerSwingState : BaseState
 
         var actorPos = (dir * minmumCloseDistance) + (Vector2)transform.position;
         actorTransform.position = actorPos;
-
+        
         var swingDir = PlayerCalculation.GetSwingDirection(Camera.main, actorTransform.position);
         var points = PlayerCalculation.GetReflectionPoints(actorTransform.position, swingDir);
-
+        
         lineRenderer.enabled = true;
         lineRenderer.positionCount = points.Length;
         lineRenderer.SetPositions(points);
-        //Debug.DrawRay(actorPos, swingDir * 5f);
 
         if (!Input.GetMouseButtonDown(0)) return false;
         blackboard.SetWrappedProperty("in_swingDir", swingDir);
