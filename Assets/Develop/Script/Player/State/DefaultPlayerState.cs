@@ -10,7 +10,7 @@ public class DefaultPlayerState : BaseState
     }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetMouseButtonDown(1))
         {
             executor.SetNextState<PlayerGrabState>();
         }
