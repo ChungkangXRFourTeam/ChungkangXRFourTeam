@@ -31,6 +31,24 @@ public class GameSetting : MonoBehaviour
         {
             SceneManager.LoadScene(1);
         }
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+    
+    void OnApplicationQuit()
+
+    {
+
+        Application.CancelQuit();
+#if !UNITY_EDITOR
+
+        System.Diagnostics.Process.GetCurrentProcess().Kill();
+
+#endif
+
     }
 
     public bool _isGravityDown;
