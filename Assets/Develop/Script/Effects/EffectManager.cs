@@ -51,6 +51,7 @@ public class EffectManager : MonoBehaviour
         Invoke(ref command);
     }
 
+    List<float> durationList = new List<float>();
     private static void Invoke(ref EffectCommand command)
     {
         EffectItem item = _inst._pool.Pop(command.EffectKey);
@@ -62,16 +63,22 @@ public class EffectManager : MonoBehaviour
         }
 
         item.IsEnabled = true;
-        var transform = item.ParticleSystem.transform;
-        transform.position = command.Position ?? Vector3.zero;
-        transform.rotation = command.Rotation ?? Quaternion.identity;
-        transform.localScale = command.Scale ?? Vector3.one;
-        
-        var p = item.ParticleSystem;
-        p.Play();
+        _inst.durationList.Clear();
+        int childCount = item.EffectObject.transform.childCount;
+        for (int i = 0; i < childCount; i++)
+        {
+            var transform = item.EffectObject.transform.GetChild(i);
+            transform.position = command.Position ?? Vector3.zero;
+            transform.rotation = command.Rotation ?? Quaternion.identity;
+            transform.localScale = command.Scale ?? Vector3.one;
+            var p = item.ParticleSystem;
+            p.Play();
+            
+         _inst.   durationList.Add(p.main.duration);
+        }
 
         Sequence s = DOTween.Sequence();
-        s.SetDelay(p.main.duration).OnComplete(() => _inst._pool.Push(item));
+        s.SetDelay(_inst.durationList.Max()).OnComplete(() => _inst._pool.Push(item));
     }
 }
 public struct EffectCommand
