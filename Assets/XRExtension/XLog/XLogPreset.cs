@@ -11,15 +11,10 @@ namespace XRProject.Utils.Log
         [XLogFilter] [SerializeField] private EXLogFilter filter;
         [SerializeField] private string _signature = null;
         [SerializeField] private bool _loggingDate = false;
-        [SerializeField] private bool _loggingSignature = false;
 
         public EXLogFilter Filter => filter;
-
         public string Signature => _signature;
-
         public bool LoggingDate => _loggingDate;
-
-        public bool LoggingSignature => _loggingSignature;
     }
 
 }
