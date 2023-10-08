@@ -4662,6 +4662,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6179648364536844533, guid: 36874bf08433b774c8061fc1091657e1, type: 3}
+      propertyPath: _removeDelayWithProperties
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6179648364536844533, guid: 36874bf08433b774c8061fc1091657e1, type: 3}
+      propertyPath: _buffStrategy._flameBuffAddingDamage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6179648364536844533, guid: 36874bf08433b774c8061fc1091657e1, type: 3}
+      propertyPath: _buffStrategy._waterBuffMovementSpeedFactor
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8735909852107992282, guid: 36874bf08433b774c8061fc1091657e1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -26.43
