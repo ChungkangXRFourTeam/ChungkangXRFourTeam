@@ -198,6 +198,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: VirtualCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 3401783494419870246, guid: b0de34255abdd794e937cbbe45721eb3, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 3541226825487307719, guid: b0de34255abdd794e937cbbe45721eb3, type: 3}
       propertyPath: m_Cameras.Array.size
       value: 2
@@ -236,11 +240,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6106029343208321652, guid: b0de34255abdd794e937cbbe45721eb3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16.475483
+      value: 5.5862885
       objectReference: {fileID: 0}
     - target: {fileID: 6106029343208321652, guid: b0de34255abdd794e937cbbe45721eb3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -11.659405
+      value: -11.5210085
       objectReference: {fileID: 0}
     - target: {fileID: 6106029343208321652, guid: b0de34255abdd794e937cbbe45721eb3, type: 3}
       propertyPath: m_LocalPosition.z
@@ -272,7 +276,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8002152655213979367, guid: b0de34255abdd794e937cbbe45721eb3, type: 3}
       propertyPath: field of view
-      value: 90
+      value: 130
       objectReference: {fileID: 0}
     - target: {fileID: 8002152655213979367, guid: b0de34255abdd794e937cbbe45721eb3, type: 3}
       propertyPath: m_CullingMask.m_Bits
