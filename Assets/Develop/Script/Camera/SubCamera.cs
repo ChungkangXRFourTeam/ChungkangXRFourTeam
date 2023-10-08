@@ -1,18 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class SubCamera : MonoBehaviour
 {
-    private float mainCamOrthoSize;
-    private Camera cam;
+    private Camera _cam;
+    private CinemachineCameraControll _cameraController;
+
+    private void Awake()
+    {
+        _cam = GetComponent<Camera>();
+        _cameraController = GameObject.FindGameObjectWithTag("VirtualCamera").GetComponent<CinemachineCameraControll>();
+    }
+
     void Start()
     {
-        cam = GetComponent<Camera>();
+        _cameraController.RegisterCameraSizeChangeFunction(SetSubCameraOrthoSize);
     }
-    void Update()
+    public void SetSubCameraOrthoSize(float size)
     {
-        mainCamOrthoSize = Camera.main.orthographicSize;
-        cam.orthographicSize = mainCamOrthoSize;
+        _cam.orthographicSize = size;
     }
 }
