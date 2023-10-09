@@ -59,13 +59,13 @@ public static class PlayerCalculation
 
         List<Vector3> points = new List<Vector3>(10);
         points.Add(currentPos);
-        int maxIter = 10;
+        int maxIter = 30;
         int currentIter = 0;
         while (maxIter > currentIter)
         {
             currentIter++;
             var hit = Physics2D.BoxCast(currentPos, Vector2.one * 1.3f, 0f, currentDir, Mathf.Infinity,
-                ~LayerMask.GetMask("Player", "Enemy", "Confiner"));
+                ~LayerMask.GetMask("Player", "Enemy", "Confiner", "Ignore Raycast"));
             if (!hit) break;
 
             var com = hit.collider.GetComponent<KnockbackObject>();
