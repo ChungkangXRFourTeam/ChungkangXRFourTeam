@@ -138,6 +138,15 @@ namespace XRProject.Helper
             {
                 item.Update(Blackboard);
             }
+            
+            var list = Blackboard.GetAllValue();
+            foreach (var item in list)
+            {
+                if (item is WrappedTriggerValue wtv)
+                {
+                    wtv.Value = false;
+                }
+            }
         }
     }
 }

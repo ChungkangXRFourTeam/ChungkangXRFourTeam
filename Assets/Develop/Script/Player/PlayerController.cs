@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     [SerializeField] private PlayerSwingAttackStrategy _swingAttackStrategy;
     [SerializeField] private PlayerBuffStrategy _buffStrategy;
     [SerializeField] private InteractionController _interaction;
+    [SerializeField] private PlayerFoot _foot;
+    [SerializeField] private PlayerFoot _leftSide;
+    [SerializeField] private PlayerFoot _rightside;
     [SerializeField] private EActorPropertiesType _properties;
     [SerializeField] private WrappedValue<int> _propertiesCount;
     [SerializeField] private float _hp;
@@ -75,6 +78,13 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     private void Awake()
     {
         CurrentHP = MaxHp;
+
+        var isGrounded = new WrappedValue<bool>();
+        var isLeftSide = new WrappedValue<bool>();
+        var isRightSide = new WrappedValue<bool>();
+        _foot.OnChangeIsGround += (x) => isGrounded.Value = x;
+        _leftSide.OnChangeIsGround += (x) => isLeftSide.Value = x;
+        _rightside.OnChangeIsGround += (x) => isRightSide.Value = x;
         
         // interaction initializing..
         Interaction.SetContractInfo(ActorContractInfo.Create(transform, ()=>false)
@@ -94,6 +104,9 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             .AddProperty("out_remaingProperties", _propertiesCount)
             .AddProperty("out_isAllowedInteraction", _isAllowedInteraction)
             .AddProperty("out_buffInfo", _buffInfo)
+            .AddProperty("out_isGrounded", isGrounded)
+            .AddProperty("out_isLeftSide", isLeftSide)
+            .AddProperty("out_isRightSide", isRightSide)
             ;
 
         strategyContainer

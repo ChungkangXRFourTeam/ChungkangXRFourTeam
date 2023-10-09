@@ -39,7 +39,7 @@ public class PlayerMoveStrategy : IStrategy
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            return (GameSetting.Instance.IsGravityDown ? Vector2.up : Vector2.down) * _jumpForce;
+            return Vector2.up * _jumpForce;
         }
         
         return Vector2.zero;
@@ -63,20 +63,25 @@ public class PlayerMoveStrategy : IStrategy
     {
         blackboard.GetProperty("out_buffInfo", out BuffInfo info);
         blackboard.GetProperty("out_transform", out Transform transform);
+        blackboard.GetUnWrappedProperty("out_isGrounded", out bool isGrounded);
+        blackboard.GetUnWrappedProperty("out_isLeftSide", out bool isLeftSide);
+        blackboard.GetUnWrappedProperty("out_isRightSide", out bool isRightSide);
 
         var movingVector = GetMovingVector() * Mathf.Max(info.SpeedFactor, 1f);
         var jumpingVector = GetJumpingVector();
         var fallingVector = GetFallingVector();
 
+        if (!isGrounded)
+            jumpingVector = Vector2.zero;
+
+        if (isLeftSide && movingVector.x < 0f)
+            movingVector.x = 0f;
+        if (isRightSide && movingVector.x > 0f)
+            movingVector.x = 0f;
+        
         _rigid.position += movingVector * Time.deltaTime;
         _rigid.AddForce(jumpingVector + fallingVector);
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            GameSetting.Instance.IsGravityDown = !GameSetting.Instance.IsGravityDown;
-        }
-
-        // application effects
+        
         if (fallingVector.sqrMagnitude > 0f)
         {
             _rigid.velocity = Vector2.zero;
@@ -98,6 +103,7 @@ public class PlayerMoveStrategy : IStrategy
                 Rotation = Quaternion.Euler(0f, 0f, 0f),
                 Scale = Vector3.one * 1.5f
             });
+            
         }
     }
 
