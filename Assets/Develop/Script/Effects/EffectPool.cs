@@ -135,6 +135,22 @@ public class EffectItem
         ParticleSystem = obj.GetComponentInChildren<ParticleSystem>();
         IsEnabled = false;
     }
+
+    public void ApplyCommand(ref EffectCommand command)
+    {
+        var transform = EffectObject.transform;
+        var module = ParticleSystem.main;
+        
+        transform.position = command.Position ?? Vector3.zero;
+        transform.rotation = command.Rotation ?? Quaternion.identity;
+        if(command.Scale.HasValue)
+            transform.localScale = command.Scale.Value;
+        module.flipRotation = command.FlipRotation;
+    }
+    public void ApplyCommand(EffectCommand command)
+    {
+        ApplyCommand(ref command);
+    }
 }
 
 public class EffectPoolItemContainer

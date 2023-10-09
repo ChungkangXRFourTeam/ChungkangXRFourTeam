@@ -51,6 +51,27 @@ public class EffectManager : MonoBehaviour
         Invoke(ref command);
     }
 
+    [CanBeNull]
+    public static EffectItem EffectItem(string effectKey)
+    {
+        if (string.IsNullOrEmpty(effectKey) || string.IsNullOrWhiteSpace(effectKey))
+        {
+            XLog.LogError($"EffectItem: 유효하지 않는 effectKey('{effectKey}')", EffectManager.LOG_SIGNATURE);
+            return null;
+        }
+
+        var str = effectKey.Split('/');
+        if (str == null || str.Length < 2)
+        {
+            XLog.LogError($"EffectItem: 유효하지 않는 effectKey('{effectKey}')", EffectManager.LOG_SIGNATURE);
+            return null;
+        }
+        
+        var effect = _inst._pool.Pop(effectKey);
+
+        return effect;
+    }
+
     List<float> durationList = new List<float>();
 
     private static void Invoke(ref EffectCommand command)
@@ -68,22 +89,19 @@ public class EffectManager : MonoBehaviour
         int childCount = item.EffectObject.transform.childCount;
         for (int i = 0; i < childCount; i++)
         {
-            var transform = item.EffectObject.transform.GetChild(i);
             var p = item.ParticleSystem;
-            var module = p.main;
-
-            /**/
-            transform.position = command.Position ?? Vector3.zero;
-            transform.rotation = command.Rotation ?? Quaternion.identity;
-            transform.localScale = command.Scale ?? Vector3.one;
-            module.flipRotation = command.FlipRotation;
-            /**/
+            item.ApplyCommand(ref command);
 
             p.Play();
             _inst.durationList.Add(p.main.duration);
         }
 
         Sequence s = DOTween.Sequence();
-        s.SetDelay(_inst.durationList.Max()).OnComplete(() => _inst._pool.Push(item));
+        var callback = command.OnComplationCallback;
+        s.SetDelay(_inst.durationList.Max()).OnComplete(() =>
+        {
+            _inst._pool.Push(item);
+            callback?.Invoke();
+        });
     }
 }
