@@ -526,12 +526,17 @@ MonoBehaviour:
     _jumpForce: 1500
     _downForce: 3000
     _rigid: {fileID: 5375335031904104078}
+    _effectBackTrailOffset: {x: 0, y: 0}
+    _effectBackTrailScaleFactor: 3
   _physicsStrategy:
     _rigid: {fileID: 5375335031904104078}
     _interaction: {fileID: 5145877283976636205}
   _meleeAttackStrategy:
     _hand: {fileID: 3108509267361451634}
     _distanceFromBodyforHand: 2
+    _slashEffectDistanceFromThis: 1.3
+    _slashEffectOffset: {x: 0, y: -1.5}
+    _slashEffectScale: {x: 0.3, y: 0.3}
   _swingAttackStrategy:
     _lineRenderer: {fileID: 2891379630436183497}
     _swingForce:
