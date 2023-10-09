@@ -91,7 +91,8 @@ public class PlayerMoveStrategy : IStrategy
                 EffectKey = "player/airDownDash",
                 Position = transform.position,
                 Rotation = Quaternion.Euler(0f, 0f, 180f),
-                Scale = Vector3.one * 2.5f
+                Scale = Vector3.one * 2.5f,
+                FlipRotation = 1f
             });
         }
         if (jumpingVector.sqrMagnitude > 0f)
