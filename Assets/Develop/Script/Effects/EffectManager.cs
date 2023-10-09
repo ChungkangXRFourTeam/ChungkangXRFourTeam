@@ -14,7 +14,7 @@ public class EffectManager : MonoBehaviour
 
     public const string LOG_SIGNATURE = "effectManager";
     private const string B_LOG_SIGNATURE = "effectManager";
-    
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Init()
     {
@@ -38,7 +38,7 @@ public class EffectManager : MonoBehaviour
     }
 
     private EffectPool _pool;
-    
+
     public static void EnqueueCommand(EffectCommand command)
     {
         if (!_inst) return;
@@ -47,11 +47,12 @@ public class EffectManager : MonoBehaviour
     public static void ImmediateCommand(EffectCommand command)
     {
         if (!_inst) return;
-        
+
         Invoke(ref command);
     }
 
     List<float> durationList = new List<float>();
+
     private static void Invoke(ref EffectCommand command)
     {
         EffectItem item = _inst._pool.Pop(command.EffectKey);
@@ -68,23 +69,21 @@ public class EffectManager : MonoBehaviour
         for (int i = 0; i < childCount; i++)
         {
             var transform = item.EffectObject.transform.GetChild(i);
+            var p = item.ParticleSystem;
+            var module = p.main;
+
+            /**/
             transform.position = command.Position ?? Vector3.zero;
             transform.rotation = command.Rotation ?? Quaternion.identity;
             transform.localScale = command.Scale ?? Vector3.one;
-            var p = item.ParticleSystem;
+            module.flipRotation = command.FlipRotation;
+            /**/
+
             p.Play();
-            
-         _inst.   durationList.Add(p.main.duration);
+            _inst.durationList.Add(p.main.duration);
         }
 
         Sequence s = DOTween.Sequence();
         s.SetDelay(_inst.durationList.Max()).OnComplete(() => _inst._pool.Push(item));
     }
-}
-public struct EffectCommand
-{
-    public string EffectKey { get; set; }
-    public Vector3? Position { get; set; }
-    public Quaternion? Rotation { get; set; }
-    public Vector3? Scale { get; set; }
 }
