@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6507970293863278548}
   m_Layer: 0
   m_Name: KnockbackBox
-  m_TagString: Untagged
+  m_TagString: KnockbackObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100,7 +100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fc43fba75e987f4e9b5f515346bc001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactive: {fileID: 4123372910038394063}
   _knockbackForce: 4000
   _knockbackTime: 0.3
   _reflectAnglel: 32.4
