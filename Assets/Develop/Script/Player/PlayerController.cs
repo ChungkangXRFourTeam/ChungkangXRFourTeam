@@ -79,6 +79,20 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     {
         CurrentHP = MaxHp;
 
+        Interaction.OnContractObject += (info) =>
+        {
+            if (info.TryGetBehaviour(out IBObjectInteractive interactive) &&
+                info.Transform.gameObject.CompareTag("KnockbackObject") &&
+                Input.GetMouseButton(0))
+            {
+                EffectManager.ImmediateCommand(new EffectCommand()
+                {
+                    EffectKey = "actor/knockbackHit",
+                    Position = transform.position
+                });
+            }
+        };
+
         var isGrounded = new WrappedValue<bool>();
         var isLeftSide = new WrappedValue<bool>();
         var isRightSide = new WrappedValue<bool>();

@@ -13,8 +13,11 @@ public class PlayerMoveStrategy : IStrategy
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _downForce;
     [SerializeField] private Rigidbody2D _rigid;
+    [SerializeField] private Vector2 _effectBackTrailOffset;
+    [SerializeField] private float _effectBackTrailScaleFactor;
     
     private bool _inputLock;
+    private EffectItem _effect;
     private Vector2 GetMovingVector()
     {
         if (_inputLock) return Vector2.zero;
@@ -58,7 +61,16 @@ public class PlayerMoveStrategy : IStrategy
     
     public void Init(Blackboard blackboard)
     {
+        blackboard.GetProperty("out_transform", out Transform transform);
+        _effect = EffectManager.EffectItem("player/backTrail");
+        
+        if(_effect != null)
+            _effect.EffectObject.transform.SetParent(transform);
+
+        _prevPosition = transform.position;
     }
+
+    private Vector2 _prevPosition;
     public void Update(Blackboard blackboard)
     {
         blackboard.GetProperty("out_buffInfo", out BuffInfo info);
@@ -104,8 +116,35 @@ public class PlayerMoveStrategy : IStrategy
                 Rotation = Quaternion.Euler(0f, 0f, 0f),
                 Scale = Vector3.one * 1.5f
             });
-            
         }
+
+        if (movingVector.sqrMagnitude > 0f)
+        {
+            if (_effect != null)
+            {
+                var dir = (Vector2)transform.position - _prevPosition;
+                dir = dir.normalized;
+
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                
+                _effect.IsEnabled = true;
+                _effect.ApplyCommand(new EffectCommand()
+                {
+                    Position = transform.position,
+                    Scale = Vector3.one * _effectBackTrailScaleFactor,
+                    Rotation = Quaternion.Euler(0f, 0f, 180 + angle)
+                });
+            }
+        }
+        else
+        {
+            if (_effect != null)
+            {
+                _effect.IsEnabled = false;
+            }
+        }
+
+        _prevPosition = transform.position;
     }
 
     public void Reset()

@@ -127,6 +127,15 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
 
     public void OnContractObject(ObjectContractInfo info)
     {
+        if (info.TryGetBehaviour(out IBObjectInteractive interactive) &&
+            info.Transform.gameObject.CompareTag("KnockbackObject"))
+        {
+            EffectManager.ImmediateCommand(new EffectCommand()
+            {
+                EffectKey = "actor/knockbackHit",
+                Position = transform.position
+            });
+        }
     }
 
     [CanBeNull]
@@ -148,10 +157,18 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
         CurrentHP -= damage;
 
         if (caller.Transform.gameObject.CompareTag("Player") &&
-            caller is ActorContractInfo actor &&
-            actor.TryGetBehaviour(out IBActorProperties properties))
+            caller is ActorContractInfo actor)
         {
-            AnimatePropertiesHitEffect(properties.Properties);
+            if(actor.TryGetBehaviour(out IBActorProperties properties))
+            {
+                AnimatePropertiesHitEffect(properties.Properties);
+            }
+            
+            EffectManager.ImmediateCommand( new EffectCommand()
+            {
+                EffectKey = "actor/enemyHit",
+                Position = transform.position
+            });
         }
     }
 

@@ -8,6 +8,9 @@ public class PlayerMeleeAttackStrategy : IStrategy
 {
     [SerializeField] private Transform _hand;
     [SerializeField] private float _distanceFromBodyforHand;
+    [SerializeField] private float _slashEffectDistanceFromThis;
+    [SerializeField] private Vector2 _slashEffectOffset;
+    [SerializeField] private Vector2 _slashEffectScale;
 
     private Transform transform;
 
@@ -23,7 +26,7 @@ public class PlayerMeleeAttackStrategy : IStrategy
         if (!col) return;
 
         var dir = ((Vector2)_hand.position - (Vector2)transform.position).normalized;
-
+        
         if (
             blackboard.TryGetProperty<WrappedValue<int>>("out_remaingProperties", out var propertiesCount) &&
             blackboard.TryGetProperty<InteractionController>("out_interaction", out var myInteraction) &&
@@ -53,21 +56,45 @@ public class PlayerMeleeAttackStrategy : IStrategy
 
     private void RotateHand()
     {
-        Plane p = new Plane(-Vector3.forward, Vector3.zero);
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (!p.Raycast(ray, out var enter)) return;
+        var mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var pos = transform.position;
+        pos.z = mp.z = 0f;
+        var dir = mp - pos;
+        dir = Vector3.Project(dir, Vector3.right).normalized;
 
-        Vector2 mousePoint = ray.origin + ray.direction * enter;
 
-        var dir = (mousePoint - (Vector2)transform.position).normalized;
-
-        _hand.position = (Vector2)transform.position + dir * _distanceFromBodyforHand;
+        _hand.position = transform.position + dir * _distanceFromBodyforHand;
     }
 
     public void Update(Blackboard blackboard)
     {
         RotateHand();
         Attack(blackboard);
+        
+        if (Input.GetMouseButtonDown(0))
+        {
+            var mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var pos = transform.position;
+            pos.z = mp.z = 0f;
+            
+            var dir = mp - pos;
+            bool flipX = dir.x > 0f ? true : false;
+
+            var scale = _slashEffectScale;
+            scale.x *= flipX ? -1f : 1f;
+
+            var farFromBody = dir.normalized;
+            farFromBody.y = 0f;
+            farFromBody.z = 0f;
+            farFromBody.x *= _slashEffectDistanceFromThis;
+            
+            EffectManager.ImmediateCommand(new EffectCommand()
+            {
+                EffectKey = "player/swordSlash",
+                Position = transform.position + (Vector3)_slashEffectOffset + farFromBody,
+                Scale = scale,
+            });
+        }
     }
 
     public void Reset()
