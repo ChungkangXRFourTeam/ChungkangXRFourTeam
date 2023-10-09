@@ -6,7 +6,7 @@ using UnityEngine;
 
 
 
-public class ObjectContractInfo : BaseContractT<IBObjectInteractive, ObjectContractInfo>
+public class ObjectContractInfo : BaseContractT<IObjectBehaviour, ObjectContractInfo>
 {
     
 }

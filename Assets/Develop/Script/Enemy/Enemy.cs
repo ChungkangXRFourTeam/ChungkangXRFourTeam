@@ -13,6 +13,7 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
     [SerializeField] private Color _waterColor;
     [SerializeField] private Image _effectImage;
     [SerializeField] private float _hp;
+    [SerializeField] private float _speed;
 
     public event System.Action<IBActorLife, float, float> ChangedHp;
     public float MaxHp => _hp;
@@ -87,16 +88,53 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
         Interaction.OnContractActor += OnContractActor;
         Interaction.OnContractObject += OnContractObject;
         
+        // 중간 시연용 코드
+        Interaction.OnContractObject += (info) =>
+        {
+            if (info.TryGetBehaviour(out IBObjectPatrollSpace patrollSpace))
+            {
+                _leftPoint = patrollSpace.LeftPoint;
+                _rightPoint = patrollSpace.RightPoint;
+                _goLeft = !_goLeft;
+                _checkPoint = true;
+            }
+        };
+        
         _currentHp = MaxHp;
 
         // Color 셋팅
         Properties = Properties;
         _effectImage.enabled = false;
     }
+    
+    // 중간 시연용 코드
+    private bool _checkPoint;
+    private Vector2 _leftPoint;
+    private Vector2 _rightPoint;
+    private Vector2 TargetPoint => _goLeft ? _leftPoint : _rightPoint;
+    private bool _goLeft;
 
     private void Update()
     {
         ActorUpdate(); 
+        
+        // 중간시연용 코드
+        if (IsSwingState || !_checkPoint)
+        {
+            _checkPoint = false;
+            return;
+        }
+
+        if (Mathf.Abs(TargetPoint.x - transform.position.x) <= 0.1f + 1.3f * 0.5f)
+        {
+            _goLeft = !_goLeft;
+        }
+
+        var dir = TargetPoint - (Vector2)transform.position;
+        dir = dir.normalized;
+        dir = Vector3.Project(dir, Vector3.right).normalized;
+
+        transform.position += (Vector3)dir * (_speed * Time.deltaTime);
     }
 
     private void OnContractActor(ActorContractInfo info)

@@ -28,6 +28,11 @@ public interface IBObjectInteractive : IObjectBehaviour
 {
     public bool IsSelectiveObject {get; }
 }
+public interface IBObjectPatrollSpace : IObjectBehaviour
+{
+    public Vector2 LeftPoint { get; }
+    public Vector2 RightPoint { get; }
+}
 #endregion
 
 
