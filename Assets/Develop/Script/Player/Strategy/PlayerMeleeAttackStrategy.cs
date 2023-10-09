@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using XRProject.Helper;
 
@@ -11,6 +12,8 @@ public class PlayerMeleeAttackStrategy : IStrategy
     [SerializeField] private float _slashEffectDistanceFromThis;
     [SerializeField] private Vector2 _slashEffectOffset;
     [SerializeField] private Vector2 _slashEffectScale;
+    [SerializeField] private float _attackDelay = 0.5f;
+    [SerializeField] private int _attackMaxCount = 3;
 
     private Transform transform;
 
@@ -20,8 +23,6 @@ public class PlayerMeleeAttackStrategy : IStrategy
     }
     private void Attack(Blackboard blackboard)
     {
-        if (!Input.GetMouseButtonDown(0)) return;
-
         var col = Physics2D.OverlapCircle(_hand.position, _hand.lossyScale.x, LayerMask.GetMask("Enemy"));
         if (!col) return;
 
@@ -66,34 +67,57 @@ public class PlayerMeleeAttackStrategy : IStrategy
         _hand.position = transform.position + dir * _distanceFromBodyforHand;
     }
 
+    private void Effect(Blackboard blackboard)
+    {
+        var mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var pos = transform.position;
+        pos.z = mp.z = 0f;
+            
+        var dir = mp - pos;
+        bool flipX = dir.x > 0f ? true : false;
+
+        var scale = _slashEffectScale;
+        scale.x *= flipX ? -1f : 1f;
+
+        var farFromBody = dir.normalized;
+        farFromBody.y = 0f;
+        farFromBody.z = 0f;
+        farFromBody.x *= _slashEffectDistanceFromThis;
+            
+        EffectManager.ImmediateCommand(new EffectCommand()
+        {
+            EffectKey = "player/swordSlash",
+            Position = transform.position + (Vector3)_slashEffectOffset + farFromBody,
+            Scale = scale,
+        });
+    }
+
+    private object _sKey = new();
+    private bool _canAttack = true;
+    private int _attackCount = 0;
+    
     public void Update(Blackboard blackboard)
     {
         RotateHand();
-        Attack(blackboard);
         
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && _canAttack)
         {
-            var mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            var pos = transform.position;
-            pos.z = mp.z = 0f;
-            
-            var dir = mp - pos;
-            bool flipX = dir.x > 0f ? true : false;
+            _attackCount++;
+            Attack(blackboard);
+            Effect(blackboard);
 
-            var scale = _slashEffectScale;
-            scale.x *= flipX ? -1f : 1f;
-
-            var farFromBody = dir.normalized;
-            farFromBody.y = 0f;
-            farFromBody.z = 0f;
-            farFromBody.x *= _slashEffectDistanceFromThis;
             
-            EffectManager.ImmediateCommand(new EffectCommand()
+            if (_attackCount >= _attackMaxCount)
             {
-                EffectKey = "player/swordSlash",
-                Position = transform.position + (Vector3)_slashEffectOffset + farFromBody,
-                Scale = scale,
-            });
+                _canAttack = false;
+                Sequence s = DOTween.Sequence();
+                s.SetDelay(_attackDelay).SetId(_sKey).OnComplete(() =>
+                {
+                    _canAttack = true;
+                    _attackCount = 0;
+                }).Play();
+            }
+
         }
     }
 
