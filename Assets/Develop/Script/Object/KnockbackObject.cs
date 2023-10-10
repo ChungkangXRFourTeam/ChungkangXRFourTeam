@@ -65,16 +65,15 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
     {
         DoKnockback(info);
 
-        if (info.TryGetBehaviour(out IBActorProperties com) &&
-            info.TryGetBehaviour(out IBActorHit hit))
+        if (info.TryGetBehaviour(out IBActorProperties com))
         {
-            float damage = (com.Properties == Properties ? 1f : 2f);
-            hit.DoHit(Interaction.ContractInfo, damage);
-
-            if (info.Transform && info.Transform.gameObject.CompareTag("Player"))
+            if(info.TryGetBehaviour(out IBActorHit hit))
             {
-                com.SetProperties(Interaction.ContractInfo, Properties);
+                float damage = (com.Properties == Properties ? 1f : 2f);
+                hit.DoHit(Interaction.ContractInfo, damage);
             }
+            
+            com.SetProperties(Interaction.ContractInfo, Properties);
         }
     }
 
