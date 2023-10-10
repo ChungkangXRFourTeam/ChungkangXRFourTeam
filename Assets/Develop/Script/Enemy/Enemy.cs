@@ -174,7 +174,7 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
                 damage = 2f;
             }
         }
-        if (info.TryGetBehaviour(out IBActorHit actorHit))
+        if (info.TryGetBehaviour(out IBActorHit actorHit) && IsSwingState)
         {
             actorHit.DoHit(Interaction.ContractInfo, damage);
         }
@@ -207,6 +207,15 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
             OnDetectBlock();
         }
     }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.GetComponent<PatrollSpace>())
+        {
+            _checkPoint = false;
+        }
+    }
+
     public void DoHit(BaseContractInfo caller, float damage)
     {
         CurrentHP -= damage;
