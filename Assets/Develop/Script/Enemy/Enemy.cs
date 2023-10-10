@@ -125,7 +125,6 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
         {
             return;
         }
-        print(IsSwingState);
 
         if (Mathf.Abs(TargetPoint.x - transform.position.x) <= 0.1f + 1.3f * 0.5f)
         {
@@ -152,7 +151,7 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
                 EffectManager.ImmediateCommand(new EffectCommand()
                 {
                     EffectKey = "actor/enemyHit",
-                    Position = transform.position
+                    Position = Vector3.Lerp(transform.position, info.Transform.position, 0.5f)
                 });
             }
         }
@@ -178,6 +177,7 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
         if (info.TryGetBehaviour(out IBActorHit actorHit) && IsSwingState)
         {
             actorHit.DoHit(Interaction.ContractInfo, damage);
+            DoHit(info, damage);
         }
     }
 
