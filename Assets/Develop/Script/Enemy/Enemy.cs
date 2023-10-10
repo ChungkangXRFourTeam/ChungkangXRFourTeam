@@ -5,6 +5,7 @@ using DG.Tweening;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, IBActorThrowable
 {
@@ -95,7 +96,7 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
             {
                 _leftPoint = patrollSpace.LeftPoint;
                 _rightPoint = patrollSpace.RightPoint;
-                _goLeft = !_goLeft;
+                _goLeft = Random.value >= 0.5f;
                 _checkPoint = true;
             }
         };
