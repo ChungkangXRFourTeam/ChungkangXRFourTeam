@@ -14,12 +14,14 @@ public class PlayerMeleeAttackStrategy : IStrategy
     [SerializeField] private Vector2 _slashEffectScale;
     [SerializeField] private float _attackDelay = 0.5f;
     [SerializeField] private int _attackMaxCount = 3;
+    [SerializeField] private SpriteRenderer renderer;
 
     private Transform transform;
 
     public void Init(Blackboard blackboard)
     {
         transform = blackboard.GetProperty<Transform>("out_transform");
+        renderer = transform.gameObject.GetComponent<SpriteRenderer>();
     }
     private void Attack(Blackboard blackboard)
     {
@@ -65,6 +67,14 @@ public class PlayerMeleeAttackStrategy : IStrategy
 
 
         _hand.position = transform.position + dir * _distanceFromBodyforHand;
+        if (dir.x < 0)
+            renderer.flipX = true;
+        else
+        {
+            renderer.flipX = false;
+        }
+
+
     }
 
     private void Effect(Blackboard blackboard)
