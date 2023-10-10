@@ -31,13 +31,15 @@ public class CinemachineCameraControll : MonoBehaviour
     {
         if (_isZoomKeyDown)
         {
+            // Time.deltaTIme => Time.unscaledDeltaTime 으로 수정: 손형준, 23/10/10-19:24
             _virtualCamera.m_Lens.OrthographicSize =
-                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, _maxZoomOutSize, Time.deltaTime * _zoomSpeed);
+                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, _maxZoomOutSize, Time.unscaledDeltaTime * _zoomSpeed);
         }
         else
         {
+            // Time.deltaTIme => Time.unscaledDeltaTime 으로 수정: 손형준, 23/10/10-19:24
             _virtualCamera.m_Lens.OrthographicSize =
-                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, _maxZoomInSize, Time.deltaTime * _zoomSpeed);
+                Mathf.Lerp(_virtualCamera.m_Lens.OrthographicSize, _maxZoomInSize, Time.unscaledDeltaTime * _zoomSpeed);
         }
         
         onMainCameraSizeChanged(_virtualCamera.m_Lens.OrthographicSize);
