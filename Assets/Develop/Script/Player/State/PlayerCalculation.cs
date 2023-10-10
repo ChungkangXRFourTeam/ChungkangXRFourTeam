@@ -65,7 +65,7 @@ public static class PlayerCalculation
         {
             currentIter++;
             var hit = Physics2D.BoxCast(currentPos, Vector2.one * 1.3f, 0f, currentDir, Mathf.Infinity,
-                ~LayerMask.GetMask("Player", "Enemy", "Confiner", "Ignore Raycast"));
+                ~LayerMask.GetMask("Player", "Enemy", "Confiner", "Ignore Raycast", "EnemyBody"));
             if (!hit) break;
 
             var com = hit.collider.GetComponent<KnockbackObject>();

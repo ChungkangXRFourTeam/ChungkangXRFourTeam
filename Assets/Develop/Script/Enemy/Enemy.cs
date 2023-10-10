@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using JetBrains.Annotations;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +13,7 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
     [SerializeField] private Image _effectImage;
     [SerializeField] private float _hp;
     [SerializeField] private float _speed;
+    [SerializeField] private Collider2D _body;
 
     public event System.Action<IBActorLife, float, float> ChangedHp;
     public float MaxHp => _hp;
@@ -116,14 +116,15 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
 
     private void Update()
     {
-        ActorUpdate(); 
+        ActorUpdate();
         
+        _body.isTrigger = !IsSwingState;
         // 중간시연용 코드
         if (IsSwingState || !_checkPoint)
         {
-            _checkPoint = false;
             return;
         }
+        print(IsSwingState);
 
         if (Mathf.Abs(TargetPoint.x - transform.position.x) <= 0.1f + 1.3f * 0.5f)
         {
@@ -139,6 +140,22 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
 
     private void OnContractActor(ActorContractInfo info)
     {
+        if (info.Transform.GetComponent<Enemy>())
+        {
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendCallback(() => _body.isTrigger = false).SetDelay(0.05f)
+                .AppendCallback(() => _body.isTrigger = true).SetId(this);
+
+            if (IsSwingState)
+            {
+                EffectManager.ImmediateCommand(new EffectCommand()
+                {
+                    EffectKey = "actor/enemyHit",
+                    Position = transform.position
+                });
+            }
+        }
+        
         if (info.TryGetBehaviour(out IBActorPhysics physics))
         {
             OnDetectBlock();
@@ -215,6 +232,7 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
     private void OnDestroy()
     {
         _isDestroyed = true;
+        DOTween.Kill(this);
 
         if (_effectTweener != null)
         {
