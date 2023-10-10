@@ -1982,7 +1982,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8256290748832071308, guid: bf833a78beeceba40937e9f7850f813d, type: 3}
       propertyPath: _reflectAnglel
-      value: 125.2
+      value: 137.8
       objectReference: {fileID: 0}
     - target: {fileID: 8256290748832071308, guid: bf833a78beeceba40937e9f7850f813d, type: 3}
       propertyPath: _knockbackForce
@@ -6570,6 +6570,10 @@ PrefabInstance:
     - target: {fileID: 6050601476596499324, guid: 36874bf08433b774c8061fc1091657e1, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6179648364536844533, guid: 36874bf08433b774c8061fc1091657e1, type: 3}
+      propertyPath: _moveStrategy._jumpForce
+      value: 1700
       objectReference: {fileID: 0}
     - target: {fileID: 6179648364536844533, guid: 36874bf08433b774c8061fc1091657e1, type: 3}
       propertyPath: _removeDelayWithProperties
