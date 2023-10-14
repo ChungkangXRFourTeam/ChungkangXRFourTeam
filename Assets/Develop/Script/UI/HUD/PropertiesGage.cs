@@ -68,6 +68,5 @@ public class PropertiesGage : MonoBehaviour
     {
         if (!_pc) return;
         SetAmount(_pc.Properties, _pc.RemainingPropertie / 10f);
-        print(_pc.RemainingPropertie);
     }
 }
