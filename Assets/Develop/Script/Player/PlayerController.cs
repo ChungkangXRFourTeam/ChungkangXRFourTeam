@@ -63,6 +63,8 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
 
     public void Die()
     {
+        if (IsDestroyed) return;
+        
         IsDestroyed = true;
         Destroy(gameObject);
     }
