@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using XRProject.Helper;
 
 [System.Serializable]
@@ -22,6 +23,7 @@ public class PlayerMeleeAttackStrategy : IStrategy
     {
         transform = blackboard.GetProperty<Transform>("out_transform");
         renderer = transform.gameObject.GetComponent<SpriteRenderer>();
+        InputManager.ActionListener.MainGame.Attack.started += OnAttack;
     }
     private void Attack(Blackboard blackboard)
     {
@@ -105,20 +107,34 @@ public class PlayerMeleeAttackStrategy : IStrategy
     private object _sKey = new();
     private bool _canAttack = true;
     private int _attackCount = 0;
+
+    private Blackboard _blackboard;
     
     public void Update(Blackboard blackboard)
     {
         RotateHand();
-        
+        _blackboard = blackboard;
         if (Input.GetMouseButtonDown(0) && _canAttack)
         {
+        }
+    }
+
+    public void Reset()
+    {
+        
+    }
+
+    void OnAttack(InputAction.CallbackContext ctx)
+    {
+        if (_canAttack)
+        {
             _attackCount++;
-            Attack(blackboard);
-            Effect(blackboard);
 
             
             if (_attackCount >= _attackMaxCount)
             {
+                Attack(_blackboard);
+                Effect(_blackboard);
                 _canAttack = false;
                 Sequence s = DOTween.Sequence();
                 s.SetDelay(_attackDelay).SetId(_sKey).OnComplete(() =>
@@ -127,12 +143,6 @@ public class PlayerMeleeAttackStrategy : IStrategy
                     _attackCount = 0;
                 }).Play();
             }
-
         }
-    }
-
-    public void Reset()
-    {
-        
     }
 }
