@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using XRProject.Helper;
 
 
@@ -15,6 +16,9 @@ public class PlayerMoveStrategy : IStrategy
     [SerializeField] private Rigidbody2D _rigid;
     [SerializeField] private Vector2 _effectBackTrailOffset;
     [SerializeField] private float _effectBackTrailScaleFactor;
+    [SerializeField] private Vector2 dir;
+    [SerializeField] private Vector2 downDir;
+    [SerializeField] private Vector2 upDir;
     
     private bool _inputLock;
     private EffectItem _effect;
@@ -22,40 +26,7 @@ public class PlayerMoveStrategy : IStrategy
     {
         if (_inputLock) return Vector2.zero;
 
-        Vector2 dir = Vector2.zero;
-        if (Input.GetKey(KeyCode.A))
-        {
-            dir += Vector2.left;
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            dir += Vector2.right;
-        }
-
         return dir * _movementSpeed;
-    }
-
-    private Vector2 GetJumpingVector()
-    {
-        if (_inputLock) return Vector2.zero;
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            return Vector2.up * _jumpForce;
-        }
-        
-        return Vector2.zero;
-    }
-
-    private Vector2 GetFallingVector()
-    {
-        if (Input.GetKeyDown(KeyCode.S))
-        {            
-            return Vector2.down * _downForce;
-        }
-
-        return Vector2.zero;
     }
     
     
@@ -68,6 +39,11 @@ public class PlayerMoveStrategy : IStrategy
             _effect.EffectObject.transform.SetParent(transform);
 
         _prevPosition = transform.position;
+
+        InputManager.ActionListener.MainGame.Move.performed += OnMove;
+        InputManager.ActionListener.MainGame.Jump.started += OnJump;
+        InputManager.ActionListener.MainGame.Fall.started += OnFall;
+
     }
 
     private Vector2 _prevPosition;
@@ -80,8 +56,8 @@ public class PlayerMoveStrategy : IStrategy
         blackboard.GetUnWrappedProperty("out_isRightSide", out bool isRightSide);
 
         var movingVector = GetMovingVector() * Mathf.Max(info.SpeedFactor, 1f);
-        var jumpingVector = GetJumpingVector();
-        var fallingVector = GetFallingVector();
+        var jumpingVector = upDir * _jumpForce;
+        var fallingVector = downDir * _downForce;
 
         if (!isGrounded)
             jumpingVector = Vector2.zero;
@@ -93,7 +69,9 @@ public class PlayerMoveStrategy : IStrategy
         
         _rigid.position += movingVector * Time.deltaTime;
         _rigid.AddForce(jumpingVector + fallingVector);
-        
+
+        downDir = Vector2.zero;
+        upDir = Vector2.zero;
         if (fallingVector.sqrMagnitude > 0f)
         {
             _rigid.velocity = Vector2.zero;
@@ -150,5 +128,22 @@ public class PlayerMoveStrategy : IStrategy
     public void Reset()
     {
         
+    }
+
+    void OnJump(InputAction.CallbackContext ctx)
+    {
+        if (upDir == Vector2.zero)
+            upDir = Vector2.up;
+    }
+
+    void OnMove(InputAction.CallbackContext ctx)
+    {
+        dir = ctx.ReadValue<Vector2>();
+    }
+
+    void OnFall(InputAction.CallbackContext ctx)
+    {
+        if (downDir == Vector2.zero)
+            downDir = Vector2.down;
     }
 }

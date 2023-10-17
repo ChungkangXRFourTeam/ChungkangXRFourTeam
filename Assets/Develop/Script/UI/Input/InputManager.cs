@@ -1,34 +1,52 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-[ExecuteInEditMode]
 public class InputManager : MonoBehaviour
 {
-    private InputActionListener actionListener;
+    private static InputManager instance = null;
+    private static InputActionListener actionListener = null;
     
-    [SerializeField] private List<NamedInputAction> actions;
-
-    // Start is called before the first frame update
-
-    private void Awake()
+    void Awake()
     {
-        actionListener = new InputActionListener();
-        actions.Clear();
-        for (int i = 0; i < actionListener.GetMainGameActions().Count; i++)
+        if (null == instance)
         {
-            InputAction action = actionListener.GetMainGameActions()[i];
-            NamedInputAction namedAction = new NamedInputAction();
-            namedAction.elementName = action.name;
-            namedAction.action = action;
-            actions.Add(namedAction);
+            instance = this;
+            actionListener = new InputActionListener();
+            
+            actionListener.MainGame.Move.Enable();
+            actionListener.MainGame.Attack.Enable();
+            actionListener.MainGame.Grab.Enable();
+            actionListener.MainGame.Jump.Enable();
+            actionListener.MainGame.BoundMode.Enable();
+            actionListener.MainGame.Fall.Enable();
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+    
+    public static InputManager Instance
+    {
+        get
+        {
+            if (null == instance)
+            {
+                return null;
+            }
+            return instance;
         }
     }
 
-    private void OnEnable()
+    public static InputActionListener ActionListener
     {
-        
+        get
+        {
+            if (actionListener != null) 
+                return actionListener;
+            return null;
+        }
     }
 }

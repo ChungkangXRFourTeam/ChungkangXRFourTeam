@@ -3,32 +3,68 @@
     "maps": [
         {
             "name": "MainGame",
-            "id": "6b33ed99-f1ad-4b04-9816-669d7bf21f47",
+            "id": "fa99f9d7-1294-40a7-81c2-87d2889fffdb",
             "actions": [
                 {
                     "name": "Move",
                     "type": "PassThrough",
-                    "id": "ddc44cf1-104b-4ddc-a86e-220cd7576807",
-                    "expectedControlType": "Axis",
+                    "id": "b271495b-2879-4d7b-a2c9-9b1a860e75e2",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "a55795e7-a752-4ca5-a216-706a8ce4abb7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Grab",
+                    "type": "Button",
+                    "id": "034eef75-82e8-4172-a56d-c25be76c8f94",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
                     "name": "Jump",
-                    "type": "PassThrough",
-                    "id": "0429a5ae-f1d7-4ab4-87ef-481c85d7a6fd",
+                    "type": "Button",
+                    "id": "04b0308c-cf49-4cc1-afc9-1a98a9f519fa",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "BoundMode",
+                    "type": "Button",
+                    "id": "c7e81bc4-deba-4b61-a746-0e6ede755413",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Fall",
+                    "type": "Button",
+                    "id": "bb26fee0-8e96-48d5-b4a8-e6e4b542c690",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
-                    "name": "1D Axis",
-                    "id": "043c5cf1-5095-4a78-8ce8-fe4466a3a64a",
-                    "path": "1DAxis",
+                    "name": "2D Vector",
+                    "id": "98d09c59-6704-4019-bbc6-7ea56f22d134",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -37,8 +73,8 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "negative",
-                    "id": "30adc9e1-001c-4051-ac43-31398b9e34a1",
+                    "name": "left",
+                    "id": "623952e7-688f-4bf9-9372-3bb397204dd9",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
@@ -48,8 +84,8 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "positive",
-                    "id": "7749fd7d-f34c-432d-919a-85739d7f27bf",
+                    "name": "right",
+                    "id": "d6a9d5dd-49b3-46af-81ef-158f8cdd49d5",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
@@ -59,26 +95,59 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "One Modifier",
-                    "id": "23315adb-a1af-4918-be33-403f5152f3b9",
-                    "path": "OneModifier",
+                    "name": "",
+                    "id": "596418b8-571c-4a75-94f5-c79897898195",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Jump",
-                    "isComposite": true,
+                    "action": "Attack",
+                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "binding",
-                    "id": "fcbbe048-aed0-48e3-bcbd-bb884f4627c6",
+                    "name": "",
+                    "id": "7b960912-56a8-4d6c-b9a4-9162eac5355c",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3ffc430f-227d-4062-a609-11acdae99e14",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d1b32849-3386-4e4d-a0ba-ec4a94f61e76",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BoundMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "39549bba-883d-4e8c-a8e1-f46411a956a8",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
