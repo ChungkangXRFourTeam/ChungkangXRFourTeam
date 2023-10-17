@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using XRProject.Helper;
 
 public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IBActorLife
@@ -81,11 +82,14 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     {
         CurrentHP = MaxHp;
 
+        InputManager.ActionListener.MainGame.BoundMode.started += OnBoundMode;
+        InputManager.ActionListener.MainGame.BoundMode.canceled += ExitBoundMode;
+        
         Interaction.OnContractObject += (info) =>
         {
             if (info.TryGetBehaviour(out IBObjectInteractive interactive) &&
                 info.Transform.gameObject.CompareTag("KnockbackObject") &&
-                Input.GetMouseButton(0))
+                IsAllowedInteraction)
             {
                 EffectManager.ImmediateCommand(new EffectCommand()
                 {
@@ -155,8 +159,6 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     private void Update()
     {
         _stateExecutor.Execute();
-
-        IsAllowedInteraction = Input.GetMouseButton(0);
     }
     
     
@@ -188,4 +190,15 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             _propertiesCount.Value = 0;
         }).SetId(this);
     }
+
+    void OnBoundMode(InputAction.CallbackContext ctx)
+    {
+        IsAllowedInteraction = true;
+    }
+
+    void ExitBoundMode(InputAction.CallbackContext ctx)
+    {
+        IsAllowedInteraction = false;
+    }
+    
 }
