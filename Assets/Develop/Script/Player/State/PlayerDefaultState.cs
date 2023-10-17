@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using XRProject.Helper;
 
 public class PlayerDefaultState : BaseState
@@ -21,6 +22,9 @@ public class PlayerDefaultState : BaseState
             ;
 
         _cameraControll = GameObject.FindWithTag("VirtualCamera")?.GetComponent<CinemachineCameraControll>();
+        InputManager.ActionListener.MainGame.Grab.started += OnZoom;
+        InputManager.ActionListener.MainGame.Grab.canceled += ExitZoom;
+
     }
 
     public override void Enter(Blackboard blackboard)
@@ -42,17 +46,6 @@ public class PlayerDefaultState : BaseState
 
         se.Execute();
 
-        if (_cameraControll)
-        {
-            if (Input.GetMouseButton(1))
-            {
-                _cameraControll.SetZoomKeyState(true);
-            }
-            else
-            {
-                _cameraControll.SetZoomKeyState(false);
-            }
-        }
 
         return false;
     }
@@ -63,5 +56,17 @@ public class PlayerDefaultState : BaseState
         {
             _cameraControll.SetZoomKeyState(true);
         }
+    }
+
+    void OnZoom(InputAction.CallbackContext ctx)
+    {
+        if(_cameraControll) 
+            _cameraControll.SetZoomKeyState(true);
+    }
+
+    void ExitZoom(InputAction.CallbackContext ctx)
+    {
+        if(_cameraControll) 
+            _cameraControll.SetZoomKeyState(false);
     }
 }

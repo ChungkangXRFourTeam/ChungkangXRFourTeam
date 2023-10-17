@@ -2,20 +2,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
 public class PlayerInteractionController : MonoBehaviour
 {
     [SerializeField] private float _clickDistance;
     [SerializeField] private bool _debug;
+    private int mouse;
+    private void Awake()
+    {
+        InputManager.ActionListener.MainGame.Grab.started += OnRightClick;
+        InputManager.ActionListener.MainGame.Grab.canceled += ExitClick;
+        InputManager.ActionListener.MainGame.Attack.started += OnLeftClick;
+        InputManager.ActionListener.MainGame.Attack.canceled += ExitClick;
+        
+    }
 
     private void CheckMouseClickDetection()
     {
-        int mouse = -1;
-        if (Input.GetMouseButtonDown(0))
-            mouse = 0;
-        if (Input.GetMouseButtonDown(1))
-            mouse = 1;
         if (mouse == -1) return;
 
 
@@ -48,4 +53,20 @@ public class PlayerInteractionController : MonoBehaviour
         
         Gizmos.DrawWireSphere(transform.position, _clickDistance);
     }
+
+    void OnRightClick(InputAction.CallbackContext ctx)
+    {
+        mouse = 1;
+    }
+
+    void OnLeftClick(InputAction.CallbackContext ctx)
+    {
+        mouse = 0;
+    }
+
+    void ExitClick(InputAction.CallbackContext ctx)
+    {
+        mouse = -1;
+    }
+    
 }

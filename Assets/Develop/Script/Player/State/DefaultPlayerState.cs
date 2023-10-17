@@ -1,21 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 using XRProject.Helper;
 public class DefaultPlayerState : BaseState
 {
+    public override void Init(Blackboard blackboard)
+    {
+        InputManager.ActionListener.MainGame.Grab.started += OnGrab;
+    }
     public override void Enter(Blackboard blackboard)
     {
     }
+    
+    private StateExecutor _executor;
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            executor.SetNextState<PlayerGrabState>();
-        }
+        _executor = executor;
 
         return false;
 
+    }
+
+    void OnGrab(InputAction.CallbackContext ctx)
+    {
+        _executor.SetNextState<PlayerGrabState>();
     }
 }

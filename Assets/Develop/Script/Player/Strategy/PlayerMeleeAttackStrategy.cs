@@ -114,9 +114,6 @@ public class PlayerMeleeAttackStrategy : IStrategy
     {
         RotateHand();
         _blackboard = blackboard;
-        if (Input.GetMouseButtonDown(0) && _canAttack)
-        {
-        }
     }
 
     public void Reset()
