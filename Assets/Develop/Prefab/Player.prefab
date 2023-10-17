@@ -513,6 +513,9 @@ MonoBehaviour:
     _rigid: {fileID: 5375335031904104078}
     _effectBackTrailOffset: {x: 0, y: 0}
     _effectBackTrailScaleFactor: 3
+    dir: {x: 0, y: 0}
+    downDir: {x: 0, y: 0}
+    upDir: {x: 0, y: 0}
   _physicsStrategy:
     _rigid: {fileID: 5375335031904104078}
     _interaction: {fileID: 5145877283976636205}
@@ -703,6 +706,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1366204394345799306}
   - component: {fileID: 1651074570124759274}
+  - component: {fileID: 3997473567669655236}
   m_Layer: 0
   m_Name: Inputs
   m_TagString: Untagged
@@ -752,17 +756,45 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: ddc44cf1-104b-4ddc-a86e-220cd7576807
+    m_ActionId: b271495b-2879-4d7b-a2c9-9b1a860e75e2
     m_ActionName: MainGame/Move[/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 0429a5ae-f1d7-4ab4-87ef-481c85d7a6fd
+    m_ActionId: a55795e7-a752-4ca5-a216-706a8ce4abb7
+    m_ActionName: MainGame/Attack[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 034eef75-82e8-4172-a56d-c25be76c8f94
+    m_ActionName: MainGame/Grab[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 04b0308c-cf49-4cc1-afc9-1a98a9f519fa
     m_ActionName: MainGame/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c7e81bc4-deba-4b61-a746-0e6ede755413
+    m_ActionName: MainGame/BoundMode[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bb26fee0-8e96-48d5-b4a8-e6e4b542c690
+    m_ActionName: MainGame/Fall[/Keyboard/s]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: MainGame
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &3997473567669655236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3593518873788793651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb34e4d8f22bff41a58bb794ce7d86f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6050601476596499324
 GameObject:
   m_ObjectHideFlags: 0
