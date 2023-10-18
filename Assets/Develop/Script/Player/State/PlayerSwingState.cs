@@ -38,12 +38,25 @@ public class PlayerSwingState : BaseState
         }
         
         var dir = ((Vector2)actorTransform.position - (Vector2)transform.position).normalized;
+        var actorBoxCollider = actorTransform.GetComponent<BoxCollider2D>();
+
+        if (!actorBoxCollider) return false;
+        var colSize = new Vector2(
+            actorBoxCollider.size.x * actorTransform.lossyScale.x,
+            actorBoxCollider.size.y * actorTransform.lossyScale.y
+        );
 
         var actorPos = (dir * minmumCloseDistance) + (Vector2)transform.position;
         actorTransform.position = actorPos;
         
         var swingDir = PlayerCalculation.GetSwingDirection(Camera.main, actorTransform.position);
-        var points = PlayerCalculation.GetReflectionPoints(actorTransform.position, swingDir);
+        var points = PlayerCalculation.GetReflectionPoints(
+            actorTransform.position, 
+            swingDir,
+            colSize,
+            actorBoxCollider.offset,
+            0f
+            );
         
         lineRenderer.enabled = true;
         lineRenderer.positionCount = points.Length;

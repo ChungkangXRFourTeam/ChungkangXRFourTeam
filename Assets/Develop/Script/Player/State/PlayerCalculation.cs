@@ -52,7 +52,7 @@ public static class PlayerCalculation
         return dir;
     }
 
-    public static Vector3[] GetReflectionPoints(Vector2 start, Vector2 dir)
+    public static Vector3[] GetReflectionPoints(Vector2 start, Vector2 dir, Vector2 size, Vector2 offset, float angleZ=0f)
     {
         Vector2 currentPos = start;
         Vector2 currentDir = dir;
@@ -64,7 +64,7 @@ public static class PlayerCalculation
         while (maxIter > currentIter)
         {
             currentIter++;
-            var hit = Physics2D.BoxCast(currentPos, Vector2.one * 1.3f, 0f, currentDir, Mathf.Infinity,
+            var hit = Physics2D.BoxCast(currentPos + offset, size, angleZ, currentDir, Mathf.Infinity,
                 ~LayerMask.GetMask("Player", "Enemy", "Confiner", "Ignore Raycast", "EnemyBody"));
             if (!hit) break;
 
