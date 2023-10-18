@@ -4,30 +4,44 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using XRProject.Helper;
 
 public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IBActorLife
 {
-    [SerializeField] private PlayerMoveStrategy _moveStrategy;
-    [SerializeField] private PlayerPhysicsStrategy _physicsStrategy;
-    [SerializeField] private PlayerMeleeAttackStrategy _meleeAttackStrategy;
-    [SerializeField] private PlayerSwingAttackStrategy _swingAttackStrategy;
-    [SerializeField] private PlayerBuffStrategy _buffStrategy;
-    [SerializeField] private InteractionController _interaction;
+    [Header("don't edit this")]
+    /* components */
     [SerializeField] private PlayerFoot _foot;
     [SerializeField] private PlayerFoot _leftSide;
     [SerializeField] private PlayerFoot _rightside;
-    [SerializeField] private EActorPropertiesType _properties;
-    [SerializeField] private WrappedValue<int> _propertiesCount;
-    [SerializeField] private float _hp;
-    [SerializeField] private float _removeDelayWithProperties;
-    [SerializeField] private BuffInfo _buffInfo;
+    [SerializeField] private Transform _meleeHand;
+    [SerializeField] private LineRenderer _traceLineRenderer;
+    [SerializeField] private InteractionController _interaction;
     
+    [Header("can edit this, it is behaviour related data of player")]
+    /* datas */
+    [SerializeField] private PlayerData _playerData;
+    [SerializeField] private PlayerMoveData _moveData;
+    [SerializeField] private PlayerMeleeAttackData _meleeAttackData;
+    [SerializeField] private PlayerSwingAttackData _swingAttackData;
+    [SerializeField] private PlayerBuffData _buffData;
+
+    /* strategies */
+    private PlayerMoveStrategy _moveStrategy = new();
+    private PlayerPhysicsStrategy _physicsStrategy = new();
+    private PlayerMeleeAttackStrategy _meleeAttackStrategy = new();
+    private PlayerSwingAttackStrategy _swingAttackStrategy = new();
+    private PlayerBuffStrategy _buffStrategy = new();
     
+    /* fields */
+    private BuffInfo _buffInfo = new BuffInfo();
     private StateExecutor _stateExecutor;
     private float _currentHp;
+    private WrappedValue<int> _propertiesCount = new WrappedValue<int>(0);
     private WrappedValue<bool> _isAllowedInteraction = new(false);
-
+    private EActorPropertiesType _properties = EActorPropertiesType.None;
+    
+    /* properties */
     public InteractionController Interaction => _interaction;
     public EActorPropertiesType Properties => _properties;
 
@@ -36,15 +50,13 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
         get => _isAllowedInteraction;
         set => _isAllowedInteraction.Value = value;
     }
-    
-    public int RemainingPropertie => _propertiesCount;
-    
-    
-    public bool IsDestroyed { get; private set; }
 
-    public event Action<IBActorLife, float, float> ChangedHp;
-    public float MaxHp => _hp;
-    
+    public int RemainingPropertie => _propertiesCount;
+
+
+    public bool IsDestroyed { get; private set; }
+    public float MaxHp => _playerData.Hp;
+
     public float CurrentHP
     {
         get => _currentHp;
@@ -60,31 +72,18 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             }
         }
     }
+
+    /* events */
+    public event Action<IBActorLife, float, float> ChangedHp;
     
-
-    public void Die()
-    {
-        if (IsDestroyed) return;
-        
-        IsDestroyed = true;
-        Destroy(gameObject);
-    }
-
-    public void DoHit(BaseContractInfo caller, float damage)
-    {
-        if (caller.Transform.gameObject.CompareTag("Boss"))
-        {
-            CurrentHP -= damage;
-        }
-    }
-
+    /* unity functions */
     private void Awake()
     {
         CurrentHP = MaxHp;
 
-        InputManager.RegisterActionToMainGame("BoundMode",OnBoundMode,ActionType.Started);
-        InputManager.RegisterActionToMainGame("BoundMode",ExitBoundMode,ActionType.Canceled);
-        
+        InputManager.RegisterActionToMainGame("BoundMode", OnBoundMode, ActionType.Started);
+        InputManager.RegisterActionToMainGame("BoundMode", ExitBoundMode, ActionType.Canceled);
+
         Interaction.OnContractObject += (info) =>
         {
             if (info.TryGetBehaviour(out IBObjectInteractive interactive) &&
@@ -105,21 +104,23 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
         _foot.OnChangeIsGround += (x) => isGrounded.Value = x;
         _leftSide.OnChangeIsGround += (x) => isLeftSide.Value = x;
         _rightside.OnChangeIsGround += (x) => isRightSide.Value = x;
-        
+        Rigidbody2D rigid = GetComponent<Rigidbody2D>();
+
         // interaction initializing..
-        Interaction.SetContractInfo(ActorContractInfo.Create(transform, ()=>false)
+        Interaction.SetContractInfo(ActorContractInfo.Create(transform, () => false)
             .AddBehaivour<IBActorPhysics>(_physicsStrategy)
             .AddBehaivour<IBActorProperties>(this)
             .AddBehaivour<IBActorHit>(this)
             .AddBehaivour<IBActorLife>(this)
         );
-        
+
         // Strategy initializing..
         var strategyContainer = new StrategyContainer();
         var strategyBlackboard = new Blackboard();
-        
+
         strategyBlackboard
             .AddProperty("out_transform", transform)
+            .AddProperty("out_rigidbody", rigid)
             .AddProperty("out_interaction", _interaction)
             .AddProperty("out_remaingProperties", _propertiesCount)
             .AddProperty("out_isAllowedInteraction", _isAllowedInteraction)
@@ -127,6 +128,12 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             .AddProperty("out_isGrounded", isGrounded)
             .AddProperty("out_isLeftSide", isLeftSide)
             .AddProperty("out_isRightSide", isRightSide)
+            .AddProperty("out_moveData", _moveData)
+            .AddProperty("out_meleeAttackData", _meleeAttackData)
+            .AddProperty("out_swingAttackData", _swingAttackData)
+            .AddProperty("out_buffData", _buffData)
+            .AddProperty("out_meleeHand", _meleeHand)
+            .AddProperty("out_traceLineRenderer", _traceLineRenderer)
             ;
 
         strategyContainer
@@ -136,7 +143,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             .Add(_meleeAttackStrategy)
             .Add(_swingAttackStrategy)
             ;
-        
+
         var strategyExecutor = StrategyExecutor.Create(strategyContainer, strategyBlackboard);
 
         // FSM initializing..
@@ -147,26 +154,25 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             .AddState<PlayerDefaultState>()
             .SetInitialState<PlayerDefaultState>()
             ;
-        
+
         fsmBlackboard
             .AddProperty("out_strategyExecutor", strategyExecutor)
             ;
-        
+
         _stateExecutor = StateExecutor.Create(stateContainer, fsmBlackboard);
-        
     }
 
     private void Update()
     {
         _stateExecutor.Execute();
     }
-    
-    
+
+
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.transform.TryGetComponent<IBObjectInteractive>(out var com))
         {
-            if(com.IsSelectiveObject && !IsAllowedInteraction)
+            if (com.IsSelectiveObject && !IsAllowedInteraction)
                 _physicsStrategy.OnDetectBlock();
         }
         else
@@ -175,16 +181,34 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
         }
     }
 
+    
+    /* functions */
+    public void Die()
+    {
+        if (IsDestroyed) return;
+
+        IsDestroyed = true;
+        Destroy(gameObject);
+    }
+
+    public void DoHit(BaseContractInfo caller, float damage)
+    {
+        if (caller.Transform.gameObject.CompareTag("Boss"))
+        {
+            CurrentHP -= damage;
+        }
+    }
+
     public void SetProperties(BaseContractInfo caller, EActorPropertiesType type)
     {
-        if(type != EActorPropertiesType.None)
+        if (type != EActorPropertiesType.None)
             _propertiesCount.Value = 10;
 
         _properties = type;
-        
+
         DOTween.Kill(this, false);
         Sequence s = DOTween.Sequence();
-        s.SetDelay(_removeDelayWithProperties).OnComplete(() =>
+        s.SetDelay(_playerData.RemoveDelayWithProperties).OnComplete(() =>
         {
             _properties = EActorPropertiesType.None;
             _propertiesCount.Value = 0;
@@ -200,5 +224,4 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     {
         IsAllowedInteraction = false;
     }
-    
 }

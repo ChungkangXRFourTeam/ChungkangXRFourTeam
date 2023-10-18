@@ -7,8 +7,8 @@ using XRProject.Helper;
 [Serializable]
 public class PlayerPhysicsStrategy : IStrategy, IBActorPhysics
 {
-    [SerializeField] private Rigidbody2D _rigid;
-    [SerializeField] private InteractionController _interaction;
+    private Rigidbody2D _rigid;
+    private InteractionController _interaction;
     public bool IsSwingState
         => _executor.CurrentState is ActorSwingState;
 
@@ -20,6 +20,9 @@ public class PlayerPhysicsStrategy : IStrategy, IBActorPhysics
     
     public void Init(Blackboard sendedBlackboard)
     {
+        _rigid = sendedBlackboard.GetProperty<Rigidbody2D>("out_rigidbody");
+        _interaction = sendedBlackboard.GetProperty<InteractionController>("out_interaction");
+        
         var container = new StateContainer();
         var blackboard = new Blackboard();
 

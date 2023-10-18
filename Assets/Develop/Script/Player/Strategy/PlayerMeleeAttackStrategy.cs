@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using XRProject.Helper;
@@ -8,29 +9,25 @@ using XRProject.Helper;
 [System.Serializable]
 public class PlayerMeleeAttackStrategy : IStrategy
 {
-    [SerializeField] private Transform _hand;
-    [SerializeField] private float _distanceFromBodyforHand;
-    [SerializeField] private float _slashEffectDistanceFromThis;
-    [SerializeField] private Vector2 _slashEffectOffset;
-    [SerializeField] private Vector2 _slashEffectScale;
-    [SerializeField] private float _attackDelay = 0.5f;
-    [SerializeField] private int _attackMaxCount = 3;
-    [SerializeField] private SpriteRenderer renderer;
-
-    private Transform transform;
+    private PlayerMeleeAttackData _data;
+    private SpriteRenderer _renderer;
+    private Transform _hand;
+    private Transform _transform;
 
     public void Init(Blackboard blackboard)
     {
-        transform = blackboard.GetProperty<Transform>("out_transform");
-        renderer = transform.gameObject.GetComponent<SpriteRenderer>();
+        _transform = blackboard.GetProperty<Transform>("out_transform");
+        _hand = blackboard.GetProperty<Transform>("out_meleeHand");
+        _renderer = _transform.gameObject.GetComponent<SpriteRenderer>();
         InputManager.RegisterActionToMainGame("Attack",OnAttack,ActionType.Started);
+        _data = blackboard.GetProperty<PlayerMeleeAttackData>("out_meleeAttackData");
     }
     private void Attack(Blackboard blackboard)
     {
         var col = Physics2D.OverlapCircle(_hand.position, _hand.lossyScale.x, LayerMask.GetMask("Enemy"));
         if (!col) return;
 
-        var dir = ((Vector2)_hand.position - (Vector2)transform.position).normalized;
+        var dir = ((Vector2)_hand.position - (Vector2)_transform.position).normalized;
         
         if (
             blackboard.TryGetProperty<WrappedValue<int>>("out_remaingProperties", out var propertiesCount) &&
@@ -62,18 +59,18 @@ public class PlayerMeleeAttackStrategy : IStrategy
     private void RotateHand()
     {
         var mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        var pos = transform.position;
+        var pos = _transform.position;
         pos.z = mp.z = 0f;
         var dir = mp - pos;
         dir = Vector3.Project(dir, Vector3.right).normalized;
 
 
-        _hand.position = transform.position + dir * _distanceFromBodyforHand;
+        _hand.position = _transform.position + dir * _data.DistanceFromBodyforHand;
         if (dir.x < 0)
-            renderer.flipX = true;
+            _renderer.flipX = true;
         else
         {
-            renderer.flipX = false;
+            _renderer.flipX = false;
         }
 
 
@@ -82,24 +79,24 @@ public class PlayerMeleeAttackStrategy : IStrategy
     private void Effect(Blackboard blackboard)
     {
         var mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        var pos = transform.position;
+        var pos = _transform.position;
         pos.z = mp.z = 0f;
             
         var dir = mp - pos;
         bool flipX = dir.x > 0f ? true : false;
 
-        var scale = _slashEffectScale;
+        var scale = _data.SlashEffectScale;
         scale.x *= flipX ? -1f : 1f;
 
         var farFromBody = dir.normalized;
         farFromBody.y = 0f;
         farFromBody.z = 0f;
-        farFromBody.x *= _slashEffectDistanceFromThis;
+        farFromBody.x *= _data.SlashEffectDistanceFromThis;
             
         EffectManager.ImmediateCommand(new EffectCommand()
         {
             EffectKey = "player/swordSlash",
-            Position = transform.position + (Vector3)_slashEffectOffset + farFromBody,
+            Position = _transform.position + (Vector3)_data.SlashEffectOffset + farFromBody,
             Scale = scale,
         });
     }
@@ -127,14 +124,14 @@ public class PlayerMeleeAttackStrategy : IStrategy
         {
             _attackCount++;
 
+            Attack(_blackboard);
+            Effect(_blackboard);
             
-            if (_attackCount >= _attackMaxCount)
+            if (_attackCount >= _data.AttackMaxCount)
             {
-                Attack(_blackboard);
-                Effect(_blackboard);
                 _canAttack = false;
                 Sequence s = DOTween.Sequence();
-                s.SetDelay(_attackDelay).SetId(_sKey).OnComplete(() =>
+                s.SetDelay(_data.AttackDelay).SetId(_sKey).OnComplete(() =>
                 {
                     _canAttack = true;
                     _attackCount = 0;
