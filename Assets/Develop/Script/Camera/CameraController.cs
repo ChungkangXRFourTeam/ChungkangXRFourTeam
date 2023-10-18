@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
@@ -29,15 +31,6 @@ public class CameraController : MonoBehaviour
     private bool _isZoomKeyDown;
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            _isZoomKeyDown = true;
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            _isZoomKeyDown = false;
-        }
-
         if (!_target) return;
         
         Vector2 resultPos = Vector2.zero;
@@ -69,4 +62,5 @@ public class CameraController : MonoBehaviour
             _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _backupSize, _zoomSpeed * Time.unscaledDeltaTime);
         }
     }
+    
 }
