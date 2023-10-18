@@ -15,10 +15,10 @@ public class BuffInfo
 [System.Serializable]
 public class PlayerBuffStrategy : IStrategy
 {
-    [SerializeField] private float _flameBuffAddingDamage;
-    [SerializeField] private float _waterBuffMovementSpeedFactor;
+    private PlayerBuffData _data;
     public void Init(Blackboard blackboard)
     {
+        _data = blackboard.GetProperty<PlayerBuffData>("out_buffData");
     }
 
     public void Update(Blackboard blackboard)
@@ -40,10 +40,10 @@ public class PlayerBuffStrategy : IStrategy
             case EActorPropertiesType.None:
                 break;
             case EActorPropertiesType.Flame:
-                buffInfo.AddingDamage = _flameBuffAddingDamage;
+                buffInfo.AddingDamage = _data.FlameBuffAddingDamage;
                 break;
             case EActorPropertiesType.Water:
-                buffInfo.SpeedFactor = _waterBuffMovementSpeedFactor;
+                buffInfo.SpeedFactor = _data.WaterBuffMovementSpeedFactor;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);

@@ -10,23 +10,19 @@ using XRProject.Helper;
 [Serializable]
 public class PlayerMoveStrategy : IStrategy
 {
-    [SerializeField] private float _movementSpeed;
-    [SerializeField] private float _jumpForce;
-    [SerializeField] private float _downForce;
-    [SerializeField] private Rigidbody2D _rigid;
-    [SerializeField] private Vector2 _effectBackTrailOffset;
-    [SerializeField] private float _effectBackTrailScaleFactor;
-    [SerializeField] private Vector2 dir;
-    [SerializeField] private Vector2 downDir;
-    [SerializeField] private Vector2 upDir;
-    
+    private PlayerMoveData _data;
+    private Vector2 dir;
+    private Vector2 downDir;
+    private Vector2 upDir;
     private bool _inputLock;
     private EffectItem _effect;
+    private Rigidbody2D _rigid;
+    
     private Vector2 GetMovingVector()
     {
         if (_inputLock) return Vector2.zero;
 
-        return dir * _movementSpeed;
+        return dir * _data.MovementSpeed;
     }
     
     
@@ -44,6 +40,8 @@ public class PlayerMoveStrategy : IStrategy
         InputManager.RegisterActionToMainGame("Jump",OnJump,ActionType.Started);
         InputManager.RegisterActionToMainGame("Fall",OnFall,ActionType.Started);
 
+        _data = blackboard.GetProperty<PlayerMoveData>("out_moveData");
+        _rigid = blackboard.GetProperty<Rigidbody2D>("out_rigidbody");
     }
 
     private Vector2 _prevPosition;
@@ -56,8 +54,8 @@ public class PlayerMoveStrategy : IStrategy
         blackboard.GetUnWrappedProperty("out_isRightSide", out bool isRightSide);
 
         var movingVector = GetMovingVector() * Mathf.Max(info.SpeedFactor, 1f);
-        var jumpingVector = upDir * _jumpForce;
-        var fallingVector = downDir * _downForce;
+        var jumpingVector = upDir * _data.JumpForce;
+        var fallingVector = downDir * _data.DownForce;
 
         if (!isGrounded)
             jumpingVector = Vector2.zero;
@@ -109,7 +107,7 @@ public class PlayerMoveStrategy : IStrategy
                 _effect.ApplyCommand(new EffectCommand()
                 {
                     Position = transform.position,
-                    Scale = Vector3.one * _effectBackTrailScaleFactor,
+                    Scale = Vector3.one * _data.EffectBackTrailScaleFactor,
                     Rotation = Quaternion.Euler(0f, 0f, 180 + angle)
                 });
             }
