@@ -12,10 +12,10 @@ public class PlayerInteractionController : MonoBehaviour
     private int mouse;
     private void Awake()
     {
-        InputManager.ActionListener.MainGame.Grab.started += OnRightClick;
-        InputManager.ActionListener.MainGame.Grab.canceled += ExitClick;
-        InputManager.ActionListener.MainGame.Attack.started += OnLeftClick;
-        InputManager.ActionListener.MainGame.Attack.canceled += ExitClick;
+        InputManager.RegisterActionToMainGame("Grab",OnRightClick,ActionType.Started);
+        InputManager.RegisterActionToMainGame("Grab",ExitClick,ActionType.Canceled);
+        InputManager.RegisterActionToMainGame("Attack",OnLeftClick,ActionType.Started);
+        InputManager.RegisterActionToMainGame("Attack",ExitClick,ActionType.Canceled);
         
     }
 

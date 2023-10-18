@@ -172,6 +172,12 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""TalkEvent"",
+            ""id"": ""7709b953-2828-4452-91cb-8f807ff6a219"",
+            ""actions"": [],
+            ""bindings"": []
         }
     ],
     ""controlSchemes"": []
@@ -184,6 +190,8 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         m_MainGame_Jump = m_MainGame.FindAction("Jump", throwIfNotFound: true);
         m_MainGame_BoundMode = m_MainGame.FindAction("BoundMode", throwIfNotFound: true);
         m_MainGame_Fall = m_MainGame.FindAction("Fall", throwIfNotFound: true);
+        // TalkEvent
+        m_TalkEvent = asset.FindActionMap("TalkEvent", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -327,6 +335,44 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         }
     }
     public MainGameActions @MainGame => new MainGameActions(this);
+
+    // TalkEvent
+    private readonly InputActionMap m_TalkEvent;
+    private List<ITalkEventActions> m_TalkEventActionsCallbackInterfaces = new List<ITalkEventActions>();
+    public struct TalkEventActions
+    {
+        private @InputActionListener m_Wrapper;
+        public TalkEventActions(@InputActionListener wrapper) { m_Wrapper = wrapper; }
+        public InputActionMap Get() { return m_Wrapper.m_TalkEvent; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TalkEventActions set) { return set.Get(); }
+        public void AddCallbacks(ITalkEventActions instance)
+        {
+            if (instance == null || m_Wrapper.m_TalkEventActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_TalkEventActionsCallbackInterfaces.Add(instance);
+        }
+
+        private void UnregisterCallbacks(ITalkEventActions instance)
+        {
+        }
+
+        public void RemoveCallbacks(ITalkEventActions instance)
+        {
+            if (m_Wrapper.m_TalkEventActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ITalkEventActions instance)
+        {
+            foreach (var item in m_Wrapper.m_TalkEventActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_TalkEventActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public TalkEventActions @TalkEvent => new TalkEventActions(this);
     public interface IMainGameActions
     {
         void OnMove(InputAction.CallbackContext context);
@@ -335,5 +381,8 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnBoundMode(InputAction.CallbackContext context);
         void OnFall(InputAction.CallbackContext context);
+    }
+    public interface ITalkEventActions
+    {
     }
 }

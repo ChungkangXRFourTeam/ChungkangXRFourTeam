@@ -8,7 +8,7 @@ public class DefaultPlayerState : BaseState
 {
     public override void Init(Blackboard blackboard)
     {
-        InputManager.ActionListener.MainGame.Grab.started += OnGrab;
+        InputManager.RegisterActionToMainGame("Grab", OnGrab, ActionType.Started);
     }
     public override void Enter(Blackboard blackboard)
     {

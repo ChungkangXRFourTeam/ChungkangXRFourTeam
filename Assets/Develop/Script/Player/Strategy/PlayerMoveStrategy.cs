@@ -40,9 +40,9 @@ public class PlayerMoveStrategy : IStrategy
 
         _prevPosition = transform.position;
 
-        InputManager.ActionListener.MainGame.Move.performed += OnMove;
-        InputManager.ActionListener.MainGame.Jump.started += OnJump;
-        InputManager.ActionListener.MainGame.Fall.started += OnFall;
+        InputManager.RegisterActionToMainGame("Move",OnMove,ActionType.Performed);
+        InputManager.RegisterActionToMainGame("Jump",OnJump,ActionType.Started);
+        InputManager.RegisterActionToMainGame("Fall",OnFall,ActionType.Started);
 
     }
 

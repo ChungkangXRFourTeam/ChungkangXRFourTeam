@@ -1,11 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
+public enum ActionType
+{
+    Started,
+    Performed,
+    Canceled
+}
 
 public class InputManager : MonoBehaviour
 {
     private static InputManager instance = null;
     private static InputActionListener actionListener = null;
+    private static InputActionMap _mainGameActionMap = null;
+    
     
     void Awake()
     {
@@ -13,19 +25,30 @@ public class InputManager : MonoBehaviour
         {
             instance = this;
             actionListener = new InputActionListener();
-            
-            actionListener.MainGame.Move.Enable();
-            actionListener.MainGame.Attack.Enable();
-            actionListener.MainGame.Grab.Enable();
-            actionListener.MainGame.Jump.Enable();
-            actionListener.MainGame.BoundMode.Enable();
-            actionListener.MainGame.Fall.Enable();
+            _mainGameActionMap = actionListener.asset.FindActionMap("MainGame");
             DontDestroyOnLoad(this.gameObject);
         }
         else
         {
             Destroy(this.gameObject);
         }
+
+    }
+
+    private void Start()
+    {
+        InitMainGameAction();
+    }
+
+    private void InitMainGameAction()
+    {
+        IEnumerator<InputAction> actions = _mainGameActionMap.GetEnumerator();
+        while (actions.MoveNext())
+        {
+                actions.Current.Enable();
+            
+        }
+            
     }
     
     public static InputManager Instance
@@ -40,7 +63,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public static InputActionListener ActionListener
+    public InputActionListener ActionListener
     {
         get
         {
@@ -48,5 +71,29 @@ public class InputManager : MonoBehaviour
                 return actionListener;
             return null;
         }
+    }
+
+    private static InputAction GetMainGameAction(string action)
+    {
+        return _mainGameActionMap.FindAction(action, true);
+    }
+
+    public static void RegisterActionToMainGame(string actionName,Action<InputAction.CallbackContext> callback, ActionType actionType)
+    {
+        InputAction foundAction = GetMainGameAction(actionName);
+        
+        switch (actionType)
+        {
+            case ActionType.Started:
+                foundAction.started += callback;
+                break;
+            case ActionType.Performed:
+                foundAction.performed += callback;
+                break;
+            case ActionType.Canceled:
+                foundAction.canceled += callback;
+                break;
+        }
+
     }
 }

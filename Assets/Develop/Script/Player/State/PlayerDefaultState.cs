@@ -22,8 +22,8 @@ public class PlayerDefaultState : BaseState
             ;
 
         _cameraControll = GameObject.FindWithTag("VirtualCamera")?.GetComponent<CinemachineCameraControll>();
-        InputManager.ActionListener.MainGame.Grab.started += OnZoom;
-        InputManager.ActionListener.MainGame.Grab.canceled += ExitZoom;
+        InputManager.RegisterActionToMainGame("Grab", OnZoom, ActionType.Started);
+        InputManager.RegisterActionToMainGame("Grab", ExitZoom, ActionType.Canceled);
 
     }
 

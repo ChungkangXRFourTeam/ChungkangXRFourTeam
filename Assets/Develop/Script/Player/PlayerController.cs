@@ -82,8 +82,8 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     {
         CurrentHP = MaxHp;
 
-        InputManager.ActionListener.MainGame.BoundMode.started += OnBoundMode;
-        InputManager.ActionListener.MainGame.BoundMode.canceled += ExitBoundMode;
+        InputManager.RegisterActionToMainGame("BoundMode",OnBoundMode,ActionType.Started);
+        InputManager.RegisterActionToMainGame("BoundMode",ExitBoundMode,ActionType.Canceled);
         
         Interaction.OnContractObject += (info) =>
         {

@@ -23,7 +23,7 @@ public class PlayerMeleeAttackStrategy : IStrategy
     {
         transform = blackboard.GetProperty<Transform>("out_transform");
         renderer = transform.gameObject.GetComponent<SpriteRenderer>();
-        InputManager.ActionListener.MainGame.Attack.started += OnAttack;
+        InputManager.RegisterActionToMainGame("Attack",OnAttack,ActionType.Started);
     }
     private void Attack(Blackboard blackboard)
     {
