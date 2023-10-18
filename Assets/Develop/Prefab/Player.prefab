@@ -506,50 +506,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eff4987cc63fa46cd83ad99a05fd8834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveStrategy:
-    _movementSpeed: 15
-    _jumpForce: 1500
-    _downForce: 3000
-    _rigid: {fileID: 5375335031904104078}
-    _effectBackTrailOffset: {x: 0, y: 0}
-    _effectBackTrailScaleFactor: 3
-    dir: {x: 0, y: 0}
-    downDir: {x: 0, y: 0}
-    upDir: {x: 0, y: 0}
-  _physicsStrategy:
-    _rigid: {fileID: 5375335031904104078}
-    _interaction: {fileID: 5145877283976636205}
-  _meleeAttackStrategy:
-    _hand: {fileID: 3108509267361451634}
-    _distanceFromBodyforHand: 2
-    _slashEffectDistanceFromThis: 1.3
-    _slashEffectOffset: {x: 0, y: -1.5}
-    _slashEffectScale: {x: 0.3, y: 0.3}
-    _attackDelay: 0.5
-    _attackMaxCount: 3
-    renderer: {fileID: 0}
-  _swingAttackStrategy:
-    _lineRenderer: {fileID: 2891379630436183497}
-    _swingForce:
-      _value: 3000
-    _minmumCloseDistance:
-      _value: 1
-    _timeScale:
-      _value: 0.15
-    _grabDistance:
-      _value: 5
-  _buffStrategy:
-    _flameBuffAddingDamage: 0
-    _waterBuffMovementSpeedFactor: 0
-  _interaction: {fileID: 5145877283976636205}
   _foot: {fileID: 3007115574203045399}
   _leftSide: {fileID: 8908867122081145259}
   _rightside: {fileID: 6125860952178547403}
-  _properties: 0
-  _propertiesCount:
-    _value: 0
-  _hp: 10
-  _removeDelayWithProperties: 30
+  _meleeHand: {fileID: 3108509267361451634}
+  _traceLineRenderer: {fileID: 2891379630436183497}
+  _interaction: {fileID: 5145877283976636205}
+  _playerData: {fileID: 11400000, guid: 9149e9dc172c01541bc512ec975e788a, type: 2}
+  _moveData: {fileID: 11400000, guid: df434e0ac0c86fd43ab7b5db02f275ef, type: 2}
+  _meleeAttackData: {fileID: 11400000, guid: dbf9b6fbb8e79f4429c8545ff7e1bf56, type: 2}
+  _swingAttackData: {fileID: 11400000, guid: a475c00bef425864ebc34ae1e810519c, type: 2}
+  _buffData: {fileID: 11400000, guid: db0729bd3a2cf834bb9ba63fcb0a0a08, type: 2}
 --- !u!70 &7575043131559424839
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
