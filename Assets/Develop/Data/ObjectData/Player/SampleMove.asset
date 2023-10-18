@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15b6bc1047338f348acffa481e82c507, type: 3}
   m_Name: SampleMove
   m_EditorClassIdentifier: 
-  _movementSpeed: 0
-  _jumpForce: 0
-  _downForce: 0
-  _rigid: {fileID: 0}
+  _movementSpeed: 15
+  _jumpForce: 1500
+  _downForce: 3000
   _effectBackTrailOffset: {x: 0, y: 0}
-  _effectBackTrailScaleFactor: 0
+  _effectBackTrailScaleFactor: 3
