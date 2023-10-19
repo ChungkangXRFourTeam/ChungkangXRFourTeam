@@ -5,9 +5,10 @@ using DG.Tweening;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+using XRProject.Helper;
 using Random = UnityEngine.Random;
 
-public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, IBActorThrowable
+public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, IBActorThrowable
 {
     [SerializeField] private Color _flameColor;
     [SerializeField] private Color _waterColor;
@@ -16,6 +17,8 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
     [SerializeField] private float _speed;
     [SerializeField] private Collider2D _body;
 
+    private ActorPhysicsStrategy _physicsStrategy = new();
+    
     public event System.Action<IBActorLife, float, float> ChangedHp;
     public float MaxHp => _hp;
     private float _currentHp;
@@ -64,6 +67,14 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
         }
     }
 
+    [SerializeField] private Rigidbody2D _rigid;
+    public Rigidbody2D Rigid => _rigid;
+    [SerializeField] private InteractionController _interaction;
+
+    public InteractionController Interaction => _interaction;
+
+    private StateExecutor _executor;
+    
     public void SetProperties(BaseContractInfo caller, EActorPropertiesType type)
     {
         Properties = type;
@@ -77,10 +88,45 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
 
     private void Awake()
     {
-        LateInit();
+        
+        // Strategy initializing..
+        var strategyContainer = new StrategyContainer();
+        var strategyBlackboard = new Blackboard();
+
+        strategyBlackboard
+            .AddProperty("out_transform", transform)
+            .AddProperty("out_rigidbody", Rigid)
+            .AddProperty("out_interaction", Interaction)
+            .AddProperty("out_isAllowedInteraction", new WrappedValue<bool>(true))
+            ;
+
+        strategyContainer
+            .Add(_physicsStrategy)
+            .Add(new EnemyPropagationStrategy())
+            ;
+        var strategyExecutor = StrategyExecutor.Create(strategyContainer, strategyBlackboard);
+        
+        // FSM 셋팅
+        Blackboard blackboard = new Blackboard();
+        StateContainer container = new StateContainer();
+
+        container
+            .AddState<EnemyDefaultState>()
+            .SetInitialState<EnemyDefaultState>()
+            ;
+
+        blackboard
+            .AddProperty("out_transform", transform)
+            .AddProperty("out_strategyExecutor", strategyExecutor)
+            .AddProperty("out_interaction", Interaction)
+            ;
+
+        _executor = StateExecutor.Create(container, blackboard);
+        
+        
         Interaction.SetContractInfo(
             ActorContractInfo.Create(transform, ()=>_isDestroyed)
-                .AddBehaivour<IBActorPhysics>(this)
+                .AddBehaivour<IBActorPhysics>(_physicsStrategy)
                 .AddBehaivour<IBActorLife>(this)
                 .AddBehaivour<IBActorHit>(this)
                 .AddBehaivour<IBActorProperties>(this)
@@ -114,10 +160,12 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
     private Vector2 _rightPoint;
     private Vector2 TargetPoint => _goLeft ? _leftPoint : _rightPoint;
     private bool _goLeft;
+    
+    private bool IsSwingState => _physicsStrategy.IsSwingState;
 
     private void Update()
     {
-        ActorUpdate();
+        _executor.Execute();
         
         _body.isTrigger = !IsSwingState;
         // 중간시연용 코드
@@ -158,8 +206,8 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
         
         if (info.TryGetBehaviour(out IBActorPhysics physics))
         {
-            OnDetectBlock();
-            OnDetectOtherActor(physics);
+            _physicsStrategy.OnDetectBlock();
+            _physicsStrategy.OnDetectOtherActor(physics);
         }
         
         float damage = 1f;
@@ -193,19 +241,12 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
             });
         }
     }
-
-    [CanBeNull]
-    public override Transform GetTransformOrNull()
-    {
-        if (_isDestroyed) return null;
-        return transform;
-    }
     
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Wall"))
         {
-            OnDetectBlock();
+            _physicsStrategy.OnDetectBlock();
         }
     }
 

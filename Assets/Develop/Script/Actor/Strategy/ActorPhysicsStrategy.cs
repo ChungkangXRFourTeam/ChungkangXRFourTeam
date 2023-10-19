@@ -5,7 +5,7 @@ using UnityEngine;
 using XRProject.Helper;
 
 [Serializable]
-public class PlayerPhysicsStrategy : IStrategy, IBActorPhysics
+public class ActorPhysicsStrategy : IStrategy, IBActorPhysics
 {
     private Rigidbody2D _rigid;
     private InteractionController _interaction;

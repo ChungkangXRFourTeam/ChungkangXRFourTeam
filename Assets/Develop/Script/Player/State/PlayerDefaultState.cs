@@ -15,7 +15,7 @@ public class PlayerDefaultState : BaseState
 
         se.Container
             .SetActive<PlayerMoveStrategy>(true)
-            .SetActive<PlayerPhysicsStrategy>(true)
+            .SetActive<ActorPhysicsStrategy>(true)
             .SetActive<PlayerMeleeAttackStrategy>(true)
             .SetActive<PlayerSwingAttackStrategy>(true)
             .SetActive<PlayerBuffStrategy>(true)
@@ -30,7 +30,7 @@ public class PlayerDefaultState : BaseState
 
         se.Container
             .SetActive<PlayerMoveStrategy>(true)
-            .SetActive<PlayerPhysicsStrategy>(true)
+            .SetActive<ActorPhysicsStrategy>(true)
             .SetActive<PlayerMeleeAttackStrategy>(true)
             .SetActive<PlayerSwingAttackStrategy>(true)
             .SetActive<PlayerBuffStrategy>(true)
