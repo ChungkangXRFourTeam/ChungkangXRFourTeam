@@ -11,71 +11,17 @@ public class PlayerMeleeAttackStrategy : IStrategy
 {
     private PlayerMeleeAttackData _data;
     private SpriteRenderer _renderer;
-    private Transform _hand;
     private Transform _transform;
+
+    private bool _isAttackPressed;
 
     public void Init(Blackboard blackboard)
     {
         _transform = blackboard.GetProperty<Transform>("out_transform");
-        _hand = blackboard.GetProperty<Transform>("out_meleeHand");
         _renderer = _transform.gameObject.GetComponent<SpriteRenderer>();
-        InputManager.RegisterActionToMainGame("Attack",OnAttack,ActionType.Started);
+        InputManager.RegisterActionToMainGame("Attack",x=>_isAttackPressed = true,ActionType.Started);
         _data = blackboard.GetProperty<PlayerMeleeAttackData>("out_meleeAttackData");
     }
-    private void Attack(Blackboard blackboard)
-    {
-        var col = Physics2D.OverlapCircle(_hand.position, _hand.lossyScale.x, LayerMask.GetMask("Enemy"));
-        if (!col) return;
-
-        var dir = ((Vector2)_hand.position - (Vector2)_transform.position).normalized;
-        
-        if (
-            blackboard.TryGetProperty<WrappedValue<int>>("out_remaingProperties", out var propertiesCount) &&
-            blackboard.TryGetProperty<InteractionController>("out_interaction", out var myInteraction) &&
-            myInteraction.TryGetContractInfo(out ActorContractInfo myInfo) &&
-            myInfo.TryGetBehaviour(out IBActorProperties myProperties) &&
-            col.TryGetComponent(out InteractionController com) &&
-            com.TryGetContractInfo(out ActorContractInfo info) && 
-            info.TryGetBehaviour(out IBActorHit hit) &&
-            info.TryGetBehaviour(out IBActorProperties properties))
-        {
-            blackboard.GetProperty("out_buffInfo", out BuffInfo buffInfo);
-            float addingDamage = buffInfo.AddingDamage;
-            
-            if (propertiesCount > 0)
-            {
-                propertiesCount.Value -= 1;
-                float damage = 1f * (properties.Properties == myProperties.Properties ? 1f : 2f) + addingDamage;
-                hit.DoHit(myInteraction.ContractInfo, damage);
-            }
-            else
-            {
-                hit.DoHit(myInteraction.ContractInfo, 0.5f + addingDamage);
-            }
-        }
-
-    }
-
-    private void RotateHand()
-    {
-        var mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        var pos = _transform.position;
-        pos.z = mp.z = 0f;
-        var dir = mp - pos;
-        dir = Vector3.Project(dir, Vector3.right).normalized;
-
-
-        _hand.position = _transform.position + dir * _data.DistanceFromBodyforHand;
-        if (dir.x < 0)
-            _renderer.flipX = true;
-        else
-        {
-            _renderer.flipX = false;
-        }
-
-
-    }
-
     private void Effect(Blackboard blackboard)
     {
         var mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -98,7 +44,41 @@ public class PlayerMeleeAttackStrategy : IStrategy
             EffectKey = "player/swordSlash",
             Position = _transform.position + (Vector3)_data.SlashEffectOffset + farFromBody,
             Scale = scale,
+            OnContractActor = (x, y)=> OnEffectHit(x, blackboard, y),
+            OnBeginCallback = x =>
+            {
+                DOTween.Sequence()
+                    .SetDelay(Time.deltaTime * 10f)
+                    .SetId(_sKey)
+                    .OnComplete(() => x.Interaction.IsEnabled = false);
+            }
         });
+    }
+
+    private void OnEffectHit(EffectItem item, Blackboard blackboard, ActorContractInfo info)
+    {
+        if (
+            blackboard.TryGetProperty<WrappedValue<int>>("out_remaingProperties", out var propertiesCount) &&
+            blackboard.TryGetProperty<InteractionController>("out_interaction", out var myInteraction) &&
+            myInteraction.TryGetContractInfo(out ActorContractInfo myInfo) &&
+            myInfo.TryGetBehaviour(out IBActorProperties myProperties) &&
+            info.TryGetBehaviour(out IBActorHit hit) &&
+            info.TryGetBehaviour(out IBActorProperties properties))
+        {
+            blackboard.GetProperty("out_buffInfo", out BuffInfo buffInfo);
+            float addingDamage = buffInfo.AddingDamage;
+            
+            if (propertiesCount > 0)
+            {
+                propertiesCount.Value -= 1;
+                float damage = 1f * (properties.Properties == myProperties.Properties ? 1f : 2f) + addingDamage;
+                hit.DoHit(myInteraction.ContractInfo, damage);
+            }
+            else
+            {
+                hit.DoHit(myInteraction.ContractInfo, 0.5f + addingDamage);
+            }
+        }
     }
 
     private object _sKey = new();
@@ -109,22 +89,24 @@ public class PlayerMeleeAttackStrategy : IStrategy
     
     public void Update(Blackboard blackboard)
     {
-        RotateHand();
         _blackboard = blackboard;
+        
+        if(_isAttackPressed)
+            OnAttack();
+
+        _isAttackPressed = false;
     }
 
     public void Reset()
     {
-        
     }
 
-    void OnAttack(InputAction.CallbackContext ctx)
+    void OnAttack()
     {
         if (_canAttack)
         {
             _attackCount++;
 
-            Attack(_blackboard);
             Effect(_blackboard);
             
             if (_attackCount >= _data.AttackMaxCount)
