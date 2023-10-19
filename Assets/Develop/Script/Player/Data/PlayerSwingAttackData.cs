@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using XRProject.Helper;
 
 [CreateAssetMenu(menuName="XR/Player/PlayerSwingAttack", fileName="PlayerSwingAttackData ", order = 3)]
 public class PlayerSwingAttackData : ScriptableObject
