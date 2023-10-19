@@ -51,7 +51,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                     ""id"": ""034eef75-82e8-4172-a56d-c25be76c8f94"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -80,6 +80,15 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Swing"",
+                    ""type"": ""Button"",
+                    ""id"": ""f37f6d9d-e07f-4311-b90e-826b3dbc6738"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -170,6 +179,17 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                     ""action"": ""Fall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b40c7c11-c99b-4fb2-8942-82b004fb0f82"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swing"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -190,6 +210,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         m_MainGame_Jump = m_MainGame.FindAction("Jump", throwIfNotFound: true);
         m_MainGame_BoundMode = m_MainGame.FindAction("BoundMode", throwIfNotFound: true);
         m_MainGame_Fall = m_MainGame.FindAction("Fall", throwIfNotFound: true);
+        m_MainGame_Swing = m_MainGame.FindAction("Swing", throwIfNotFound: true);
         // TalkEvent
         m_TalkEvent = asset.FindActionMap("TalkEvent", throwIfNotFound: true);
     }
@@ -259,6 +280,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
     private readonly InputAction m_MainGame_Jump;
     private readonly InputAction m_MainGame_BoundMode;
     private readonly InputAction m_MainGame_Fall;
+    private readonly InputAction m_MainGame_Swing;
     public struct MainGameActions
     {
         private @InputActionListener m_Wrapper;
@@ -269,6 +291,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_MainGame_Jump;
         public InputAction @BoundMode => m_Wrapper.m_MainGame_BoundMode;
         public InputAction @Fall => m_Wrapper.m_MainGame_Fall;
+        public InputAction @Swing => m_Wrapper.m_MainGame_Swing;
         public InputActionMap Get() { return m_Wrapper.m_MainGame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -296,6 +319,9 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
             @Fall.started += instance.OnFall;
             @Fall.performed += instance.OnFall;
             @Fall.canceled += instance.OnFall;
+            @Swing.started += instance.OnSwing;
+            @Swing.performed += instance.OnSwing;
+            @Swing.canceled += instance.OnSwing;
         }
 
         private void UnregisterCallbacks(IMainGameActions instance)
@@ -318,6 +344,9 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
             @Fall.started -= instance.OnFall;
             @Fall.performed -= instance.OnFall;
             @Fall.canceled -= instance.OnFall;
+            @Swing.started -= instance.OnSwing;
+            @Swing.performed -= instance.OnSwing;
+            @Swing.canceled -= instance.OnSwing;
         }
 
         public void RemoveCallbacks(IMainGameActions instance)
@@ -381,6 +410,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnBoundMode(InputAction.CallbackContext context);
         void OnFall(InputAction.CallbackContext context);
+        void OnSwing(InputAction.CallbackContext context);
     }
     public interface ITalkEventActions
     {

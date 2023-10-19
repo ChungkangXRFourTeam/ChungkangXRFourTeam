@@ -43,7 +43,7 @@ public static class PlayerCalculation
     public static Vector2 GetSwingDirection(Camera  camera, Vector2 actorPosition)
     {
         var ray = camera.ScreenPointToRay(Input.mousePosition);
-        Plane p = new Plane(-Vector3.forward, Vector3.forward * -1f);
+        Plane p = new Plane(-Vector3.forward, Vector3.zero);
 
         if (!p.Raycast(ray, out var enter))
             throw new System.Exception();
@@ -54,18 +54,33 @@ public static class PlayerCalculation
 
     public static Vector3[] GetReflectionPoints(Vector2 start, Vector2 dir, Vector2 size, Vector2 offset, float angleZ=0f)
     {
-        Vector2 currentPos = start;
+        Vector2 currentPos = start + offset;
         Vector2 currentDir = dir;
 
         List<Vector3> points = new List<Vector3>(10);
         points.Add(currentPos);
         int maxIter = 30;
         int currentIter = 0;
+        GameObject prevCol = null;
         while (maxIter > currentIter)
         {
             currentIter++;
-            var hit = Physics2D.BoxCast(currentPos + offset, size, angleZ, currentDir, Mathf.Infinity,
+            var hits = Physics2D.BoxCastAll(currentPos, size, angleZ, currentDir, Mathf.Infinity,
                 ~LayerMask.GetMask("Player", "Enemy", "Confiner", "Ignore Raycast", "EnemyBody"));
+            if (hits.Length == 0) break;
+
+            RaycastHit2D hit = new RaycastHit2D();
+            foreach (var item in hits)
+            {
+                if (item.collider.gameObject != prevCol)
+                {
+                    prevCol = item.collider.gameObject;
+                    hit = item;
+                    break;
+                }
+                    
+            }
+            
             if (!hit) break;
 
             var com = hit.collider.GetComponent<KnockbackObject>();
@@ -76,8 +91,8 @@ public static class PlayerCalculation
             }
 
             currentDir = com.ReflecDirection;
-            currentPos = hit.centroid + com.ReflecDirection * 0.01f;
-            points.Add(hit.point + com.ReflecDirection * 0.01f);
+            currentPos = hit.centroid;
+            points.Add(hit.point);
         }
 
         return points.ToArray();

@@ -73,7 +73,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private static InputAction GetMainGameAction(string action)
+    public static InputAction GetMainGameAction(string action)
     {
         return _mainGameActionMap.FindAction(action, true);
     }
@@ -92,6 +92,24 @@ public class InputManager : MonoBehaviour
                 break;
             case ActionType.Canceled:
                 foundAction.canceled += callback;
+                break;
+        }
+
+    }
+    public static void UnRegisterActionToMainGame(string actionName, Action<InputAction.CallbackContext> callback, ActionType actionType)
+    {
+        InputAction foundAction = GetMainGameAction(actionName);
+        
+        switch (actionType)
+        {
+            case ActionType.Started:
+                foundAction.started -= callback;
+                break;
+            case ActionType.Performed:
+                foundAction.performed -= callback;
+                break;
+            case ActionType.Canceled:
+                foundAction.canceled -= callback;
                 break;
         }
 

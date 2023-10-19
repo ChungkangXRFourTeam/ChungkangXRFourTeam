@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using XRProject.Helper;
 
 public class PlayerSwingState : BaseState
@@ -18,8 +19,15 @@ public class PlayerSwingState : BaseState
         Time.timeScale = timeScale;
         Time.fixedDeltaTime = Time.timeScale * 0.016f;
         
+        
     }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
+    {
+        bool rtv = Swing(blackboard, executor);
+        return rtv;
+    }
+
+    private bool Swing(Blackboard blackboard, StateExecutor executor)
     {
         blackboard.GetPropertyOrNull<IBActorPhysics>("in_currentActor_physics", out var currentActorPhysics);
 
@@ -56,16 +64,15 @@ public class PlayerSwingState : BaseState
             colSize,
             actorBoxCollider.offset,
             0f
-            );
+        );
         
         lineRenderer.enabled = true;
         lineRenderer.positionCount = points.Length;
         lineRenderer.SetPositions(points);
 
-        if (!Input.GetMouseButtonDown(0)) return false;
+        if (!InputManager.GetMainGameAction("Swing").triggered) return false;
         blackboard.SetWrappedProperty("in_swingDir", swingDir);
         executor.SetNextState<PlayerShootState>();
-
         return false;
     }
     

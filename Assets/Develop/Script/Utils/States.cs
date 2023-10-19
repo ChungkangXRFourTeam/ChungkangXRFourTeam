@@ -378,7 +378,9 @@ namespace XRProject.Helper
                     Debug.Log(_currentState.GetType().Name);
                 loop = _currentState.Update(Blackboard, this);
 
+                names.Add(_currentState.GetType().Name);
                 if (_nextState == null) break;
+                _currentState.Exit(Blackboard);
                 
                 var list = Blackboard.GetAllValue();
                 foreach (var item in list)
@@ -388,10 +390,7 @@ namespace XRProject.Helper
                         wtv.Value = false;
                     }
                 }
-                
-                names.Add(_currentState.GetType().Name);
 
-                _currentState.Exit(Blackboard);
                 _currentState = _nextState;
                 _nextState = null;
                 _currentState.Enter(Blackboard);

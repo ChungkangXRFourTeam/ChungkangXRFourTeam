@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using XRProject.Helper;
 
-public class PlayerShootState : BaseState
+public class 
+    PlayerShootState : BaseState
 {
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
@@ -17,7 +18,6 @@ public class PlayerShootState : BaseState
         lineRenderer.positionCount = 0;
         
         Time.timeScale = 1f;
-        Time.fixedDeltaTime = Time.timeScale * 0.016f;
         
         if(currentActorPhysics is not null)
             currentActorPhysics.AddKnockback(swingDir * swingForce);

@@ -22,9 +22,6 @@ public class PlayerDefaultState : BaseState
             ;
 
         _cameraControll = GameObject.FindWithTag("VirtualCamera")?.GetComponent<CinemachineCameraControll>();
-        InputManager.RegisterActionToMainGame("Grab", OnZoom, ActionType.Started);
-        InputManager.RegisterActionToMainGame("Grab", ExitZoom, ActionType.Canceled);
-
     }
 
     public override void Enter(Blackboard blackboard)
@@ -46,27 +43,9 @@ public class PlayerDefaultState : BaseState
 
         se.Execute();
 
+        if(_cameraControll) 
+            _cameraControll.SetZoomKeyState(InputManager.GetMainGameAction("Grab").IsPressed());
 
         return false;
-    }
-
-    public override void Exit(Blackboard blackboard)
-    {
-        if (_cameraControll)
-        {
-            _cameraControll.SetZoomKeyState(true);
-        }
-    }
-
-    void OnZoom(InputAction.CallbackContext ctx)
-    {
-        if(_cameraControll) 
-            _cameraControll.SetZoomKeyState(true);
-    }
-
-    void ExitZoom(InputAction.CallbackContext ctx)
-    {
-        if(_cameraControll) 
-            _cameraControll.SetZoomKeyState(false);
     }
 }

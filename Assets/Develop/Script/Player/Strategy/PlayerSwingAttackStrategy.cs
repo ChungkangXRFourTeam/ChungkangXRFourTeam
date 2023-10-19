@@ -37,6 +37,7 @@ public class PlayerSwingAttackStrategy : IStrategy
             .AddProperty("out_lineRenderer", _lineRenderer)
             ;
         
+        
         _executor = StateExecutor.Create(container, blackboard);
     }
 

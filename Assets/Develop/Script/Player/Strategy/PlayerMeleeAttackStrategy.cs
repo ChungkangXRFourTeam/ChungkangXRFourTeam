@@ -19,7 +19,7 @@ public class PlayerMeleeAttackStrategy : IStrategy
     {
         _transform = blackboard.GetProperty<Transform>("out_transform");
         _renderer = _transform.gameObject.GetComponent<SpriteRenderer>();
-        InputManager.RegisterActionToMainGame("Attack",x=>_isAttackPressed = true,ActionType.Started);
+        InputManager.RegisterActionToMainGame("Attack",OnKeyCallback,ActionType.Started);
         _data = blackboard.GetProperty<PlayerMeleeAttackData>("out_meleeAttackData");
     }
     private void Effect(Blackboard blackboard)
@@ -99,6 +99,12 @@ public class PlayerMeleeAttackStrategy : IStrategy
 
     public void Reset()
     {
+        InputManager.UnRegisterActionToMainGame("Attack",OnKeyCallback,ActionType.Started);
+    }
+
+    private void OnKeyCallback(InputAction.CallbackContext ctx)
+    {
+        _isAttackPressed = true;
     }
 
     void OnAttack()
