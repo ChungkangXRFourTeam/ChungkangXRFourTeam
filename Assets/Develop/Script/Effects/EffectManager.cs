@@ -68,7 +68,6 @@ public class EffectManager : MonoBehaviour
         }
         
         var effect = _inst._pool.Pop(effectKey);
-
         return effect;
     }
 
@@ -84,7 +83,6 @@ public class EffectManager : MonoBehaviour
             return;
         }
 
-        item.IsEnabled = true;
         _inst.durationList.Clear();
         int childCount = item.EffectObject.transform.childCount;
         for (int i = 0; i < childCount; i++)
@@ -95,13 +93,16 @@ public class EffectManager : MonoBehaviour
             p.Play();
             _inst.durationList.Add(p.main.duration);
         }
+        
+        item.IsEnabled = true;
+        command.OnBeginCallback?.Invoke(item);
 
         Sequence s = DOTween.Sequence();
         var callback = command.OnComplationCallback;
         s.SetDelay(_inst.durationList.Max()).OnComplete(() =>
         {
+            callback?.Invoke(item);
             _inst._pool.Push(item);
-            callback?.Invoke();
         });
     }
 }

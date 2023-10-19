@@ -116,7 +116,31 @@ public class EffectItem
     public string EffectKey => $"{TableKey}/{ItemKey}";
     private EffectPoolItemContainer Container { get; set; }
     public ParticleSystem ParticleSystem { get; private set; }
-    public GameObject EffectObject { get; private set; }
+    public GameObject EffectObject { get; private set; } 
+    private InteractionController _interaction;
+    public InteractionController Interaction
+    {
+        get
+        {
+            if (ReferenceEquals(_interaction, null) && ReferenceEquals(EffectObject, null) == false)
+            {
+                if (EffectObject.TryGetComponent<InteractionController>(out var interaction))
+                {
+                    _interaction = interaction;
+                    
+                    if (ProxyContractInfo == null)
+                        _interaction.SetContractInfo(ActorContractInfo.Create(EffectObject.transform, () => false));
+                    else
+                        _interaction.SetContractInfo(ProxyContractInfo);
+                }
+            }
+
+            return _interaction;
+        }
+    }
+    public BaseContractInfo ProxyContractInfo { get; private set; }
+
+    public bool IsInteractionNull => ReferenceEquals(Interaction, null);
 
     private bool _isEnabled;
     public bool IsEnabled
@@ -140,16 +164,35 @@ public class EffectItem
     {
         var transform = EffectObject.transform;
         var module = ParticleSystem.main;
+        var onContractActor = command.OnContractActor;
         
         transform.position = command.Position ?? Vector3.zero;
         transform.rotation = command.Rotation ?? Quaternion.identity;
         if(command.Scale.HasValue)
             transform.localScale = command.Scale.Value;
         module.flipRotation = command.FlipRotation;
+
+        ProxyContractInfo = command.ProxyContractInfo;
+        if (!IsInteractionNull)
+        {
+            Interaction.OnContractActor += x =>
+            {
+                onContractActor?.Invoke(this, x);
+            };   
+        }
     }
     public void ApplyCommand(EffectCommand command)
     {
         ApplyCommand(ref command);
+    }
+
+    public void Reset()
+    {
+        if (!IsInteractionNull)
+        {
+            Interaction.ClearContractEvent();
+            Interaction.IsEnabled = true;
+        }
     }
 }
 
@@ -180,6 +223,7 @@ public class EffectPoolItemContainer
 
             var effect = new EffectItem(obj, this);
             effect.IsEnabled = false;
+            effect.Reset();
             _stack.Push(effect);
         }
 
@@ -189,6 +233,7 @@ public class EffectPoolItemContainer
     public void Push(EffectItem item)
     {
         item.IsEnabled = false;
+        item.Reset();
         _stack.Push(item);
     }
     

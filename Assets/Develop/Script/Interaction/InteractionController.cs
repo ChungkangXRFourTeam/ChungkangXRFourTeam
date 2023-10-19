@@ -13,6 +13,12 @@ public class InteractionController : MonoBehaviour
         ContractInfo = info;
     }
 
+    public bool IsEnabled
+    {
+        get => enabled;
+        set => enabled = value;
+    }
+
     public T GetContractInfoOrNull<T>() where T : BaseContractInfo
         => ContractInfo as T;
 
@@ -40,18 +46,29 @@ public class InteractionController : MonoBehaviour
         }
     }
 
+    public void ClearContractEvent()
+    {
+        OnContractActor = null;
+        OnContractObject = null;
+        OnContractClick = null;
+    }
+
     private void OnCollisionEnter2D(Collision2D other)
     {
+        if (!IsEnabled) return;
         if (other.gameObject.TryGetComponent<InteractionController>(out var com))
         {
+            if (!com.IsEnabled) return;
             Activate(com.ContractInfo);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (!IsEnabled) return;
         if (other.gameObject.TryGetComponent<InteractionController>(out var com))
         {
+            if (!com.IsEnabled) return;
             Activate(com.ContractInfo);
         }
     }

@@ -7,7 +7,10 @@ using UnityEngine;
 public struct EffectCommand
 {
     public string EffectKey { get; set; }
-    public Action OnComplationCallback { get; set; }
+    public Action<EffectItem> OnBeginCallback { get; set; }
+    public Action<EffectItem> OnComplationCallback { get; set; }
+    public Action<EffectItem, ActorContractInfo> OnContractActor { get; set; }
+    public BaseContractInfo ProxyContractInfo { get; set; }
     public Vector3? Position { get; set; }
     public Quaternion? Rotation { get; set; }
     public Vector3? Scale { get; set; }
