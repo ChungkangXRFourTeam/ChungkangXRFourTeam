@@ -410,6 +410,14 @@ namespace XRProject.Helper
                 }
             } while (loop);
         }
+
+        public void Release()
+        {
+            foreach (var state in _container.GetAllState())
+            {
+                state.Release(Blackboard);
+            }
+        }
     }
 
     public abstract class BaseState
