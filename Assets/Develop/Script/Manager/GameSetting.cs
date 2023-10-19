@@ -23,7 +23,7 @@ public class GameSetting : MonoBehaviour
 
     private void Update()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 0;
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             SceneManager.LoadScene(0);

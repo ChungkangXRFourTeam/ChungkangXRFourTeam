@@ -17,7 +17,6 @@ public class PlayerSwingState : BaseState
         var timeScale = blackboard.GetUnWrappedProperty<float>("out_timeScale");
         
         Time.timeScale = timeScale;
-        Time.fixedDeltaTime = Time.timeScale * 0.016f;
         
         
     }
@@ -79,6 +78,5 @@ public class PlayerSwingState : BaseState
     public override void Exit(Blackboard blackboard)
     {
         Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.016f;
     }
 }
