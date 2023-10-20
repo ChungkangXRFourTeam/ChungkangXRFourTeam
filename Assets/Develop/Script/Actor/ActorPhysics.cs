@@ -62,6 +62,11 @@ public abstract class ActorPhysics : MonoBehaviour, IBActorPhysics
         Rigid.AddForce(force, mode);
     }
 
+    public void Stop()
+    {
+        throw new NotImplementedException();
+    }
+
     [CanBeNull]
     public abstract Transform GetTransformOrNull();
     

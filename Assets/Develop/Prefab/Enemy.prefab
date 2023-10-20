@@ -510,15 +510,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5831fc0bd2c84874ba35a209607749ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _flameColor: {r: 1, g: 1, b: 1, a: 1}
-  _waterColor: {r: 1, g: 1, b: 1, a: 1}
-  _effectImage: {fileID: 8929238629399507731}
-  _hp: 5
-  _speed: 5
-  _body: {fileID: 824152850215910124}
   _data: {fileID: 11400000, guid: 6fde3fe9792c7c24d9bbcf4c812bdc84, type: 2}
   _isThrowable: 1
   _properties: 0
+  _effectImage: {fileID: 8929238629399507731}
+  _body: {fileID: 824152850215910124}
   _rigid: {fileID: 1623398777935529079}
   _interaction: {fileID: 808929621619883787}
 --- !u!50 &1623398777935529079

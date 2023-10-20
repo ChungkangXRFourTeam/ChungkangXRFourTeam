@@ -65,6 +65,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
 
     public InteractionController Interaction => _interaction;
     private bool IsSwingState => _physicsStrategy.IsSwingState;
+    public string test;
 
     /* unity functions */
     private void Awake()
@@ -100,11 +101,12 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             .AddProperty("out_rigidbody", Rigid)
             .AddProperty("out_strategyExecutor", strategyExecutor)
             .AddProperty("out_interaction", Interaction)
+            .AddProperty("test", "")
             
             .AddProperty("out_enemyData", _data)
             .AddProperty("out_patrollPoints", new WrappedValue<(Vector2, Vector2)>())
             .AddProperty("out_isEnteredPatrollSpace", new WrappedValue<bool>(false))
-            .AddProperty("out_propagationInfo", _propagationInfo = new PropagationInfo())
+            .AddProperty("out_propagationInfo", _propagationInfo = new PropagationInfo(Interaction))
             .AddProperty("out_enemyBody", _body)
             
             .AddProperty("in_isMoving", new WrappedValue<bool>(false))
@@ -120,6 +122,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
         
         Interaction.SetContractInfo(
             ActorContractInfo.Create(transform, ()=>_isDestroyed)
+                .AddBehaivour<IBActorPropagation>(_propagationInfo)
                 .AddBehaivour<IBActorPhysics>(_physicsStrategy)
                 .AddBehaivour<IBActorLife>(this)
                 .AddBehaivour<IBActorHit>(this)
@@ -138,6 +141,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
 
     private void Update()
     {
+        test = _executor.Blackboard.GetProperty<string>("test");
         _executor.Execute();
         //_body.isTrigger = !IsSwingState;
     }

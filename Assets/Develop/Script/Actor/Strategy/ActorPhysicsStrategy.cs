@@ -79,6 +79,11 @@ public class ActorPhysicsStrategy : IStrategy, IBActorPhysics
     {
     }
 
+    public void Stop()
+    {
+        _executor.Blackboard.SetWrappedProperty("out_trigger_knockbackCollision", true);
+        Rigid.velocity = Vector2.zero;
+    }
     public void Update(Blackboard blackboard)
     {
         _executor.Execute();
