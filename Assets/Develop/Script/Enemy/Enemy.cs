@@ -5,21 +5,34 @@ using DG.Tweening;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+using XRProject.Helper;
 using Random = UnityEngine.Random;
 
-public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, IBActorThrowable
+public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, IBActorThrowable
 {
-    [SerializeField] private Color _flameColor;
-    [SerializeField] private Color _waterColor;
+    /* seralizedFields */
+    [Header("editable")]
+    [SerializeField] private EnemyData _data;
+    [SerializeField] private bool _isThrowable;
+    [SerializeField] private EActorPropertiesType _properties;
+    [Header("don't edit this")]
     [SerializeField] private Image _effectImage;
-    [SerializeField] private float _hp;
-    [SerializeField] private float _speed;
     [SerializeField] private Collider2D _body;
+    [SerializeField] private Rigidbody2D _rigid;
+    [SerializeField] private InteractionController _interaction;
 
+    /* fields */
+    private ActorPhysicsStrategy _physicsStrategy = new();
+    private StateExecutor _executor;
+    private PropagationInfo _propagationInfo;
+    private Tweener _effectTweener = null;
+    private bool _isDestroyed = false;
+    
+    /* properties */
     public event System.Action<IBActorLife, float, float> ChangedHp;
-    public float MaxHp => _hp;
+    public float MaxHp => _data.Hp;
+    
     private float _currentHp;
-
     public float CurrentHP
     {
         get => _currentHp;
@@ -36,12 +49,8 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
         }
     }
 
-    [SerializeField]
-    private bool _isThrowable;
     public bool IsThrowable => _isThrowable;
 
-    [SerializeField]
-    private EActorPropertiesType _properties;
 
     public EActorPropertiesType Properties
     {
@@ -49,57 +58,78 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
         set
         {
             _properties = value;
-
-            Color color;
-            if (value == EActorPropertiesType.Flame)
-            {
-                color = _flameColor;
-            }
-            else
-            {
-                color = _waterColor;
-            }
-
-            GetComponent<SpriteRenderer>().color = color;
         }
     }
 
-    public void SetProperties(BaseContractInfo caller, EActorPropertiesType type)
-    {
-        Properties = type;
-    }
+    public Rigidbody2D Rigid => _rigid;
 
-    public void Die()
-    {
-        Destroy(gameObject);
-    }
+    public InteractionController Interaction => _interaction;
+    private bool IsSwingState => _physicsStrategy.IsSwingState;
+    public string test;
 
-
+    /* unity functions */
     private void Awake()
     {
-        LateInit();
+        
+        // Strategy initializing..
+        var strategyContainer = new StrategyContainer();
+        var strategyBlackboard = new Blackboard();
+
+        strategyBlackboard
+            .AddProperty("out_transform", transform)
+            .AddProperty("out_rigidbody", Rigid)
+            .AddProperty("out_interaction", Interaction)
+            .AddProperty("out_isAllowedInteraction", new WrappedValue<bool>(true))
+            ;
+
+        strategyContainer
+            .Add(_physicsStrategy)
+            ;
+        var strategyExecutor = StrategyExecutor.Create(strategyContainer, strategyBlackboard);
+        
+        // FSM 셋팅
+        Blackboard blackboard = new Blackboard();
+        StateContainer container = new StateContainer();
+
+        container
+            .AddState<EnemyDefaultState>()
+            .SetInitialState<EnemyDefaultState>()
+            ;
+
+        blackboard
+            .AddProperty("out_transform", transform)
+            .AddProperty("out_rigidbody", Rigid)
+            .AddProperty("out_strategyExecutor", strategyExecutor)
+            .AddProperty("out_interaction", Interaction)
+            .AddProperty("test", "")
+            
+            .AddProperty("out_enemyData", _data)
+            .AddProperty("out_patrollPoints", new WrappedValue<(Vector2, Vector2)>())
+            .AddProperty("out_isEnteredPatrollSpace", new WrappedValue<bool>(false))
+            .AddProperty("out_propagationInfo", _propagationInfo = new PropagationInfo(Interaction))
+            .AddProperty("out_enemyBody", _body)
+            
+            .AddProperty("in_isMoving", new WrappedValue<bool>(false))
+            .AddProperty("in_isStop", new WrappedValue<bool>(false))
+            .AddProperty("in_isSleep", new WrappedValue<bool>(false))
+            
+            
+            .AddProperty("out_trigger_isPropagating",  new WrappedTriggerValue())
+            ;
+
+        _executor = StateExecutor.Create(container, blackboard);
+        
+        
         Interaction.SetContractInfo(
             ActorContractInfo.Create(transform, ()=>_isDestroyed)
-                .AddBehaivour<IBActorPhysics>(this)
+                .AddBehaivour<IBActorPropagation>(_propagationInfo)
+                .AddBehaivour<IBActorPhysics>(_physicsStrategy)
                 .AddBehaivour<IBActorLife>(this)
                 .AddBehaivour<IBActorHit>(this)
                 .AddBehaivour<IBActorProperties>(this)
                 .AddBehaivour<IBActorThrowable>(this)
         );
         Interaction.OnContractActor += OnContractActor;
-        Interaction.OnContractObject += OnContractObject;
-        
-        // 중간 시연용 코드
-        Interaction.OnContractObject += (info) =>
-        {
-            if (info.TryGetBehaviour(out IBObjectPatrollSpace patrollSpace))
-            {
-                _leftPoint = patrollSpace.LeftPoint;
-                _rightPoint = patrollSpace.RightPoint;
-                _goLeft = Random.value >= 0.5f;
-                _checkPoint = true;
-            }
-        };
         
         _currentHp = MaxHp;
 
@@ -108,58 +138,56 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
         _effectImage.enabled = false;
     }
     
-    // 중간 시연용 코드
-    private bool _checkPoint;
-    private Vector2 _leftPoint;
-    private Vector2 _rightPoint;
-    private Vector2 TargetPoint => _goLeft ? _leftPoint : _rightPoint;
-    private bool _goLeft;
 
     private void Update()
     {
-        ActorUpdate();
-        
-        _body.isTrigger = !IsSwingState;
-        // 중간시연용 코드
-        if (IsSwingState || !_checkPoint)
+        test = _executor.Blackboard.GetProperty<string>("test");
+        _executor.Execute();
+        //_body.isTrigger = !IsSwingState;
+    }
+
+    
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Wall"))
         {
-            return;
+            _physicsStrategy.OnDetectBlock();
         }
-
-        if (Mathf.Abs(TargetPoint.x - transform.position.x) <= 0.1f + 1.3f * 0.5f)
+    }
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.GetComponent<PatrollSpace>())
         {
-            _goLeft = !_goLeft;
+            _executor.Blackboard.GetWrappedProperty<bool>("out_isEnteredPatrollSpace").Value = true;
         }
+    }
 
-        var dir = TargetPoint - (Vector2)transform.position;
-        dir = dir.normalized;
-        dir = Vector3.Project(dir, Vector3.right).normalized;
+    /* methods */
+    public void SetProperties(BaseContractInfo caller, EActorPropertiesType type)
+    {
+        Properties = type;
+    }
 
-        transform.position += (Vector3)dir * (_speed * Time.deltaTime);
+    public void Die()
+    {
+        _executor.Release();
+        _isDestroyed = true;
+        DOTween.Kill(this);
+
+        if (_effectTweener != null)
+        {
+            _effectTweener.Kill();
+            _effectTweener = null;
+        }
+        Destroy(gameObject);
     }
 
     private void OnContractActor(ActorContractInfo info)
     {
-        if (info.Transform.GetComponent<Enemy>())
-        {
-            Sequence sequence = DOTween.Sequence();
-            sequence.AppendCallback(() => _body.isTrigger = false).SetDelay(0.05f)
-                .AppendCallback(() => _body.isTrigger = true).SetId(this);
-
-            if (IsSwingState)
-            {
-                EffectManager.ImmediateCommand(new EffectCommand()
-                {
-                    EffectKey = "actor/enemyHit",
-                    Position = Vector3.Lerp(transform.position, info.Transform.position, 0.5f)
-                });
-            }
-        }
-        
         if (info.TryGetBehaviour(out IBActorPhysics physics))
         {
-            OnDetectBlock();
-            OnDetectOtherActor(physics);
+            _physicsStrategy.OnDetectBlock();
+            _physicsStrategy.OnDetectOtherActor(physics);
         }
         
         float damage = 1f;
@@ -181,41 +209,6 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
         }
     }
 
-    public void OnContractObject(ObjectContractInfo info)
-    {
-        if (info.TryGetBehaviour(out IBObjectInteractive interactive) &&
-            info.Transform.gameObject.CompareTag("KnockbackObject"))
-        {
-            EffectManager.ImmediateCommand(new EffectCommand()
-            {
-                EffectKey = "actor/knockbackHit",
-                Position = transform.position
-            });
-        }
-    }
-
-    [CanBeNull]
-    public override Transform GetTransformOrNull()
-    {
-        if (_isDestroyed) return null;
-        return transform;
-    }
-    
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.gameObject.CompareTag("Wall"))
-        {
-            OnDetectBlock();
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.GetComponent<PatrollSpace>())
-        {
-            _checkPoint = false;
-        }
-    }
 
     public void DoHit(BaseContractInfo caller, float damage)
     {
@@ -236,20 +229,6 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
             });
         }
     }
-
-    private Tweener _effectTweener = null;
-    private bool _isDestroyed = false;
-    private void OnDestroy()
-    {
-        _isDestroyed = true;
-        DOTween.Kill(this);
-
-        if (_effectTweener != null)
-        {
-            _effectTweener.Kill();
-            _effectTweener = null;
-        }
-    }
     private void AnimatePropertiesHitEffect(EActorPropertiesType type)
     {
         bool isNotNone = false;
@@ -259,10 +238,10 @@ public class Enemy : ActorPhysics, IBActorLife, IBActorProperties, IBActorHit, I
                 isNotNone = true;
                 break;
             case EActorPropertiesType.Flame:
-                _effectImage.color = _flameColor;
+                _effectImage.color = _data.FlameColor;
                 break;
             case EActorPropertiesType.Water:
-                _effectImage.color = _waterColor;
+                _effectImage.color = _data.WaterColor;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);

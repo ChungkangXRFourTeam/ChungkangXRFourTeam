@@ -48,6 +48,7 @@ public interface IBActorPhysics : IActorBehaviour
 
     public void AddKnockback(Vector2 vector);
     public void AddForce(Vector2 force, ForceMode2D mode);
+    public void Stop();
     public Transform GetTransformOrNull();
 }
 
@@ -67,6 +68,14 @@ public interface IBActorLife : IActorBehaviour
     public float CurrentHP { get; }
     public event System.Action<IBActorLife, float, float> ChangedHp;
     public void Die();
+}
+
+public interface IBActorPropagation : IActorBehaviour
+{
+    public int Count { get; set; }
+    public int MaxCount { get; }
+    public void Propagate(BaseContractInfo caller, int count, Vector2 forceVector);
+    public bool IsPropagation { get; }
 }
 
 public interface IBActorThrowable : IActorBehaviour

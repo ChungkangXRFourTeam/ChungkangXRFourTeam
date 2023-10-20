@@ -5,7 +5,7 @@ using UnityEngine;
 using XRProject.Helper;
 
 [Serializable]
-public class PlayerPhysicsStrategy : IStrategy, IBActorPhysics
+public class ActorPhysicsStrategy : IStrategy, IBActorPhysics
 {
     private Rigidbody2D _rigid;
     private InteractionController _interaction;
@@ -79,6 +79,11 @@ public class PlayerPhysicsStrategy : IStrategy, IBActorPhysics
     {
     }
 
+    public void Stop()
+    {
+        _executor.Blackboard.SetWrappedProperty("out_trigger_knockbackCollision", true);
+        Rigid.velocity = Vector2.zero;
+    }
     public void Update(Blackboard blackboard)
     {
         _executor.Execute();

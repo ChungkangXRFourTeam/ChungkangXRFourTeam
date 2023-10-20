@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
 
     /* strategies */
     private PlayerMoveStrategy _moveStrategy = new();
-    private PlayerPhysicsStrategy _physicsStrategy = new();
+    private ActorPhysicsStrategy _physicsStrategy = new();
     private PlayerMeleeAttackStrategy _meleeAttackStrategy = new();
     private PlayerSwingAttackStrategy _swingAttackStrategy = new();
     private PlayerBuffStrategy _buffStrategy = new();

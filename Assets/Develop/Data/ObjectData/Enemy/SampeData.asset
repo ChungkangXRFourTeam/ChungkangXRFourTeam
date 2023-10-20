@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8d9a05a09a5cc042ad21eebf41d29de, type: 3}
-  m_Name: SampleMeleeAttack
+  m_Script: {fileID: 11500000, guid: 1dca92d2f0daa89469d4e3adf2c27c1f, type: 3}
+  m_Name: SampeData
   m_EditorClassIdentifier: 
-  _distanceFromBodyforHand: 2
-  _slashEffectDistanceFromThis: 1.3
-  _slashEffectOffset: {x: 0, y: -1.5}
-  _slashEffectScale: {x: 0.3, y: 0.3}
-  _attackDelay: 0.3
-  _attackMaxCount: 3
+  _hp: 1000
+  _movementSpeed: 5
+  _SleepDecisionTime: 0.01
+  _propagationForce: 50
+  _propagationCount: 5
+  _flameColor: {r: 0, g: 0, b: 0, a: 0}
+  _waterColor: {r: 0, g: 0, b: 0, a: 0}
