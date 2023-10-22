@@ -7,9 +7,11 @@ using UnityEngine;
 public class CinemachineCameraControll : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
-    [Space(15f), Header("카메라 줌")]
+    [Space(15f), Header("카메라 줌아웃")]
     [SerializeField, Tooltip("최대 줌 아웃 사이즈를 조절합니다.")] private float _maxZoomOutSize = 10f;
+    [Space(15f), Header("카메라 줌인")]
     [SerializeField, Tooltip("최대 줌 인 사이즈를 조절합니다.")] private float _maxZoomInSize = 15f;
+    [Space(15f), Header("카메라 줌 속도")]
     [SerializeField, Tooltip("카메라가 줌 되는 속도를 조절합니다.")] private float _zoomSpeed = 1f;
 
     public delegate void SetCameraOrthoSize(float size);
@@ -53,6 +55,16 @@ public class CinemachineCameraControll : MonoBehaviour
     public void SetZoomKeyState(bool state)
     {
         _isZoomKeyDown = state;
+    }
+
+    public float GetMaxZoomOutSize()
+    {
+        return _maxZoomOutSize;
+    }
+
+    public float GetMaxZoomInSize()
+    {
+        return _maxZoomInSize;
     }
 
 }

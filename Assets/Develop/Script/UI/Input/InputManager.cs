@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,7 +12,6 @@ public enum ActionType
     Performed,
     Canceled
 }
-
 public class InputManager : MonoBehaviour
 {
     private static InputManager instance = null;
@@ -73,6 +73,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    [CanBeNull]
     public static InputAction GetMainGameAction(string action)
     {
         return _mainGameActionMap.FindAction(action, true);
