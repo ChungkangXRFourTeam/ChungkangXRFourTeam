@@ -6,13 +6,19 @@ using UnityEngine;
 
 public class KnockbackObject : MonoBehaviour, IBObjectInteractive
 {
+    [Header("튕기는 힘")]
     [SerializeField] private float _knockbackForce;
-    [SerializeField] private float _knockbackTime;
+    [Header("튕기는 방향에 대한 각도")]
     [SerializeField] private float _reflectAnglel;
-    [SerializeField] private float _rayLength;
-    [SerializeField] private bool _debug;
-    [SerializeField] private bool _isSelectiveObject;
+    [Header("속성(값이 None이면 에러 발생!! 반드시 설정)")]
     [SerializeField] private EActorPropertiesType _properties;
+    [Space]
+    [Header("시각적 디버깅 광선의 길이")]
+    [SerializeField] private float _rayLength;
+    [Header("시각적 디버깅 활성화 여부")]
+    [SerializeField] private bool _debug;
+    [Space]
+    [SerializeField] private bool _isSelectiveObject;
 
     public bool IsSelectiveObject => _isSelectiveObject;
     public EActorPropertiesType Properties => _properties;
@@ -84,7 +90,6 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
             p.AddKnockback(ReflecDirection * _knockbackForce);
         }
     }
-
     private void OnDrawGizmos()
     {
         if (!_debug) return;
