@@ -28,6 +28,11 @@ public class
                 Vector2 v = (currentActorPhysics.GetTransformOrNull().position - transform.position);
                 currentActorPropagation.BeginPropagate(v.normalized);
             }
+
+            if (currentActorPhysics.GetTransformOrNull())
+            {
+                currentActorPhysics.GetTransformOrNull().position = transform.position + Vector3.one * 1.5f;
+            }
             currentActorPhysics.AddKnockback(swingDir * swingForce);
         }
         

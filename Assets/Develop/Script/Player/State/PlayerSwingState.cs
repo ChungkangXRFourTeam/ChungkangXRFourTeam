@@ -56,9 +56,9 @@ public class PlayerSwingState : BaseState
         var actorPos = (dir * minmumCloseDistance) + (Vector2)transform.position;
         actorTransform.position = actorPos;
         
-        var swingDir = PlayerCalculation.GetSwingDirection(Camera.main, actorTransform.position);
+        var swingDir = PlayerCalculation.GetSwingDirection(Camera.main, transform.position+ Vector3.one * 1.5f);
         var points = PlayerCalculation.GetReflectionPoints(
-            actorTransform.position, 
+            transform.position + Vector3.one * 1.5f, 
             swingDir,
             colSize,
             actorBoxCollider.offset,
