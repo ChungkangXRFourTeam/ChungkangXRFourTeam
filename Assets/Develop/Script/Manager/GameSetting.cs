@@ -9,17 +9,9 @@ using XRProject.Utils.Log;
 
 public class GameSetting : MonoBehaviour
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
-    static void Init()
-    {
-        _inst = null;
-    }
-    static private GameSetting _inst;
-
-    static public GameSetting Instance => _inst;
     private void Awake()
     {
-        _inst = this;
+        EffectManager.Init();
     }
 
     private void Update()

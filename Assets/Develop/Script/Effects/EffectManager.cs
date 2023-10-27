@@ -14,24 +14,24 @@ public class EffectManager : MonoBehaviour
 
     public const string LOG_SIGNATURE = "effectManager";
     private const string B_LOG_SIGNATURE = "effectManager";
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
-    private static void Init()
+    
+    public static void Init()
     {
-        if (_inst == null)
+        if (_inst)
         {
-            var obj = new GameObject("EffectManager/");
-            _inst = obj.AddComponent<EffectManager>();
-            DontDestroyOnLoad(obj);
-
-            _inst.PoolAlloc();
-
-            SceneManager.sceneLoaded += _inst.SceneLoaded;
+            Destroy(_inst.gameObject);
         }
+        
+        var obj = new GameObject("EffectManager/");
+        _inst = obj.AddComponent<EffectManager>();
+        DontDestroyOnLoad(obj);
+
+        _inst.PoolAlloc();
     }
 
     private void PoolAlloc()
     {
+        Debug.Log("alloc");
         if(_resTable == null)
             _resTable = Resources.Load<EffectTableSet>("EffectTableSet")?.TableList ?? new List<EffectTable>();
         
@@ -42,21 +42,7 @@ public class EffectManager : MonoBehaviour
         transform.rotation = quaternion.identity;
         transform.localScale = Vector3.one;
     }
-
-    private void SceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (mode == LoadSceneMode.Single && _inst)
-        {
-            _inst.PoolAlloc();
-        }
-    }
-
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= SceneLoaded;
-        _inst = null;
-    }
-
+    
     private EffectPool _pool;
     private List<EffectTable> _resTable;
     private EffectScheduler _scheduler;

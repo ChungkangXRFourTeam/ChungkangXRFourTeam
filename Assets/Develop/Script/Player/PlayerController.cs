@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     public event Action<IBActorLife, float, float> ChangedHp;
     
     /* unity functions */
-    private void Awake()
+    private void Start()
     {
         CurrentHP = MaxHp;
 
