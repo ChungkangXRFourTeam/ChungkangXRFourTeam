@@ -26,7 +26,6 @@ public class InputManager : MonoBehaviour
             instance = this;
             actionListener = new InputActionListener();
             _mainGameActionMap = actionListener.asset.FindActionMap("MainGame");
-            DontDestroyOnLoad(this.gameObject);
         }
         else
         {
