@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityEngine;
 using XRProject.Utils.Log;
-
+using UnityEngine.SceneManagement;
 public class EffectManager : MonoBehaviour
 {
     private static EffectManager _inst;
@@ -15,7 +15,7 @@ public class EffectManager : MonoBehaviour
     public const string LOG_SIGNATURE = "effectManager";
     private const string B_LOG_SIGNATURE = "effectManager";
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
     private static void Init()
     {
         if (_inst == null)
@@ -24,20 +24,42 @@ public class EffectManager : MonoBehaviour
             _inst = obj.AddComponent<EffectManager>();
             DontDestroyOnLoad(obj);
 
-            var list = Resources.Load<EffectTableSet>("EffectTableSet")?.TableList ?? new List<EffectTable>();
-            _inst._pool = new EffectPool(list);
-            obj.transform.position = Vector3.zero;
-            obj.transform.rotation = quaternion.identity;
-            obj.transform.localScale = Vector3.one;
+            _inst.PoolAlloc();
+
+            SceneManager.sceneLoaded += _inst.SceneLoaded;
+        }
+    }
+
+    private void PoolAlloc()
+    {
+        if(_resTable == null)
+            _resTable = Resources.Load<EffectTableSet>("EffectTableSet")?.TableList ?? new List<EffectTable>();
+        
+        _scheduler = new EffectScheduler();
+        
+        _pool = new EffectPool(_resTable);
+        transform.position = Vector3.zero;
+        transform.rotation = quaternion.identity;
+        transform.localScale = Vector3.one;
+    }
+
+    private void SceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (mode == LoadSceneMode.Single && _inst)
+        {
+            _inst.PoolAlloc();
         }
     }
 
     private void OnDestroy()
     {
+        SceneManager.sceneLoaded -= SceneLoaded;
         _inst = null;
     }
 
     private EffectPool _pool;
+    private List<EffectTable> _resTable;
+    private EffectScheduler _scheduler;
 
     public static void EnqueueCommand(EffectCommand command)
     {
@@ -97,12 +119,16 @@ public class EffectManager : MonoBehaviour
         item.IsEnabled = true;
         command.OnBeginCallback?.Invoke(item);
 
-        Sequence s = DOTween.Sequence();
         var callback = command.OnComplationCallback;
-        s.SetDelay(_inst.durationList.Max()).OnComplete(() =>
+        _inst._scheduler.Schedule(_inst.durationList.Max(), () =>
         {
             callback?.Invoke(item);
             _inst._pool.Push(item);
         });
+    }
+
+    private void Update()
+    {
+        _scheduler.Update();
     }
 }
