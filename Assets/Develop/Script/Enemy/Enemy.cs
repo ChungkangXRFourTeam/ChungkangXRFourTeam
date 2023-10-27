@@ -128,6 +128,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
                 .AddBehaivour<IBActorHit>(this)
                 .AddBehaivour<IBActorProperties>(this)
                 .AddBehaivour<IBActorThrowable>(this)
+                .AddBehaivour<IBEnemyState>(container.GetState<EnemyDefaultState>())
         );
         Interaction.OnContractActor += OnContractActor;
         

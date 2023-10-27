@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using DG.Tweening;
+using TMPro;
 using XRProject.Helper;
 
-public class EnemyDefaultState : BaseState
+public class EnemyDefaultState : BaseState, IBEnemyState
 {
     private StateExecutor _actionExecutor;
     private StateExecutor _movingObserverExecutor;
+    private InteractionController _interaction;
+
     public override void Init(Blackboard sendedBlackboard)
     {
         sendedBlackboard.GetProperty<StrategyExecutor>("out_strategyExecutor", out var se);
+        _interaction = sendedBlackboard.GetProperty<InteractionController>("out_interaction");
 
         se.Container
             .SetActive<ActorPhysicsStrategy>(true)
@@ -32,7 +36,7 @@ public class EnemyDefaultState : BaseState
             .AddState<EnemySleepState>()
             .SetInitialState<EnemySleepState>()
             ;
-        
+
         _actionExecutor = StateExecutor.Create(actionContainer, sendedBlackboard);
         _movingObserverExecutor = StateExecutor.Create(movingObserverContainer, sendedBlackboard);
     }
@@ -49,12 +53,25 @@ public class EnemyDefaultState : BaseState
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
         blackboard.GetProperty<StrategyExecutor>("out_strategyExecutor", out var se);
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+
+        
+        transform.GetComponentInChildren<TMP_Text>()?
+            .SetText($"{_actionExecutor.CurrentState.ToString()}\n{_movingObserverExecutor.CurrentState.ToString()}\n{(_interaction.ContractInfo as ActorContractInfo).GetBehaviourOrNull<IBActorPropagation>().Count}");
 
         se.Execute();
         _actionExecutor.Execute();
         _movingObserverExecutor.Execute();
 
-        blackboard.SetProperty("test", _actionExecutor.CurrentState.ToString());
+        return false;
+    }
+
+    public InteractionController Interaction => _interaction;
+
+    public bool CheckCurrentState<T>() where T : BaseState
+    {
+        if (_actionExecutor.CurrentState is T) return true;
+        if (_movingObserverExecutor.CurrentState is T) return true;
 
         return false;
     }
@@ -67,20 +84,23 @@ public class EnemyPatrollState : BaseState
     private bool _goLeft;
     private Vector2 TargetPoint => _goLeft ? _leftPoint : _rightPoint;
     private EnemyData _data;
-    private Blackboard _cachedBlackboard;    
+    private Blackboard _cachedBlackboard;
+
     public override void Init(Blackboard blackboard)
     {
         _cachedBlackboard = blackboard;
-        
+
         _data = blackboard.GetProperty<EnemyData>("out_enemyData");
         blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
         interaction.OnContractObject += OnContractActor;
     }
+
     public override void Release(Blackboard blackboard)
     {
         blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
         interaction.OnContractObject -= OnContractActor;
     }
+
     public override void Enter(Blackboard blackboard)
     {
         blackboard.GetUnWrappedProperty<(Vector2, Vector2)>("out_patrollPoints", out var points);
@@ -89,21 +109,21 @@ public class EnemyPatrollState : BaseState
         _goLeft = Random.value > 0.5f;
         blackboard.GetProperty<PropagationInfo>("out_propagationInfo", out var pi);
         pi.Count = 0;
-
     }
+
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
         bool gotoPatrollSpace = EnemyPatrollState.ReadyGotoPatroll(blackboard);
         bool gotoSwingState = EnemySwingState.ReadyGotoSwing(blackboard);
         bool gotoProgagating = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
 
-        if (gotoSwingState)
-        {
-            executor.SetNextState<EnemySwingState>();
-        }
-        else if (gotoProgagating)
+        if (gotoProgagating)
         {
             executor.SetNextState<EnemyPropagatingState>();
+        }
+        else if (gotoSwingState)
+        {
+            executor.SetNextState<EnemySwingState>();
         }
         else if (!gotoPatrollSpace)
         {
@@ -113,14 +133,14 @@ public class EnemyPatrollState : BaseState
         {
             Patroll(blackboard);
         }
-        
+
         return false;
     }
 
     private void Patroll(Blackboard blackboard)
     {
         var transform = blackboard.GetProperty<Transform>("out_transform");
-        
+
         if (Mathf.Abs(TargetPoint.x - transform.position.x) <= 0.1f + 1.3f * 0.5f)
         {
             _goLeft = !_goLeft;
@@ -136,15 +156,15 @@ public class EnemyPatrollState : BaseState
     private void OnContractActor(ObjectContractInfo info)
     {
         var blackboard = _cachedBlackboard;
-        
+
         if (info.TryGetBehaviour(out IBObjectPatrollSpace patrollSpace))
         {
             blackboard.GetWrappedProperty<bool>("out_isEnteredPatrollSpace").Value = true;
             blackboard.GetWrappedProperty<(Vector2, Vector2)>("out_patrollPoints").Value =
                 (patrollSpace.LeftPoint, patrollSpace.RightPoint);
         }
-        
     }
+
     public static bool ReadyGotoPatroll(Blackboard blackboard)
     {
         blackboard.GetUnWrappedProperty<bool>("out_isEnteredPatrollSpace", out var entered);
@@ -155,15 +175,17 @@ public class EnemyPatrollState : BaseState
 
 public class EnemySwingState : BaseState
 {
-    private Blackboard _cachedBlackboard;    
+    private Blackboard _cachedBlackboard;
+
     public override void Enter(Blackboard blackboard)
     {
         _cachedBlackboard = blackboard;
-        
+
         blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
         interaction.OnContractActor += OnContractActor;
         interaction.OnContractObject += OnContractObject;
     }
+
     public override void Exit(Blackboard blackboard)
     {
         blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
@@ -175,18 +197,17 @@ public class EnemySwingState : BaseState
     {
         DOTween.Kill(this);
     }
+
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
         bool isSleep = blackboard.GetUnWrappedProperty<bool>("in_isSleep");
         bool gotoPatroll = EnemyPatrollState.ReadyGotoPatroll(blackboard);
+        bool gotoPropagation = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
 
-        if (ReadyGotoSwing(blackboard))
+        if (gotoPropagation)
         {
-            blackboard.GetProperty<PropagationInfo>("out_propagationInfo", out var info);
-            blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
-            info.Count = data.PropagationCount;
+            executor.SetNextState<EnemyPropagatingState>();
         }
-        
         if (isSleep && gotoPatroll)
         {
             executor.SetNextState<EnemyPatrollState>();
@@ -199,18 +220,18 @@ public class EnemySwingState : BaseState
         {
             // swing..   
         }
-        
+
         return false;
     }
 
     private void OnContractActor(ActorContractInfo info)
     {
     }
-    
+
     private void OnContractObject(ObjectContractInfo info)
     {
         var transform = _cachedBlackboard.GetProperty<Transform>("out_transform");
-        
+
         if (info.TryGetBehaviour(out IBObjectInteractive interactive) &&
             info.Transform.gameObject.CompareTag("KnockbackObject"))
         {
@@ -221,6 +242,7 @@ public class EnemySwingState : BaseState
             });
         }
     }
+
     public static bool ReadyGotoSwing(Blackboard blackboard)
     {
         blackboard.GetProperty<StrategyExecutor>("out_strategyExecutor", out var se);
@@ -232,53 +254,65 @@ public class EnemySwingState : BaseState
 public class PropagationInfo : IBActorPropagation
 {
     public int Count { get; set; }
-    public Vector2 ForceVector { get; set; }
+    public Vector2 Direction { get; set; }
     public InteractionController Interaction { get; private set; }
     public int MaxCount { get; set; }
+    public float Force { get; set; }
     public PropagationInfo(InteractionController interaction)
     {
         Interaction = interaction;
     }
 
-
-    public void Propagate(BaseContractInfo caller, int count, Vector2 forceVector)
+    public void Propagate(BaseContractInfo caller, Vector2 direction)
     {
-        Count = count < 0 ? 0 : count;
-        ForceVector = forceVector;
+        Count--;
+        if (Count < 0) Count = 0;
+        Direction = direction;
+    }
+
+    public void BeginPropagate(Vector2 direction)
+    {
+        Count = MaxCount;
+        //Direction = direction;
     }
 
     public bool IsPropagation => Count > 0;
 }
+
 public class EnemyPropagatingState : BaseState
 {
     private Blackboard _cachedBlackboard;
     private PropagationInfo _propagationInfo;
     private EnemyData _data;
+
     public override void Init(Blackboard blackboard)
     {
         _cachedBlackboard = blackboard;
-        
+
         blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
         interaction.OnContractActor += OnContractActor;
 
         _propagationInfo = blackboard.GetProperty<PropagationInfo>("out_propagationInfo");
         _data = blackboard.GetProperty<EnemyData>("out_enemyData");
         _propagationInfo.MaxCount = _data.PropagationCount;
-
+        _propagationInfo.Force = _data.PropagationForce;
     }
 
     public override void Enter(Blackboard blackboard)
     {
         Propagate(blackboard);
     }
+
     public override void Exit(Blackboard blackboard)
     {
     }
+
     public override void Release(Blackboard blackboard)
     {
         blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
         interaction.OnContractActor -= OnContractActor;
     }
+
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
         bool gotoPatrollSpace = EnemyPatrollState.ReadyGotoPatroll(blackboard);
@@ -286,8 +320,8 @@ public class EnemyPropagatingState : BaseState
         bool gotoProgagating = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
 
         blackboard.GetUnWrappedProperty<bool>("in_isSleep", out var isSleep);
-        
-        
+
+
         if (gotoProgagating && !isSleep)
         {
             executor.SetNextState<EnemyPropagatingState>();
@@ -304,7 +338,7 @@ public class EnemyPropagatingState : BaseState
         {
             executor.SetNextState<EnemyNothingState>();
         }
-        
+
         return false;
     }
 
@@ -312,51 +346,65 @@ public class EnemyPropagatingState : BaseState
     private void Propagate(Blackboard blackboard)
     {
         blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
-        if (interaction.ContractInfo is ActorContractInfo info && 
-            info.TryGetBehaviour(out IBActorPhysics physics))
+        if (interaction.ContractInfo is ActorContractInfo info &&
+            info.TryGetBehaviour(out IBActorPhysics physics) &&
+            _propagationInfo.Count > 0)
         {
-            physics.AddForce(_propagationInfo.ForceVector, ForceMode2D.Impulse);
-            _propagationInfo.ForceVector = Vector2.zero;
+            //physics.Stop();
+            physics.AddForce(_propagationInfo.Direction * _propagationInfo.Force, ForceMode2D.Impulse);
+            _propagationInfo.Direction = Vector2.zero;
         }
     }
 
     private void OnContractActor(ActorContractInfo info)
     {
         var blackboard = _cachedBlackboard;
-        
+
         blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
         if (info.Transform.GetComponent<Enemy>() == null) return;
 
         if (
-            info.TryGetBehaviour(out IBActorPropagation propagation) &&
             info.TryGetBehaviour(out IBActorPhysics physics) &&
+            info.TryGetBehaviour(out IBEnemyState state) &&
+            info.TryGetBehaviour(out IBActorPropagation propagation) &&
+            state.CheckCurrentState<EnemyPropagatingState>() &&
             interaction.TryGetContractInfo(out ActorContractInfo myInfo) &&
-            myInfo.TryGetBehaviour(out IBActorPhysics myPhysics) &&
-            !myPhysics.IsSwingState &&
-            propagation.Count > 0
+            myInfo.TryGetBehaviour(out IBEnemyState myState)
         )
         {
             blackboard.GetProperty("out_transform", out Transform transform);
             Vector3 v = (info.Transform.position - transform.position).normalized;
-            v = Vector3.Project(v, Vector3.right).normalized * _data.PropagationForce;
+            v = Vector3.Project(v, Vector3.right).normalized;
 
-            
-            int count = propagation.Count - 1;
-            
-            _propagationInfo.Propagate(interaction.ContractInfo, count, -v);
-            if (count <= 0) return;
+            if (myState.CheckCurrentState<EnemySwingState>() || myState.CheckCurrentState<EnemyPatrollState>())
+            {
+                _propagationInfo.Count = propagation.Count;
+                _propagationInfo.Propagate(interaction.ContractInfo, -v);
+            }
+            else if (myState.CheckCurrentState<EnemyPropagatingState>())
+            {
+                _propagationInfo.Propagate(interaction.ContractInfo, -v);
+            }
+            else
+            {
+                return;
+            }
+
             EffectManager.ImmediateCommand(new EffectCommand()
             {
                 EffectKey = "actor/enemyHit",
                 Position = Vector3.Lerp(transform.position, info.Transform.position, 0.5f)
             });
 
-            physics.Stop();
-            physics.AddForce(v * 0.75f, ForceMode2D.Impulse);
-            propagation.Count = 0;
+            if (_propagationInfo.Count > 0)
+            {
+                physics.Stop();
+                physics.AddForce(v * (0.75f*_data.PropagationForce), ForceMode2D.Impulse);
+            }
+            propagation.Count -= 1;
         }
     }
-    
+
     public static bool ReadyGotoPropagating(Blackboard blackboard)
     {
         blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
@@ -364,8 +412,6 @@ public class EnemyPropagatingState : BaseState
 
         if (
             interaction.ContractInfo is ActorContractInfo myInfo &&
-            myInfo.TryGetBehaviour(out IBActorPhysics myPhysics) &&
-            !myPhysics.IsSwingState &&
             propagationInfo.Count > 0
         )
         {
@@ -400,7 +446,7 @@ public class EnemyNothingState : BaseState
         {
             // none..
         }
-        
+
         return false;
     }
 }
@@ -419,7 +465,7 @@ public class EnemyMovingState : BaseState
         {
             // move..
         }
-        
+
         return false;
     }
 
@@ -446,7 +492,7 @@ public class EnemyMovingState : BaseState
 
         return false;
     }
-}    
+}
 
 public class EnemyStopState : BaseState
 {
@@ -457,16 +503,17 @@ public class EnemyStopState : BaseState
     {
         _data = blackboard.GetProperty<EnemyData>("out_enemyData");
     }
+
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
         var gotoMoving = EnemyMovingState.ReadyMoving(blackboard);
         var gotoSleep = PollingStop(blackboard);
-        
+
         if (gotoMoving)
         {
             executor.SetNextState<EnemyMovingState>();
         }
-        else if(gotoSleep)
+        else if (gotoSleep)
         {
             executor.SetNextState<EnemySleepState>();
         }
@@ -474,7 +521,7 @@ public class EnemyStopState : BaseState
         {
             // stop..
         }
-        
+
         return false;
     }
 
@@ -503,7 +550,7 @@ public class EnemyStopState : BaseState
         blackboard.GetWrappedProperty<bool>("in_isStop", out var isStop);
         isStop.Value = false;
     }
-}    
+}
 
 public class EnemySleepState : BaseState
 {
@@ -518,6 +565,7 @@ public class EnemySleepState : BaseState
 
         return false;
     }
+
     public override void Enter(Blackboard blackboard)
     {
         blackboard.GetWrappedProperty<bool>("in_isSleep", out var isSleep);
@@ -529,4 +577,4 @@ public class EnemySleepState : BaseState
         blackboard.GetWrappedProperty<bool>("in_isSleep", out var isSleep);
         isSleep.Value = false;
     }
-}    
+}

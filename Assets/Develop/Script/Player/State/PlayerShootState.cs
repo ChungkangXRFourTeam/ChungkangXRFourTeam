@@ -10,7 +10,9 @@ public class
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
         blackboard.GetPropertyOrNull<IBActorPhysics>("in_currentActor_physics", out var currentActorPhysics);
+        blackboard.GetPropertyOrNull<IBActorPropagation>("in_currentActor_propagation", out var currentActorPropagation);
         var lineRenderer = blackboard.GetProperty<LineRenderer>("out_lineRenderer");
+        var transform = blackboard.GetProperty<Transform>("out_transform");
         var swingForce = blackboard.GetUnWrappedProperty<float>("out_swingForce");
         var swingDir = blackboard.GetUnWrappedProperty<Vector2>("in_swingDir");
 
@@ -18,9 +20,16 @@ public class
         lineRenderer.positionCount = 0;
         
         Time.timeScale = 1f;
-        
-        if(currentActorPhysics is not null)
+
+        if (currentActorPhysics is not null)
+        {
+            if (currentActorPropagation is not null && currentActorPhysics.GetTransformOrNull() is not null)
+            {
+                Vector2 v = (currentActorPhysics.GetTransformOrNull().position - transform.position);
+                currentActorPropagation.BeginPropagate(v.normalized);
+            }
             currentActorPhysics.AddKnockback(swingDir * swingForce);
+        }
         
         executor.SetNextState<DefaultPlayerState>();
         return false;

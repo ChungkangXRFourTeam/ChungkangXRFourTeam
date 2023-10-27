@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XRProject.Helper;
 
 /*
  * Base interaction
@@ -74,8 +75,14 @@ public interface IBActorPropagation : IActorBehaviour
 {
     public int Count { get; set; }
     public int MaxCount { get; }
-    public void Propagate(BaseContractInfo caller, int count, Vector2 forceVector);
+    public void Propagate(BaseContractInfo caller, Vector2 direction);
+    public void BeginPropagate(Vector2 direction);
     public bool IsPropagation { get; }
+}
+
+public interface IBEnemyState : IActorBehaviour
+{
+    public bool CheckCurrentState<T>() where T : BaseState;
 }
 
 public interface IBActorThrowable : IActorBehaviour

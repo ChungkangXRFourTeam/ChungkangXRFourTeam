@@ -32,6 +32,7 @@ public class PlayerSwingAttackStrategy : IStrategy
             .AddProperty("out_minmumCloseDistance",new WrappedValue<float>(_data.MinmumCloseDistance))
             .AddProperty("out_swingForce", new WrappedValue<float>(_data.SwingForce))
             .AddProperty("in_currentActor_physics", null)
+            .AddProperty("in_currentActor_propagation", null)
             .AddProperty("in_currentActor_life", null)
             .AddProperty("in_swingDir", new WrappedNullableValue<Vector2>())
             .AddProperty("out_lineRenderer", _lineRenderer)
