@@ -8,8 +8,10 @@ using XRProject.Utils.Log;
 
 public class PlayerHPHud : MonoBehaviour
 {
-    [SerializeField] private Image _img;
+    [SerializeField] private Image _image;
+    [SerializeField] private Color _color;
     [SerializeField] private float _animationDuration;
+    
     private PlayerController _pc;
 
     private void Awake()
@@ -21,7 +23,7 @@ public class PlayerHPHud : MonoBehaviour
             XLog.LogError("PlayerHPHud: it couldn't find player", "player");
             return;
         }
-        if (!_img)
+        if (!_image)
         {
             XLog.LogError("PlayerHPHud: image is null", "player");
             return;
@@ -30,8 +32,15 @@ public class PlayerHPHud : MonoBehaviour
         _pc.ChangedHp += OnChangeHP;
     }
 
+    private void OnValidate()
+    {
+        if (!_image) return;
+
+        _image.color = _color;
+    }
+
     private void OnChangeHP(IBActorLife life, float prevHp, float newHp)
     {
-        _img.DOFillAmount( newHp / life.MaxHp, _animationDuration);
+        _image.DOFillAmount( newHp / life.MaxHp, _animationDuration);
     }
 }

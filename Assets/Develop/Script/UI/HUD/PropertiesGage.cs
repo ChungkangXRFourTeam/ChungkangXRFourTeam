@@ -10,7 +10,8 @@ using XRProject.Utils.Log;
 
 public class PropertiesGage : MonoBehaviour
 {
-    [SerializeField] private Image _image;
+    [SerializeField] private Image _gageImage;
+    [SerializeField] private Image _headImage;
     [SerializeField] private Color _flameColor;
     [SerializeField] private Color _waterColor;
     [SerializeField] private Color _emptyColor;
@@ -20,48 +21,49 @@ public class PropertiesGage : MonoBehaviour
 
     private void SetAmount(EActorPropertiesType type, float value)
     {
-        if (!_image) return;
+        if (!_gageImage) return;
 
-        Color color = Color.white;
-        
+        Color color = _emptyColor;
+
         if (type == EActorPropertiesType.Flame)
         {
             color = _flameColor;
-        }        
+        }
         else if (type == EActorPropertiesType.Water)
         {
             color = _waterColor;
         }
-        else
+
+        _gageImage.DOFillAmount(value, _animationDuration);
+        _headImage.DOFillAmount(value, _animationDuration);
+
+        if (_prevType != type)
         {
-            color = _emptyColor;
+            _gageImage.DOColor(color, _animationDuration);
+            _headImage.DOColor(color, _animationDuration);
         }
-        
-        
-        _image.DOFillAmount(value, _animationDuration);
-        
-        if(_prevType != type)   
-            _image.DOColor(color, _animationDuration);
-        
+
         _prevType = type;
-        
     }
+
     private void Awake()
     {
         _pc = GameObject.Find("Player").GetComponent<PlayerController>();
 
-        if (!_image)
+        if (!_gageImage || !_headImage)
         {
             XLog.LogError("PropertiesGage: image is null", "player");
             return;
         }
-        
+
         if (!_pc)
         {
             XLog.LogError("PropertiesGage: it couldn't find player ", "player");
         }
-        
-        _image.fillAmount = 0f;
+
+        _gageImage.fillAmount = 0f;
+        _gageImage.color = _emptyColor;
+        _headImage.color = _emptyColor;
     }
 
     private void Update()
