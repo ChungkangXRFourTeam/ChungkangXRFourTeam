@@ -20,7 +20,7 @@ public class ActorSwingState : BaseState
 
         rigid.gravityScale = 0f;
         rigid.velocity = Vector2.zero;
-        rigid.AddForce(knockbackVector);
+        rigid.AddForce(knockbackVector, ForceMode2D.Impulse);
     }
 
     public override bool Update(Blackboard blackboard, StateExecutor executor)

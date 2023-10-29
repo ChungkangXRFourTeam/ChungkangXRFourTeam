@@ -16,7 +16,7 @@ public class GameSetting : MonoBehaviour
 
     private void Update()
     {
-        Application.targetFrameRate = 60;
+        
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             SceneManager.LoadScene(0);

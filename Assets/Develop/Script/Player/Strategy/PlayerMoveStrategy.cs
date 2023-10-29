@@ -67,13 +67,13 @@ public class PlayerMoveStrategy : IStrategy
         
         _rigid.position += movingVector * Time.deltaTime;
         _rigid.AddForce(jumpingVector, ForceMode2D.Impulse);
-        _rigid.AddForce(fallingVector, ForceMode2D.Force);
 
         downDir = Vector2.zero;
         upDir = Vector2.zero;
         if (fallingVector.sqrMagnitude > 0f)
         {
             _rigid.velocity = Vector2.zero;
+            _rigid.AddForce(fallingVector, ForceMode2D.Impulse);
             
             EffectManager.ImmediateCommand(new EffectCommand()
             {

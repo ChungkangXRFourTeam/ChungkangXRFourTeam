@@ -41,8 +41,6 @@ public class InteractionController : MonoBehaviour
             case ObjectContractInfo objectContractInfo:
                 OnContractObject?.Invoke(objectContractInfo);
                 break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(ContractInfo));
         }
     }
 
