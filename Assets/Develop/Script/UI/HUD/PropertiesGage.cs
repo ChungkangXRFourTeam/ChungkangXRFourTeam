@@ -18,6 +18,7 @@ public class PropertiesGage : MonoBehaviour
     [SerializeField] private float _animationDuration;
     private PlayerController _pc;
     private EActorPropertiesType _prevType;
+    private float _prevValue;
 
     private void SetAmount(EActorPropertiesType type, float value)
     {
@@ -34,8 +35,11 @@ public class PropertiesGage : MonoBehaviour
             color = _waterColor;
         }
 
-        _gageImage.DOFillAmount(value, _animationDuration);
-        _headImage.DOFillAmount(value, _animationDuration);
+        if (!Mathf.Approximately(_prevValue, value))
+        {
+            _gageImage.DOFillAmount(value, _animationDuration);
+            _headImage.DOFillAmount(value, _animationDuration);
+        }
 
         if (_prevType != type)
         {
@@ -44,6 +48,7 @@ public class PropertiesGage : MonoBehaviour
         }
 
         _prevType = type;
+        _prevValue = value;
     }
 
     private void Awake()
