@@ -31,7 +31,6 @@ public class EffectManager : MonoBehaviour
 
     private void PoolAlloc()
     {
-        Debug.Log("alloc");
         if(_resTable == null)
             _resTable = Resources.Load<EffectTableSet>("EffectTableSet")?.TableList ?? new List<EffectTable>();
         
