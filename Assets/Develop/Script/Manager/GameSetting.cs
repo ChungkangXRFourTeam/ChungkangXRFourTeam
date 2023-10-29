@@ -9,31 +9,17 @@ using XRProject.Utils.Log;
 
 public class GameSetting : MonoBehaviour
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
-    static void Init()
-    {
-        _inst = null;
-    }
-    static private GameSetting _inst;
-
-    static public GameSetting Instance => _inst;
     private void Awake()
     {
-        _inst = this;
+        EffectManager.Init();
     }
 
     private void Update()
     {
-        Application.targetFrameRate = 60;
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             SceneManager.LoadScene(0);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SceneManager.LoadScene(1);
-        }
-
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             Application.Quit();
