@@ -88,8 +88,6 @@ public class ParallaxLayer : MonoBehaviour
             _upWall = GameObject.Find("UpWall").transform.position;
             _downWall= GameObject.Find("DownWall").transform.position;
         }
-
-        SetParallaxValue();
     }
 
     void SetLayer()
@@ -158,7 +156,4 @@ public class ParallaxLayer : MonoBehaviour
 
     }
 
-    void SetParallaxValue()
-    {
-    }
 }
