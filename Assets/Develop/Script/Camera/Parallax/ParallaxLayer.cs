@@ -75,19 +75,15 @@ public class ParallaxLayer : MonoBehaviour
         float posX = transform.position.x;
         float posY = transform.position.y;
         SetLayer();
-        
-        if (_layerType == LayerType.Background)
-        {
-            _leftPoint.position = new Vector2((posX - (_renderer.size.x / 2) * transform.localScale.x),posY);
-            _rightPoint.position = new Vector2((posX + (_renderer.size.x / 2) * transform.localScale.x),posY);
-            _upPoint.position = new Vector2(posX,posY+ (_renderer.size.y / 2) * transform.localScale.y);
-            _downPoint.position = new Vector2(posX,posY - (_renderer.size.y / 2)*transform.localScale.y);
+        _leftPoint.position = new Vector2((posX - (_renderer.size.x / 2) * transform.localScale.x),posY);
+        _rightPoint.position = new Vector2((posX + (_renderer.size.x / 2) * transform.localScale.x),posY);
+        _upPoint.position = new Vector2(posX,posY+ (_renderer.size.y / 2) * transform.localScale.y);
+        _downPoint.position = new Vector2(posX,posY - (_renderer.size.y / 2)*transform.localScale.y);
 
-            _leftWall = GameObject.Find("LeftWall").transform.position;
-            _rightWall = GameObject.Find("RightWall").transform.position;
-            _upWall = GameObject.Find("UpWall").transform.position;
-            _downWall= GameObject.Find("DownWall").transform.position;
-        }
+        _leftWall = GameObject.Find("LeftWall").transform.position;
+        _rightWall = GameObject.Find("RightWall").transform.position;
+        _upWall = GameObject.Find("UpWall").transform.position;
+        _downWall= GameObject.Find("DownWall").transform.position;
     }
 
     void SetLayer()
@@ -106,10 +102,12 @@ public class ParallaxLayer : MonoBehaviour
                 break;
             case LayerType.Middleground:
                 gameObject.layer = LayerMask.NameToLayer("Middleground");
+                gameObject.tag = "Middleground";
                 _renderer.sortingLayerName = "Middleground";
                 break;
             case LayerType.Foreground:
                 gameObject.layer = LayerMask.NameToLayer("Foreground");
+                gameObject.tag = "Foreground";
                 _renderer.sortingLayerName = "Foreground";
                 break;
         }
