@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [AddComponentMenu("패럴랙스 스크롤/패럴랙스 카메라")]
-[ExecuteInEditMode]
 public class ParallaxCamera : MonoBehaviour 
 {
     public delegate void ParallaxCameraDelegate(float deltaMovementX, float deltaMovementY);
