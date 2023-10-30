@@ -231,16 +231,6 @@ public class EnemySwingState : BaseState
     private void OnContractObject(ObjectContractInfo info)
     {
         var transform = _cachedBlackboard.GetProperty<Transform>("out_transform");
-
-        if (info.TryGetBehaviour(out IBObjectInteractive interactive) &&
-            info.Transform.gameObject.CompareTag("KnockbackObject"))
-        {
-            EffectManager.ImmediateCommand(new EffectCommand()
-            {
-                EffectKey = "actor/knockbackHit",
-                Position = transform.position
-            });
-        }
     }
 
     public static bool ReadyGotoSwing(Blackboard blackboard)

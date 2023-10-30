@@ -130,6 +130,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
                 .AddBehaivour<IBActorThrowable>(this)
                 .AddBehaivour<IBEnemyState>(container.GetState<EnemyDefaultState>())
         );
+        
         Interaction.OnContractActor += OnContractActor;
         
         _currentHp = MaxHp;
@@ -209,7 +210,6 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             DoHit(info, damage);
         }
     }
-
 
     public void DoHit(BaseContractInfo caller, float damage)
     {
