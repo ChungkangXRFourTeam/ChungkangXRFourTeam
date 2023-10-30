@@ -166,11 +166,13 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     {
         _stateExecutor.Execute();
         
+        /*
         // 스프라이트 반전 코드. 이후 애니메이션이 나오면 삭제
         var x = InputManager.GetMainGameAction("Move")?.ReadValue<Vector2>().x ?? 0f;
         bool flipX = x < 0f;
         if (TryGetComponent<SpriteRenderer>(out var renderer))
             renderer.flipX = flipX;
+            */
     }
 
 

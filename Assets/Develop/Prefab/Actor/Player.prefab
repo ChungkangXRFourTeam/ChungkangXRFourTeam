@@ -269,6 +269,8 @@ GameObject:
   - component: {fileID: 6179648364536844533}
   - component: {fileID: 7575043131559424839}
   - component: {fileID: 5786440116261882233}
+  - component: {fileID: 7150456207733829141}
+  - component: {fileID: 1249441776031645013}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -494,6 +496,40 @@ CapsuleCollider2D:
   m_Offset: {x: -0.09782949, y: 0.6242794}
   m_Size: {x: 0.8606408, y: 1.3258874}
   m_Direction: 0
+--- !u!95 &7150456207733829141
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2374883332254647771}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 60b95823797760741bc9b6378b032984, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1249441776031645013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2374883332254647771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddb6b4a60f9fb14bbf8f9cd03513d18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 0}
 --- !u!1 &3593518873788793651
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,6 +612,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: bb26fee0-8e96-48d5-b4a8-e6e4b542c690
     m_ActionName: MainGame/Fall[/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f37f6d9d-e07f-4311-b90e-826b3dbc6738
+    m_ActionName: MainGame/Swing[/Mouse/leftButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: MainGame
