@@ -7,7 +7,6 @@ using XRProject.Helper;
 
 public class PlayerDefaultState : BaseState
 {
-    private CinemachineCameraControll _cameraControll;
 
     public override void Init(Blackboard blackboard)
     {
@@ -21,7 +20,6 @@ public class PlayerDefaultState : BaseState
             .SetActive<PlayerBuffStrategy>(true)
             ;
 
-        _cameraControll = GameObject.FindWithTag("VirtualCamera")?.GetComponent<CinemachineCameraControll>();
     }
 
     public override void Enter(Blackboard blackboard)
@@ -43,8 +41,6 @@ public class PlayerDefaultState : BaseState
 
         se.Execute();
 
-        if(_cameraControll) 
-            _cameraControll.SetZoomKeyState(InputManager.GetMainGameAction("Grab").IsPressed());
 
         return false;
     }

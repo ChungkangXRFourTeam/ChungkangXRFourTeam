@@ -67,7 +67,10 @@ public class ActorPhysicsStrategy : IStrategy, IBActorPhysics
 
     public Transform GetTransformOrNull()
     {
-        return _rigid.transform;
+        if(_rigid)
+            return _rigid.transform;
+        
+        return null;
     }
     
     public void OnDetectBlock()

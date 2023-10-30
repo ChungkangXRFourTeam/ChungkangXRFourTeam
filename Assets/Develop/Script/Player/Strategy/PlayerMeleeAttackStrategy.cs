@@ -92,7 +92,7 @@ public class PlayerMeleeAttackStrategy : IStrategy
         _blackboard = blackboard;
         
         if(_isAttackPressed)
-            OnAttack();
+            OnAttack(blackboard);
 
         _isAttackPressed = false;
     }
@@ -107,8 +107,11 @@ public class PlayerMeleeAttackStrategy : IStrategy
         _isAttackPressed = true;
     }
 
-    void OnAttack()
+    void OnAttack(Blackboard blackboard)
     {
+        blackboard.GetUnWrappedProperty<bool>("in_isGrabState", out var isGrabState);
+        if (isGrabState) return;
+        
         if (_canAttack)
         {
             _attackCount++;

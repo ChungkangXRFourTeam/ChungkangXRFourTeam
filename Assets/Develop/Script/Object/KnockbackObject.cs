@@ -71,16 +71,16 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
     {
         DoKnockback(info);
 
-        if (info.TryGetBehaviour(out IBActorProperties com))
-        {
-            if(info.TryGetBehaviour(out IBActorHit hit))
-            {
-                float damage = (com.Properties == Properties ? 1f : 2f);
-                hit.DoHit(Interaction.ContractInfo, damage);
-            }
-            
-            com.SetProperties(Interaction.ContractInfo, Properties);
-        }
+        //if (info.TryGetBehaviour(out IBActorProperties com))
+        //{
+        //    if(info.TryGetBehaviour(out IBActorHit hit))
+        //    {
+        //        float damage = (com.Properties == Properties ? 1f : 2f);
+        //        hit.DoHit(Interaction.ContractInfo, damage);
+        //    }
+        //    
+        //    com.SetProperties(Interaction.ContractInfo, Properties);
+        //}
     }
 
     private void DoKnockback(ActorContractInfo info)

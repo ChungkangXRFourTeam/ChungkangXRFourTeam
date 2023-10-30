@@ -9,9 +9,11 @@ public class PlayerSwingAttackStrategy : IStrategy
     private LineRenderer _lineRenderer;
     private PlayerSwingAttackData _data;
     private StateExecutor _executor;
+    private CinemachineCameraControll _cameraControll;
 
     public void Init(Blackboard sendedBlackboard)
     {
+        _cameraControll = GameObject.FindWithTag("VirtualCamera")?.GetComponent<CinemachineCameraControll>();
         _data = sendedBlackboard.GetProperty<PlayerSwingAttackData>("out_swingAttackData");
         _lineRenderer = sendedBlackboard.GetProperty<LineRenderer>("out_traceLineRenderer");
         
@@ -45,6 +47,13 @@ public class PlayerSwingAttackStrategy : IStrategy
     public void Update(Blackboard blackboard)
     {
         _executor.Execute();
+        
+        if (_cameraControll)
+        {
+            _cameraControll.SetZoomKeyState(_executor.CurrentState is PlayerSwingState);
+        }
+
+        blackboard.GetWrappedProperty<bool>("in_isGrabState").Value = _executor.CurrentState is not DefaultPlayerState;
     }
 
     public void Reset()
