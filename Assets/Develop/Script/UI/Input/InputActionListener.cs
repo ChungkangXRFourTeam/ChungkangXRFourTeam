@@ -51,7 +51,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                     ""id"": ""034eef75-82e8-4172-a56d-c25be76c8f94"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
@@ -161,7 +161,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""d1b32849-3386-4e4d-a0ba-ec4a94f61e76"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

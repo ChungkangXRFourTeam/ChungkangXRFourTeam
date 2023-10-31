@@ -6,23 +6,26 @@ using UnityEngine;
 
 public class KnockbackObject : MonoBehaviour, IBObjectInteractive
 {
-    [Header("튕기는 힘")]
-    [SerializeField] private float _knockbackForce;
-    [Header("튕기는 방향에 대한 각도")]
-    [SerializeField] private float _reflectAnglel;
-    [Header("속성(값이 None이면 에러 발생!! 반드시 설정)")]
-    [SerializeField] private EActorPropertiesType _properties;
-    [Space]
-    [Header("시각적 디버깅 광선의 길이")]
-    [SerializeField] private float _rayLength;
-    [Header("시각적 디버깅 활성화 여부")]
-    [SerializeField] private bool _debug;
-    [Space]
-    [SerializeField] private bool _isSelectiveObject;
+    [Header("튕기는 힘")] [SerializeField] private float _knockbackForce;
+
+    [Header("튕기는 방향에 대한 각도")] [SerializeField]
+    private float _reflectAnglel;
+
+    [Header("속성(값이 None이면 에러 발생!! 반드시 설정)")] [SerializeField]
+    private EActorPropertiesType _properties;
+
+    [Space] [Header("시각적 디버깅 광선의 길이")] [SerializeField]
+    private float _rayLength;
+
+    [Header("시각적 디버깅 활성화 여부")] [SerializeField]
+    private bool _debug;
+
+    [Space] [SerializeField] private bool _isSelectiveObject;
 
     public bool IsSelectiveObject => _isSelectiveObject;
     public EActorPropertiesType Properties => _properties;
     public InteractionController Interaction { get; private set; }
+
     public Vector2 ReflecDirection
     {
         get
@@ -35,10 +38,10 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
     private void Awake()
     {
         Interaction = GetComponentInChildren<InteractionController>();
-        
-        Interaction.SetContractInfo(ObjectContractInfo.Create(transform, ()=>false)
-                .AddBehaivour<IBObjectInteractive>(this)
-            );
+
+        Interaction.SetContractInfo(ObjectContractInfo.Create(transform, () => false)
+            .AddBehaivour<IBObjectInteractive>(this)
+        );
         Interaction.OnContractActor += OnContractActor;
     }
 
@@ -71,16 +74,21 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
     {
         DoKnockback(info);
 
-        if (info.TryGetBehaviour(out IBActorProperties com))
+        string key = "actor/knockbackHit";
+        if (Properties == EActorPropertiesType.Flame)
         {
-            if(info.TryGetBehaviour(out IBActorHit hit))
-            {
-                float damage = (com.Properties == Properties ? 1f : 2f);
-                hit.DoHit(Interaction.ContractInfo, damage);
-            }
-            
-            com.SetProperties(Interaction.ContractInfo, Properties);
+            key = "actor/knockbackHitOrange";
         }
+        else if (Properties == EActorPropertiesType.Water)
+        {
+            key = "actor/knockbackHitWater";
+        }
+        
+        EffectManager.ImmediateCommand(new EffectCommand
+        {
+            EffectKey = key,
+            Position = info.Transform.position
+        });
     }
 
     private void DoKnockback(ActorContractInfo info)
@@ -90,6 +98,7 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
             p.AddKnockback(ReflecDirection * _knockbackForce);
         }
     }
+
     private void OnDrawGizmos()
     {
         if (!_debug) return;
@@ -97,5 +106,4 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, ReflecDirection * _rayLength);
     }
-
 }

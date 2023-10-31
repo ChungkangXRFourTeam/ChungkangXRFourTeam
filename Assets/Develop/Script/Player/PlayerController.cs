@@ -134,6 +134,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             .AddProperty("out_buffData", _buffData)
             .AddProperty("out_meleeHand", _meleeHand)
             .AddProperty("out_traceLineRenderer", _traceLineRenderer)
+            .AddProperty("in_isGrabState", new WrappedValue<bool>(false))
             ;
 
         strategyContainer
