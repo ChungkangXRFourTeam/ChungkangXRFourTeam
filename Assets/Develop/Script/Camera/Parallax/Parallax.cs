@@ -14,7 +14,6 @@ public class Parallax : MonoBehaviour
     private GameObject _virtualCameraObject;
     private CinemachineVirtualCamera _virtualCamera;
     private ParallaxCamera _parallaxCamera;
-    [SerializeField] private GameObject[] _parallaxLayerObjects;
     [SerializeField] private List<ParallaxLayer> _parallaxLayers;
 
     private void Awake()
@@ -36,16 +35,14 @@ public class Parallax : MonoBehaviour
 
         if (_parallaxCamera != null)
             _parallaxCamera.onCameraTranslate += Move;
-
-        _parallaxLayerObjects = GameObject.FindGameObjectsWithTag("Background");
-        if (_parallaxLayerObjects != null)
-        {
-            _parallaxLayers = new List<ParallaxLayer>();
-            for (int i = 0; i < _parallaxLayerObjects.Length; i++)
-            {
-                _parallaxLayers.Add( _parallaxLayerObjects[i].GetComponent<ParallaxLayer>());
-            }
-        }
+        
+        _parallaxLayers = new List<ParallaxLayer>();
+        
+        SetLayerFromStringTag("Background");
+        SetLayerFromStringTag("Middleground");
+        SetLayerFromStringTag("Foreground");
+        
+        
     }
     
 
@@ -55,6 +52,19 @@ public class Parallax : MonoBehaviour
         {
             _parallaxLayers[i].MoveX(deltaX);
             _parallaxLayers[i].MoveY(deltaY);
+        }
+    }
+
+    void SetLayerFromStringTag(string tag)
+    {
+        GameObject[] _parallaxLayerObjects;
+        _parallaxLayerObjects = GameObject.FindGameObjectsWithTag(tag);
+        if (_parallaxLayerObjects != null)
+        {
+            for (int i = 0; i < _parallaxLayerObjects.Length; i++)
+            {
+                _parallaxLayers.Add( _parallaxLayerObjects[i].GetComponent<ParallaxLayer>());
+            }
         }
     }
 

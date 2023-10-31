@@ -30,11 +30,6 @@ public class DOFManager : MonoBehaviour
         StartCoroutine(UpdateBlur(dof));
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     IEnumerator UpdateBlur(DepthOfField dof)
     {
         float dt = 0;

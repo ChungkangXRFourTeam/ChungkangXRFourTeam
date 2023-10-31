@@ -20,6 +20,7 @@ public enum LayerType
 }
 
 [AddComponentMenu("패럴랙스 스크롤/패럴랙스 레이어")]
+[ExecuteInEditMode]
 public class ParallaxLayer : MonoBehaviour
 {
     [Header("오브젝트 타입 설정")]
@@ -40,8 +41,6 @@ public class ParallaxLayer : MonoBehaviour
     [Header("오브젝트 줌아웃 크기 설정")]
     [SerializeField, Tooltip("줌아웃 했을 때의 스프라이트 크기를 조절합니다."), Range(-2f, 3f)]
     private float _spriteZoomOutSize = 1f;
-    
-    private float _zoomOffset = 0.1f;
     private SpriteRenderer _renderer;
     private CinemachineCameraControll _virtualCameraController;
     private CinemachineVirtualCamera _virtualCamera;
@@ -76,19 +75,15 @@ public class ParallaxLayer : MonoBehaviour
         float posX = transform.position.x;
         float posY = transform.position.y;
         SetLayer();
-        
-        if (_layerType == LayerType.Background)
-        {
-            _leftPoint.position = new Vector2((posX - (_renderer.size.x / 2) * transform.localScale.x),posY);
-            _rightPoint.position = new Vector2((posX + (_renderer.size.x / 2) * transform.localScale.x),posY);
-            _upPoint.position = new Vector2(posX,posY+ (_renderer.size.y / 2) * transform.localScale.y);
-            _downPoint.position = new Vector2(posX,posY - (_renderer.size.y / 2)*transform.localScale.y);
+        _leftPoint.position = new Vector2((posX - (_renderer.size.x / 2) * transform.localScale.x),posY);
+        _rightPoint.position = new Vector2((posX + (_renderer.size.x / 2) * transform.localScale.x),posY);
+        _upPoint.position = new Vector2(posX,posY+ (_renderer.size.y / 2) * transform.localScale.y);
+        _downPoint.position = new Vector2(posX,posY - (_renderer.size.y / 2)*transform.localScale.y);
 
-            _leftWall = GameObject.Find("LeftWall").transform.position;
-            _rightWall = GameObject.Find("RightWall").transform.position;
-            _upWall = GameObject.Find("UpWall").transform.position;
-            _downWall= GameObject.Find("DownWall").transform.position;
-        }
+        _leftWall = GameObject.Find("LeftWall").transform.position;
+        _rightWall = GameObject.Find("RightWall").transform.position;
+        _upWall = GameObject.Find("UpWall").transform.position;
+        _downWall= GameObject.Find("DownWall").transform.position;
     }
 
     void SetLayer()
@@ -107,10 +102,12 @@ public class ParallaxLayer : MonoBehaviour
                 break;
             case LayerType.Middleground:
                 gameObject.layer = LayerMask.NameToLayer("Middleground");
+                gameObject.tag = "Middleground";
                 _renderer.sortingLayerName = "Middleground";
                 break;
             case LayerType.Foreground:
                 gameObject.layer = LayerMask.NameToLayer("Foreground");
+                gameObject.tag = "Foreground";
                 _renderer.sortingLayerName = "Foreground";
                 break;
         }
@@ -139,18 +136,22 @@ public class ParallaxLayer : MonoBehaviour
 
     void SetSpriteSize()
     {
-        if (allowChangeSizeWhenCameraSizeChanged && Application.isPlaying)
+        if (Application.isPlaying)
         {
             InputAction action = InputManager.GetMainGameAction("Grab");
             if (action != null && action.IsPressed())
-            { 
-                transform.localScale = new Vector2(_spriteZoomOutSize, _spriteZoomOutSize);
+            {
+                if (allowChangeSizeWhenCameraSizeChanged && Application.isPlaying)
+                {
+                    transform.localScale = Vector2.Lerp(transform.localScale,new Vector2(_spriteZoomOutSize, _spriteZoomOutSize),Time.deltaTime * 5);
+                }
             }
             else
             {
-                transform.localScale = new Vector2(_spriteSize, _spriteSize);
+                transform.localScale = Vector2.Lerp(transform.localScale,new Vector2(_spriteSize, _spriteSize),Time.deltaTime * 5);
             }
-        
         }
+
     }
+
 }
