@@ -75,10 +75,12 @@ public class ParallaxLayer : MonoBehaviour
         float posX = transform.position.x;
         float posY = transform.position.y;
         SetLayer();
-        _leftPoint.position = new Vector2((posX - (_renderer.size.x / 2) * transform.localScale.x),posY);
-        _rightPoint.position = new Vector2((posX + (_renderer.size.x / 2) * transform.localScale.x),posY);
-        _upPoint.position = new Vector2(posX,posY+ (_renderer.size.y / 2) * transform.localScale.y);
-        _downPoint.position = new Vector2(posX,posY - (_renderer.size.y / 2)*transform.localScale.y);
+        float sizeX = _renderer.sprite.texture.Size().x / 100;
+        float sizeY = _renderer.sprite.texture.Size().y / 100;
+        _leftPoint.position = new Vector2((posX - (sizeX / 2) * transform.localScale.x), posY);
+        _rightPoint.position = new Vector2((posX + (sizeX  / 2) * transform.localScale.x), posY);
+        _upPoint.position = new Vector2(posX, posY + (sizeY / 2) * transform.localScale.y);
+        _downPoint.position = new Vector2(posX, posY - (sizeY / 2) * transform.localScale.y);
 
         _leftWall = GameObject.Find("LeftWall").transform.position;
         _rightWall = GameObject.Find("RightWall").transform.position;
