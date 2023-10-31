@@ -59,7 +59,7 @@ public static class PlayerCalculation
 
         List<Vector3> points = new List<Vector3>(10);
         points.Add(currentPos);
-        int maxIter = 30;
+        int maxIter = 6;
         int currentIter = 0;
         GameObject prevCol = null;
         while (maxIter > currentIter)
