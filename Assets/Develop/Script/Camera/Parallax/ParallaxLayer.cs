@@ -142,8 +142,6 @@ public class ParallaxLayer : MonoBehaviour
 
     void SetSpriteSize()
     {
-        if (Application.isPlaying)
-        {
             InputAction action = InputManager.GetMainGameAction("Grab");
             if (action != null && action.IsPressed())
             {
@@ -156,7 +154,6 @@ public class ParallaxLayer : MonoBehaviour
             {
                 transform.localScale = Vector2.Lerp(transform.localScale,new Vector2(_spriteSize, _spriteSize),Time.deltaTime * 5);
             }
-        }
 
     }
 
