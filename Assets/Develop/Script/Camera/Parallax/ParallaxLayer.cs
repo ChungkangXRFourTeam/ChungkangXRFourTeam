@@ -75,12 +75,16 @@ public class ParallaxLayer : MonoBehaviour
         float posX = transform.position.x;
         float posY = transform.position.y;
         SetLayer();
-        float sizeX = _renderer.sprite.texture.Size().x / 100;
-        float sizeY = _renderer.sprite.texture.Size().y / 100;
-        _leftPoint.position = new Vector2((posX - (sizeX / 2) * transform.localScale.x), posY);
-        _rightPoint.position = new Vector2((posX + (sizeX  / 2) * transform.localScale.x), posY);
-        _upPoint.position = new Vector2(posX, posY + (sizeY / 2) * transform.localScale.y);
-        _downPoint.position = new Vector2(posX, posY - (sizeY / 2) * transform.localScale.y);
+        if (_renderer.sprite != null)
+        {
+            float sizeX = _renderer.sprite.texture.Size().x / 100;
+            float sizeY = _renderer.sprite.texture.Size().y / 100;
+            
+            _leftPoint.position = new Vector2((posX - (sizeX / 2) * transform.localScale.x), posY);
+            _rightPoint.position = new Vector2((posX + (sizeX  / 2) * transform.localScale.x), posY);
+            _upPoint.position = new Vector2(posX, posY + (sizeY / 2) * transform.localScale.y);
+            _downPoint.position = new Vector2(posX, posY - (sizeY / 2) * transform.localScale.y);
+        }
 
         _leftWall = GameObject.Find("LeftWall").transform.position;
         _rightWall = GameObject.Find("RightWall").transform.position;
@@ -138,8 +142,6 @@ public class ParallaxLayer : MonoBehaviour
 
     void SetSpriteSize()
     {
-        if (Application.isPlaying)
-        {
             InputAction action = InputManager.GetMainGameAction("Grab");
             if (action != null && action.IsPressed())
             {
@@ -152,7 +154,6 @@ public class ParallaxLayer : MonoBehaviour
             {
                 transform.localScale = Vector2.Lerp(transform.localScale,new Vector2(_spriteSize, _spriteSize),Time.deltaTime * 5);
             }
-        }
 
     }
 

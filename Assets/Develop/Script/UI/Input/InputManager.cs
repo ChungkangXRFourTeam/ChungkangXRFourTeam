@@ -74,8 +74,13 @@ public class InputManager : MonoBehaviour
 
     [CanBeNull]
     public static InputAction GetMainGameAction(string action)
-    {
-        return _mainGameActionMap.FindAction(action, true);
+    { 
+        if(Application.isPlaying) 
+            return _mainGameActionMap.FindAction(action, false);
+        else
+        {
+            return null;
+        }
     }
 
     public static void RegisterActionToMainGame(string actionName,Action<InputAction.CallbackContext> callback, ActionType actionType)
