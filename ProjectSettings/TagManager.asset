@@ -7,10 +7,11 @@ TagManager:
   - Boss
   - Wall
   - VirtualCamera
-  - Background
   - SubCamera
   - KnockbackObject
-  - Middleground
+  - Background
+  - Object1
+  - Object2
   - Foreground
   layers:
   - Default
@@ -22,12 +23,12 @@ TagManager:
   - Player
   - Enemy
   - Background
-  - Middleground
+  - Object1
   - Foreground
   - Confiner
   - EnemyBody
   - Effect
-  - 
+  - Object2
   - 
   - 
   - 
@@ -49,8 +50,11 @@ TagManager:
   - name: Background
     uniqueID: 2051151137
     locked: 0
-  - name: Middleground
+  - name: Object1
     uniqueID: 26965005
+    locked: 0
+  - name: Object2
+    uniqueID: 1945222807
     locked: 0
   - name: Default
     uniqueID: 0
