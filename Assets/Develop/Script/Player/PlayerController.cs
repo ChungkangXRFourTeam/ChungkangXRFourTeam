@@ -202,10 +202,13 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
 
     public void DoHit(BaseContractInfo caller, float damage)
     {
-        if (caller.Transform.gameObject.CompareTag("Boss"))
+        CurrentHP -= damage;
+        
+        EffectManager.ImmediateCommand(new EffectCommand
         {
-            CurrentHP -= damage;
-        }
+            EffectKey = "actor/knockbackHit",
+            Position = transform.position
+        });
     }
 
     public void SetProperties(BaseContractInfo caller, EActorPropertiesType type)
