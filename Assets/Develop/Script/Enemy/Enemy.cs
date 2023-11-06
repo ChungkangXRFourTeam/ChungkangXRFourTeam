@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
     private PropagationInfo _propagationInfo;
     private Tweener _effectTweener = null;
     private bool _isDestroyed = false;
+    private WrappedTriggerValue _isAttackEnded = new();
     
     /* properties */
     public event System.Action<IBActorLife, float, float> ChangedHp;
@@ -50,7 +51,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
     }
 
     public bool IsThrowable => _isThrowable;
-
+    public void SetThrowable(bool value) => _isThrowable = value;
 
     public EActorPropertiesType Properties
     {
@@ -113,8 +114,8 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             .AddProperty("in_isStop", new WrappedValue<bool>(false))
             .AddProperty("in_isSleep", new WrappedValue<bool>(false))
             
-            
             .AddProperty("out_trigger_isPropagating",  new WrappedTriggerValue())
+            .AddProperty("out_trigger_isAttackEnded", _isAttackEnded)
             ;
 
         _executor = StateExecutor.Create(container, blackboard);
@@ -148,7 +149,20 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
         //_body.isTrigger = !IsSwingState;
     }
 
-    
+    private float _attackTimer;
+    private void LateUpdate()
+    {
+        // Attack ai test
+        _attackTimer += Time.deltaTime;
+
+        if (_attackTimer >= _data.AttackSpeed)
+        {
+            _isAttackEnded.Value = true;
+            _attackTimer = 0f;
+        }
+    }
+
+
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Wall"))
@@ -266,5 +280,13 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             c.a = 1f;
             _effectImage.color = c;
         });
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, _data.DetectionDistance);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, _data.AttackDistance);
     }
 }

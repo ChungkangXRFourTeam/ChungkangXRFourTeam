@@ -24,6 +24,9 @@ public class EnemyDefaultState : BaseState, IBEnemyState
         StateContainer actionContainer = new StateContainer();
         actionContainer
             .AddState<EnemyPatrollState>()
+            .AddState<EnemyDetectionState>()
+            .AddState<EnemyAttackState>()
+            
             .AddState<EnemyPropagatingState>()
             .AddState<EnemyNothingState>()
             .AddState<EnemySwingState>()
@@ -116,6 +119,7 @@ public class EnemyPatrollState : BaseState
         bool gotoPatrollSpace = EnemyPatrollState.ReadyGotoPatroll(blackboard);
         bool gotoSwingState = EnemySwingState.ReadyGotoSwing(blackboard);
         bool gotoProgagating = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
+        bool gotoDetection = EnemyDetectionState.GotoDetection(blackboard);
 
         if (gotoProgagating)
         {
@@ -128,6 +132,10 @@ public class EnemyPatrollState : BaseState
         else if (!gotoPatrollSpace)
         {
             executor.SetNextState<EnemyNothingState>();
+        }
+        else if (gotoDetection)
+        {
+            executor.SetNextState<EnemyDetectionState>();
         }
         else
         {
@@ -438,6 +446,153 @@ public class EnemyNothingState : BaseState
         }
 
         return false;
+    }
+}
+
+public class EnemyDetectionState : BaseState
+{
+    public override bool Update(Blackboard blackboard, StateExecutor executor)
+    {
+        bool gotoAttack = EnemyAttackState.GotoAttack(blackboard);
+        bool gotoSwingState = EnemySwingState.ReadyGotoSwing(blackboard);
+        bool gotoProgagating = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
+        bool gotoDetection = EnemyDetectionState.GotoDetection(blackboard);
+
+        if (gotoProgagating)
+        {
+            executor.SetNextState<EnemyPropagatingState>();
+        }
+        else if (gotoSwingState)
+        {
+            executor.SetNextState<EnemySwingState>();
+        }
+        else if(gotoAttack)
+        {
+            executor.SetNextState<EnemyAttackState>();
+        }
+        else if (!gotoDetection)
+        {
+            executor.SetNextState<EnemyPatrollState>();
+        }
+        else
+        {
+            if (!TracePlayer(blackboard))
+            {
+                executor.SetNextState<EnemyPatrollState>();
+            }
+        }
+
+        return false;
+    }
+
+    private bool TracePlayer(Blackboard blackboard)
+    {
+        Debug.Log("trace player");
+        blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+        var playerCollider = GetPlayerOrNull(transform.position, data.DetectionDistance);
+
+        if (!playerCollider) return false;
+
+        Vector2 dir = (playerCollider.transform.position - transform.position);
+        dir.y = 0f;
+        dir = dir.normalized;
+
+        transform.position += (Vector3)(data.MovementSpeed * Time.deltaTime * dir);
+
+        return true;
+    }
+
+    public static Collider2D GetPlayerOrNull(Vector2 myPos, float radius)
+    {
+        var playerCollider = Physics2D.OverlapCircle(
+            myPos,
+            radius,
+            LayerMask.GetMask("Player"));
+
+        return playerCollider;
+    }
+
+    public static bool GotoDetection(Blackboard blackboard)
+    {
+        blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+
+        return GetPlayerOrNull(transform.position, data.DetectionDistance) != null;
+    }
+}
+public class EnemyAttackState : BaseState
+{
+    public override void Enter(Blackboard blackboard)
+    {
+        // TODO: 공격 모션 코드 삽입
+        Debug.Log("Begin Attack");
+        DoHit(blackboard);
+        
+        
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+        transform.GetComponent<Enemy>().SetThrowable(false);
+    }
+    public override bool Update(Blackboard blackboard, StateExecutor executor)
+    {
+        blackboard.GetUnWrappedProperty<bool>("out_trigger_isAttackEnded", out var isAttackEnded);
+        bool gotoSwing = EnemySwingState.ReadyGotoSwing(blackboard);
+        bool gotoPropagation = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
+
+        if (gotoPropagation)
+        {
+            executor.SetNextState<EnemyPropagatingState>();
+        }
+        else if (gotoSwing)
+        {
+            executor.SetNextState<EnemySwingState>();
+        }
+        else if (isAttackEnded)
+        {
+            executor.SetNextState<EnemyPatrollState>();
+            return false;
+        }
+        
+        
+        return false;
+    }
+
+    public override void Exit(Blackboard blackboard)
+    {
+        // TODO:  공격 모션 종료 코드 삽입
+        Debug.Log("end Attack");
+        
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+        transform.GetComponent<Enemy>().SetThrowable(true);
+    }
+
+    private void DoHit(Blackboard blackboard)
+    {
+        blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+        var playerCollider = EnemyDetectionState.GetPlayerOrNull(transform.position, data.AttackDistance);
+
+        if (!playerCollider) return;
+        if (playerCollider.TryGetComponent(out InteractionController interaction) &&
+            interaction.TryGetContractInfo(out ActorContractInfo info) &&
+            info.TryGetBehaviour(out IBActorHit hit))
+        {
+            blackboard.GetProperty<InteractionController>("out_interaction", out var myInteraction);
+            hit.DoHit(myInteraction.ContractInfo, data.Damage);
+        }
+    }
+    public static bool GotoAttack(Blackboard blackboard)
+    {
+        blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+
+        var playerCollider = Physics2D.OverlapCircle(
+            transform.position,
+            data.AttackDistance,
+            LayerMask.GetMask("Player"));
+
+        if (!playerCollider) return false;
+        return true;
     }
 }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName="XR/Enemy/EnemyData", fileName="EnemyData ", order = 3)]
 public class EnemyData : ScriptableObject
 {
+
     [SerializeField] private float _hp;
     [SerializeField] private float _movementSpeed;
     [SerializeField] private float _SleepDecisionTime;
@@ -12,7 +13,10 @@ public class EnemyData : ScriptableObject
     [SerializeField] private int _propagationCount;
     [SerializeField] private Color _flameColor;
     [SerializeField] private Color _waterColor;
-
+    [SerializeField] private float _detectionDistance;
+    [SerializeField] private float _attackDistance;
+    [SerializeField] private float _damage;
+    [SerializeField] private float _attackSpeed;
     public float SleepDecisionTime => _SleepDecisionTime;   
     public float PropagationForce => _propagationForce;
 
@@ -24,4 +28,9 @@ public class EnemyData : ScriptableObject
 
     public float MovementSpeed => _movementSpeed;
     public int PropagationCount => _propagationCount;
+    public float DetectionDistance => _detectionDistance;
+
+    public float AttackDistance => _attackDistance;
+    public float Damage => _damage;
+    public float AttackSpeed => _attackSpeed;
 }
