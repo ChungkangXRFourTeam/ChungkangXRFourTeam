@@ -13,8 +13,10 @@ public enum LayerType
     Default,
     [InspectorName("원경")]
     Background,
-    [InspectorName("중경")]
-    Middleground,
+    [InspectorName("오브젝트1")]
+    Object1,
+    [InspectorName("오브젝트2")]
+    Object2,
     [InspectorName("근경")]
     Foreground
 }
@@ -106,10 +108,15 @@ public class ParallaxLayer : MonoBehaviour
                 gameObject.tag = "Background";
                 _renderer.sortingLayerName = "Background";
                 break;
-            case LayerType.Middleground:
-                gameObject.layer = LayerMask.NameToLayer("Middleground");
-                gameObject.tag = "Middleground";
-                _renderer.sortingLayerName = "Middleground";
+            case LayerType.Object1:
+                gameObject.layer = LayerMask.NameToLayer("Object1");
+                gameObject.tag = "Object1";
+                _renderer.sortingLayerName = "Object1";
+                break;
+            case LayerType.Object2:
+                gameObject.layer = LayerMask.NameToLayer("Object2");
+                gameObject.tag = "Object2";
+                _renderer.sortingLayerName = "Object2";
                 break;
             case LayerType.Foreground:
                 gameObject.layer = LayerMask.NameToLayer("Foreground");
@@ -122,8 +129,11 @@ public class ParallaxLayer : MonoBehaviour
     {
         Vector3 newPos = transform.localPosition;
         newPos.x -= delta * _horizontalFactor;
-        if ((_leftPoint.position.x > _leftWall.x && delta > 0)  || (_rightPoint.position.x < _rightWall.x && delta < 0))
+
+        if ((_leftPoint.position.x > _leftWall.x && delta > 0) || (_rightPoint.position.x < _rightWall.x && delta < 0))
+        {
             transform.position = newPos;
+        }
     }
     
     public void MoveY(float delta)
