@@ -6,12 +6,12 @@ namespace XRProject.Boss
 {
     public static partial class BossPatternFactory
     {
-        public static Track Pattern1()
+        public static Track Pattern1(Transform transform, IPatternFactoryIngredient ingredients)
         {
             var cTrack = new Track();
 
             cTrack
-                .AddAction(new NormalLazerAction())
+                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData))
                 .AddAction(new DelayAction(3f))
                 ;
 
@@ -20,7 +20,8 @@ namespace XRProject.Boss
                 if (x is not Track tract) return;
 
                 if (tract.IsEnded)
-                {
+                {            Debug.Log("a");
+
                     tract.CurrentIndex = 0;
                 }
             };

@@ -49,16 +49,14 @@ namespace XRProject.Boss
 
         public void Begin()
         {
-            CurrentIndex = 0;
+            _currentIndex = 0;
         }
         
         private bool _isActionBegin;
         public void EValuate()
         {
-            if (IsEnded)
-            {
-                return;
-            }
+            if (_table.Count == 0) return;
+            if (IsEnded) return;
             
             IAction current = _table[_currentIndex];
             
