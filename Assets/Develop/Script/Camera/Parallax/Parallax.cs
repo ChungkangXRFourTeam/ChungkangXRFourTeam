@@ -39,7 +39,8 @@ public class Parallax : MonoBehaviour
         _parallaxLayers = new List<ParallaxLayer>();
         
         SetLayerFromStringTag("Background");
-        SetLayerFromStringTag("Middleground");
+        SetLayerFromStringTag("Object1");
+        SetLayerFromStringTag("Object2");
         SetLayerFromStringTag("Foreground");
         
         
