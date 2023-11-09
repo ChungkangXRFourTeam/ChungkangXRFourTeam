@@ -1,11 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Design.Serialization;
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using Object = UnityEngine.Object;
+
 
 public class ParallaxObjectCreator
 {
@@ -101,3 +99,5 @@ public class ParallaxObjectCreator
     */
     
 }
+
+#endif

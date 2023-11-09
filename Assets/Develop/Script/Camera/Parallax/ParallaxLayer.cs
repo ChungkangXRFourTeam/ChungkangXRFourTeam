@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Cinemachine;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public enum LayerType
 {
@@ -40,13 +35,12 @@ public class ParallaxLayer : MonoBehaviour
     [SerializeField, Tooltip("줌아웃 했을 때 오브젝트의 크기를 변경 할 것인지에 대한 여부를 설정합니다.")]
     private bool allowChangeSizeWhenCameraSizeChanged;
     
-    [Header("오브젝트 줌아웃 크기 설정")]
-    [SerializeField, Tooltip("줌아웃 했을 때의 스프라이트 크기를 조절합니다."), Range(-2f, 3f)]
-    private float _spriteZoomOutSize = 1f;
     private SpriteRenderer _renderer;
     private CinemachineCameraControll _virtualCameraController;
     private CinemachineVirtualCamera _virtualCamera;
 
+    [Header("벽을 넘어갈 수 있는지에 대한 여부")] [SerializeField]
+    private bool isOverable;
     
     [Space(20f)]
     [SerializeField]
@@ -79,8 +73,11 @@ public class ParallaxLayer : MonoBehaviour
         SetLayer();
         if (_renderer.sprite != null)
         {
-            float sizeX = _renderer.sprite.texture.Size().x / 100;
-            float sizeY = _renderer.sprite.texture.Size().y / 100;
+            float sizeX = _renderer.sprite.bounds.size.x;
+            float sizeY = _renderer.sprite.bounds.size.y;
+            
+            Debug.Log(sizeX);
+            Debug.Log(sizeY);
             
             _leftPoint.position = new Vector2((posX - (sizeX / 2) * transform.localScale.x), posY);
             _rightPoint.position = new Vector2((posX + (sizeX  / 2) * transform.localScale.x), posY);
@@ -130,7 +127,7 @@ public class ParallaxLayer : MonoBehaviour
         Vector3 newPos = transform.localPosition;
         newPos.x -= delta * _horizontalFactor;
 
-        if ((_leftPoint.position.x > _leftWall.x && delta > 0) || (_rightPoint.position.x < _rightWall.x && delta < 0))
+        if (isOverable||(_leftPoint.position.x > _leftWall.x && delta > 0) || (_rightPoint.position.x < _rightWall.x && delta < 0))
         {
             transform.position = newPos;
         }
@@ -141,7 +138,8 @@ public class ParallaxLayer : MonoBehaviour
         Vector3 newPos = transform.localPosition;
         newPos.y -= delta * _verticalFactor;
         
-        if((_upPoint.position.y < _upWall.y && delta < 0) || (_downPoint.position.y > _downWall.y && delta > 0) ) 
+        if(isOverable||((_upPoint.position.y < _upWall.y && delta < 0) || (_downPoint.position.y > _downWall.y && delta > 0))
+           ) 
             transform.position = newPos;
     }
 
@@ -152,19 +150,17 @@ public class ParallaxLayer : MonoBehaviour
 
     void SetSpriteSize()
     {
-            InputAction action = InputManager.GetMainGameAction("Grab");
-            if (action != null && action.IsPressed())
-            {
-                if (allowChangeSizeWhenCameraSizeChanged && Application.isPlaying)
-                {
-                    transform.localScale = Vector2.Lerp(transform.localScale,new Vector2(_spriteZoomOutSize, _spriteZoomOutSize),Time.deltaTime * 5);
-                }
-            }
-            else
-            {
-                transform.localScale = Vector2.Lerp(transform.localScale,new Vector2(_spriteSize, _spriteSize),Time.deltaTime * 5);
-            }
+        float zoomOutSize = _virtualCameraController.GetMaxZoomOutSize() / _virtualCameraController.GetMaxZoomInSize();
+        if (_virtualCameraController.GetZoomKeyState() && allowChangeSizeWhenCameraSizeChanged)
+            transform.localScale = Vector2.Lerp(transform.localScale,
+                new Vector2(_spriteSize * zoomOutSize, _spriteSize * zoomOutSize), Time.unscaledDeltaTime * _virtualCameraController.GetZoomSpeed());
+        else
+        {
+            transform.localScale = Vector2.Lerp(transform.localScale,
+                new Vector2(_spriteSize, _spriteSize), Time.unscaledDeltaTime * _virtualCameraController.GetZoomSpeed());
+        }
 
     }
+
 
 }

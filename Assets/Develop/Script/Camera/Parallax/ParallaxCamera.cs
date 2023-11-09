@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +17,8 @@ public class ParallaxCamera : MonoBehaviour
         oldPositionY = transform.position.y;
     }
 
-    void Update()
+
+    private void Update()
     {
         if (transform.position.x != oldPositionX && transform.position.y != oldPositionY)
         {

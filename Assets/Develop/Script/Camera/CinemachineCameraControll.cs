@@ -57,6 +57,11 @@ public class CinemachineCameraControll : MonoBehaviour
         _isZoomKeyDown = state;
     }
 
+    public bool GetZoomKeyState()
+    {
+        return _isZoomKeyDown;
+    }
+
     public float GetMaxZoomOutSize()
     {
         return _maxZoomOutSize;
@@ -65,6 +70,11 @@ public class CinemachineCameraControll : MonoBehaviour
     public float GetMaxZoomInSize()
     {
         return _maxZoomInSize;
+    }
+
+    public float GetZoomSpeed()
+    {
+        return _zoomSpeed;
     }
 
 }
