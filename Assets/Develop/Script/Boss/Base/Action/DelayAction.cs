@@ -18,16 +18,14 @@ namespace XRProject.Boss
             _timer = 0f;
         }
 
-        public IEnumerator EValuate()
+        public void End()
         {
-            Debug.Log("wait");
-            yield return new WaitForSeconds(_duration);
-            yield return null;
+            
         }
 
-        public bool IsEnd()
+        public IEnumerator EValuate()
         {
-            return _timer >= _duration;
+            yield return new WaitForSeconds(_duration);
         }
 
         public ITrackPredicate Predicate { get; set; }

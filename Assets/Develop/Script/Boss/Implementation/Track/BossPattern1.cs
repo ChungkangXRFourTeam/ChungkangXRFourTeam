@@ -11,8 +11,16 @@ namespace XRProject.Boss
             var cTrack = new Track();
 
             cTrack
-                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData))
+                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, true))
                 .AddAction(new DelayAction(1f))
+                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                .AddAction(new DelayAction(2f))
+                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                .AddAction(new DelayAction(2f))
+                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                .AddAction(new DelayAction(2f))
+                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                .AddAction(new DelayAction(2f))
                 ;
 
             cTrack.Predicate = new RepeatPredicate() { Index = 0 };

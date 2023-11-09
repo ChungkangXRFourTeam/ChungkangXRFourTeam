@@ -146,6 +146,7 @@ namespace XRProject.Boss
                         var temp = _context ?? inAction.Item.EValuate();
                         if (_context == null)
                         {
+                            inAction.Item.Begin();
                             _context = temp;
                         }
 
@@ -153,6 +154,7 @@ namespace XRProject.Boss
 
                         if (!pass)
                         {
+                            inAction.Item.End();
                             inAction.Item.Predicate?.Process(_list, inAction.Parent, inAction.Index);
                             break;
                         }
