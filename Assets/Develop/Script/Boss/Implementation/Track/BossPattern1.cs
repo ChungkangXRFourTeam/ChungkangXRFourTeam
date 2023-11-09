@@ -12,19 +12,10 @@ namespace XRProject.Boss
 
             cTrack
                 .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData))
-                .AddAction(new DelayAction(3f))
+                .AddAction(new DelayAction(1f))
                 ;
 
-            cTrack.Predicate = (target, parent) =>
-            {
-                if (target is not Track track) return;
-                if (parent is not Track p) return;
-
-                if (target.IsEnd())
-                {
-                    p.ReplayAction();
-                }
-            };
+            cTrack.Predicate = new RepeatPredicate() { Index = 0 };
             
             return cTrack;
         }

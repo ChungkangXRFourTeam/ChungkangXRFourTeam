@@ -7,17 +7,19 @@ using XRProject.Boss;
 public class Boss : MonoBehaviour, IPatternFactoryIngredient
 {
     private Track _track;
+    private TrackPlayer _player;
 
     [SerializeField] private NormalLazerActionData _normalLazerActionData;
 
     private void Awake()
     {
         _track = BossPatternFactory.CompletionTrack(transform, this);
+        _player = new TrackPlayer();
+        _player.Play(_track);
     }
 
     private void Update()
     {
-        _track.EValuate();
     }
 
     private void OnDrawGizmos()

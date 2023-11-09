@@ -7,16 +7,14 @@ namespace XRProject.Boss
     public interface IAction
     {
         public void Begin();
-        public void EValuate();
+        public IEnumerator EValuate();
         public bool IsEnd();
-        public Predicate Predicate { get; set; }
+        public ITrackPredicate Predicate { get; set; }
     }
-
-    public delegate void Predicate(IAction target, IAction parent);
     public class Track : IAction
     {
         private List<IAction> _table = new();
-        public Predicate Predicate { get; set; }
+        public ITrackPredicate Predicate { get; set; }
 
         private int _currentIndex;
 
@@ -26,6 +24,7 @@ namespace XRProject.Boss
             set
             {
                 _currentIndex = value;
+                _context = null;
                 if (_currentIndex >= ActionCount)
                 {
                     Debug.LogError("Track: current index >= ActionCount");
@@ -46,85 +45,17 @@ namespace XRProject.Boss
             _table.Add(action);
             return this;
         }
-
-        public bool CanNextAction
-        {
-            get
-            {
-                if (_currentIndex == -1 ||
-                    _currentIndex >= _table.Count)
-                    return false;
-
-                return true;
-            }
-        }
-
-        public bool CanPrevAction
-        {
-            get
-            {
-                if (_currentIndex < 1)
-                    return false;
-                
-                return true;
-            }
-        }
-
-        public void MovePrevAction()
-        {
-            if (CanPrevAction)
-            {
-                _currentIndex--;
-            }
-        }
-
-        public void MoveNextAction()
-        {
-            if (CanNextAction)
-            {
-                _currentIndex++;
-            }
-        }
-
-        public void ReplayAction()
-        {
-            MovePrevAction();
-        }
-
         public void Begin()
         {
+            _context = null;
             _currentIndex = 0;
         }
         
         private bool _isActionBegin;
-        public void EValuate()
+        private IEnumerator _context;
+        public IEnumerator EValuate()
         {
-            if (_table.Count == 0) return;
-            if (IsEnded) return;
-            
-            IAction current = _table[_currentIndex];
-            
-            if(_isActionBegin == false)
-            {
-                current.Begin();
-                _isActionBegin = true;
-            }
-            
-            current.EValuate();
-            
-            if (current.IsEnd())
-            {
-                _currentIndex++;
-
-                if (_currentIndex >= _table.Count)
-                {
-                    _currentIndex = -1;
-                }
-                
-                _isActionBegin = false;
-            }
-            
-            current.Predicate?.Invoke(current, this);
+            yield break;
         }
 
         public bool IsEnd()
@@ -133,5 +64,5 @@ namespace XRProject.Boss
         }
 
         public IAction this[int index] => _table[index];
-    }   
+    }
 }

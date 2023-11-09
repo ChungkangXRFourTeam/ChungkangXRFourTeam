@@ -94,21 +94,29 @@ namespace XRProject.Boss
             _isAttacked = false;
         }
 
-        public void EValuate()
+        public IEnumerator EValuate()
         {
             var playerTransform = GetPlayerOrNull();
             var lazer = _data.LazerController;
-            if (playerTransform == false) return;
+            Debug.Log("start");
+            if (playerTransform == false) yield break;
             
             var points1 = GetAcrossPoints(playerTransform.position + Vector3.one * _data.Distance);
             var points2 = GetAcrossPoints(playerTransform.position + -Vector3.one*_data.Distance);
-            
-            lazer.SetLinePosition(0, points1.Item1.Item1, points1.Item1.Item2);            
-            lazer.SetLinePosition(1, points1.Item2.Item1, points1.Item2.Item2);        
-            lazer.SetLinePosition(2, points2.Item1.Item1, points2.Item1.Item2);            
+            Debug.Log("1");
+            lazer.SetLinePosition(0, points1.Item1.Item1, points1.Item1.Item2);
+            yield return new WaitForSeconds(0.5f);
+            Debug.Log("2");
+            lazer.SetLinePosition(1, points1.Item2.Item1, points1.Item2.Item2);   
+            yield return new WaitForSeconds(0.5f);     
+            Debug.Log("3");
+            lazer.SetLinePosition(2, points2.Item1.Item1, points2.Item1.Item2);  
+            yield return new WaitForSeconds(0.5f);    
+            Debug.Log("4");      
             lazer.SetLinePosition(3, points2.Item2.Item1, points2.Item2.Item2);
 
             _isAttacked = true;
+            yield return null;
         }
 
         public bool IsEnd()
@@ -116,7 +124,7 @@ namespace XRProject.Boss
             return _isAttacked;
         }
 
-        public Predicate Predicate { get; set; }
+        public ITrackPredicate Predicate { get; set; }
     }
 
 }

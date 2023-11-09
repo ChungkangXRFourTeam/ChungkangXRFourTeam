@@ -18,9 +18,11 @@ namespace XRProject.Boss
             _timer = 0f;
         }
 
-        public void EValuate()
+        public IEnumerator EValuate()
         {
-            _timer += Time.deltaTime;
+            Debug.Log("wait");
+            yield return new WaitForSeconds(_duration);
+            yield return null;
         }
 
         public bool IsEnd()
@@ -28,7 +30,7 @@ namespace XRProject.Boss
             return _timer >= _duration;
         }
 
-        public Predicate Predicate { get; set; }
+        public ITrackPredicate Predicate { get; set; }
     }
 
 }
