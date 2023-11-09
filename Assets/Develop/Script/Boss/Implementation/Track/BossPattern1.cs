@@ -15,14 +15,14 @@ namespace XRProject.Boss
                 .AddAction(new DelayAction(3f))
                 ;
 
-            cTrack.Predicate = x =>
+            cTrack.Predicate = (target, parent) =>
             {
-                if (x is not Track tract) return;
+                if (target is not Track track) return;
+                if (parent is not Track p) return;
 
-                if (tract.IsEnded)
-                {            Debug.Log("a");
-
-                    tract.CurrentIndex = 0;
+                if (target.IsEnd())
+                {
+                    p.ReplayAction();
                 }
             };
             

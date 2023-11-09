@@ -12,7 +12,7 @@ namespace XRProject.Boss
         public Predicate Predicate { get; set; }
     }
 
-    public delegate void Predicate(IAction target);
+    public delegate void Predicate(IAction target, IAction parent);
     public class Track : IAction
     {
         private List<IAction> _table = new();
@@ -45,6 +45,50 @@ namespace XRProject.Boss
         {
             _table.Add(action);
             return this;
+        }
+
+        public bool CanNextAction
+        {
+            get
+            {
+                if (_currentIndex == -1 ||
+                    _currentIndex >= _table.Count)
+                    return false;
+
+                return true;
+            }
+        }
+
+        public bool CanPrevAction
+        {
+            get
+            {
+                if (_currentIndex < 1)
+                    return false;
+                
+                return true;
+            }
+        }
+
+        public void MovePrevAction()
+        {
+            if (CanPrevAction)
+            {
+                _currentIndex--;
+            }
+        }
+
+        public void MoveNextAction()
+        {
+            if (CanNextAction)
+            {
+                _currentIndex++;
+            }
+        }
+
+        public void ReplayAction()
+        {
+            MovePrevAction();
         }
 
         public void Begin()
@@ -80,7 +124,7 @@ namespace XRProject.Boss
                 _isActionBegin = false;
             }
             
-            current.Predicate?.Invoke(this);
+            current.Predicate?.Invoke(current, this);
         }
 
         public bool IsEnd()
