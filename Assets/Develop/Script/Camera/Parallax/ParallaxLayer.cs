@@ -47,6 +47,8 @@ public class ParallaxLayer : MonoBehaviour
     private CinemachineCameraControll _virtualCameraController;
     private CinemachineVirtualCamera _virtualCamera;
 
+    [Header("벽을 넘어갈 수 있는지에 대한 여부")] [SerializeField]
+    private bool isOverable;
     
     [Space(20f)]
     [SerializeField]
@@ -130,7 +132,7 @@ public class ParallaxLayer : MonoBehaviour
         Vector3 newPos = transform.localPosition;
         newPos.x -= delta * _horizontalFactor;
 
-        if ((_leftPoint.position.x > _leftWall.x && delta > 0) || (_rightPoint.position.x < _rightWall.x && delta < 0))
+        if (isOverable||(_leftPoint.position.x > _leftWall.x && delta > 0) || (_rightPoint.position.x < _rightWall.x && delta < 0))
         {
             transform.position = newPos;
         }
@@ -141,7 +143,8 @@ public class ParallaxLayer : MonoBehaviour
         Vector3 newPos = transform.localPosition;
         newPos.y -= delta * _verticalFactor;
         
-        if((_upPoint.position.y < _upWall.y && delta < 0) || (_downPoint.position.y > _downWall.y && delta > 0) ) 
+        if(isOverable||((_upPoint.position.y < _upWall.y && delta < 0) || (_downPoint.position.y > _downWall.y && delta > 0))
+           ) 
             transform.position = newPos;
     }
 
@@ -157,12 +160,12 @@ public class ParallaxLayer : MonoBehaviour
             {
                 if (allowChangeSizeWhenCameraSizeChanged && Application.isPlaying)
                 {
-                    transform.localScale = Vector2.Lerp(transform.localScale,new Vector2(_spriteZoomOutSize, _spriteZoomOutSize),Time.deltaTime * 5);
+                    transform.localScale = Vector2.Lerp(transform.localScale,new Vector2(_spriteZoomOutSize, _spriteZoomOutSize),Time.unscaledDeltaTime * 5);
                 }
             }
             else
             {
-                transform.localScale = Vector2.Lerp(transform.localScale,new Vector2(_spriteSize, _spriteSize),Time.deltaTime * 5);
+                transform.localScale = Vector2.Lerp(transform.localScale,new Vector2(_spriteSize, _spriteSize),Time.unscaledDeltaTime * 5);
             }
 
     }
