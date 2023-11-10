@@ -34,7 +34,7 @@ namespace XRProject.Boss
             _lineRenderers[index].positionCount = 2;
             
             var s = DOTween.Sequence();
-            var c = color;
+            var c = _lineRenderers[index].sharedMaterial.color;
             c.a = 0;
             s.Join(_lineRenderers[index].DOColor(
                     new Color2(c, c),

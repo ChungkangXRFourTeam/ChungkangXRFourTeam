@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using XRProject.Boss;
 
 public class Boss : MonoBehaviour, IPatternFactoryIngredient
@@ -9,7 +10,10 @@ public class Boss : MonoBehaviour, IPatternFactoryIngredient
     private Track _track;
     private TrackPlayer _player;
 
-    [SerializeField] private NormalLazerActionData _normalLazerActionData;
+    [SerializeField] private BaseLazerActionData baseLazerActionData;
+    [SerializeField] private BossMeleeData _meleeData;
+    [SerializeField] private VerticalLazerData _verticalLazerData;
+    [SerializeField] private TopBottomLazerData _topBottomLazerData;
 
     private void Awake()
     {
@@ -25,8 +29,11 @@ public class Boss : MonoBehaviour, IPatternFactoryIngredient
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube((Vector2)transform.position + _normalLazerActionData.CenterOffset, _normalLazerActionData.BoxSize * 2f);
+        Gizmos.DrawWireCube((Vector2)transform.position + baseLazerActionData.CenterOffset, baseLazerActionData.BoxSize * 2f);
     }
 
-    public NormalLazerActionData NormalLazerData => _normalLazerActionData;
+    public VerticalLazerData VerticalLazerData => _verticalLazerData;
+    public BossMeleeData MeleeData => _meleeData;
+    public TopBottomLazerData TopBottomLazerData => _topBottomLazerData;
+    public BaseLazerActionData BaseLazerData => baseLazerActionData;
 }

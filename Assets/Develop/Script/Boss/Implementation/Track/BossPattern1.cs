@@ -11,18 +11,40 @@ namespace XRProject.Boss
             var cTrack = new Track();
 
             cTrack
-                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, true))
+                .AddAction(new OpeningLazerAction(transform, ingredients.BaseLazerData))
                 .AddAction(new DelayAction(1f))
-                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                
+                .AddAction(new RandomLazerAction(transform, ingredients.BaseLazerData))
                 .AddAction(new DelayAction(2f))
-                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                .AddAction(new RandomLazerAction(transform, ingredients.BaseLazerData))
                 .AddAction(new DelayAction(2f))
-                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                
+                .AddAction(new VerticalLazerAction(transform, ingredients.BaseLazerData, ingredients.VerticalLazerData))
                 .AddAction(new DelayAction(2f))
-                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                .AddAction(new VerticalLazerAction(transform, ingredients.BaseLazerData, ingredients.VerticalLazerData))
+                .AddAction(new DelayAction(2f))
+                
+                .AddAction(new StarLazerAction(transform, ingredients.BaseLazerData))
+                .AddAction(new DelayAction(2f))
+                .AddAction(new StarLazerAction(transform, ingredients.BaseLazerData))
+                .AddAction(new DelayAction(2f))
+                
+                .AddAction(new TopBottomLazerAction(transform, ingredients.BaseLazerData, ingredients.TopBottomLazerData))
+                .AddAction(new DelayAction(2f))
+                .AddAction(new TopBottomLazerAction(transform, ingredients.BaseLazerData, ingredients.TopBottomLazerData))
                 .AddAction(new DelayAction(2f))
                 ;
 
+            //cTrack = new Track();
+            //cTrack
+            //    //.AddAction(new OpeningLazerAction(transform, ingredients.BaseLazerData))
+            //    //.AddAction(new RandomLazerAction(transform, ingredients.BaseLazerData))
+            //    //.AddAction(new VerticalLazerAction(transform, ingredients.BaseLazerData, ingredients.VerticalLazerData))
+            //    //.AddAction(new StarLazerAction(transform, ingredients.BaseLazerData))
+            //    //.AddAction(new TopBottomLazerAction(transform, ingredients.BaseLazerData, ingredients.TopBottomLazerData))
+            //    .AddAction(new DelayAction(1f))
+            //    ;
+            
             cTrack.Predicate = new RepeatPredicate() { Index = 0 };
             
             return cTrack;
