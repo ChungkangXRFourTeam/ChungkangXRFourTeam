@@ -6,7 +6,6 @@ using System.Reflection;
 using UnityEngine;
 using Cinemachine;
 
-[ExecuteInEditMode]
 public class Parallax : MonoBehaviour
 {
     
@@ -32,7 +31,7 @@ public class Parallax : MonoBehaviour
         
         if (_parallaxCamera == null)
             _parallaxCamera = Camera.main.GetComponent<ParallaxCamera>();
-
+        
         if (_parallaxCamera != null)
             _parallaxCamera.onCameraTranslate += Move;
         
