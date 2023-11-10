@@ -124,7 +124,7 @@ public class ParallaxLayer : MonoBehaviour
     }
     public void MoveX(float delta)
     {
-        Vector3 newPos = transform.localPosition;
+        Vector3 newPos = transform.position;
         newPos.x -= delta * _horizontalFactor;
 
         if (isOverable||(_leftPoint.position.x > _leftWall.x && delta > 0) || (_rightPoint.position.x < _rightWall.x && delta < 0))
