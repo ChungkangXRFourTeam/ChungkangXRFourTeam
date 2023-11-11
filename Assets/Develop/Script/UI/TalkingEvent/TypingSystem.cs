@@ -1,0 +1,126 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+using Unity.VisualScripting;
+
+public class TypingSystem : MonoBehaviour
+{
+    public static TypingSystem instance;
+    
+    [SerializeField]
+    private float typingTimer = 0.08f;
+    private float typingTimer_fast = 0.03f;
+    
+    private float typingTime;
+    private string[] texts;
+    private TextMeshProUGUI tmpSave;
+
+    public static bool isDialogEnd;
+    public static bool isTypingEnd;
+    private int dialogNumber = 0;
+
+    private float timer;
+
+    void Awake()
+    {
+        if (null == instance)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+
+        timer = typingTimer;
+        typingTime = typingTimer;
+    }
+    
+    public static TypingSystem Instance
+    {
+        get
+        {
+            if (instance == null)
+                return null;
+
+            return instance;
+        }
+        
+    }
+
+    public void Typing(string[] dialogs, TextMeshProUGUI textObj)
+    {
+        isDialogEnd = false;
+        texts = dialogs;
+        tmpSave = textObj;
+        if (dialogNumber < dialogs.Length)
+        {
+            char[] chars = dialogs[dialogNumber].ToCharArray();
+            StartCoroutine(Typer(chars,textObj));
+            
+        }
+        else
+        {
+            tmpSave.text = "";
+            isDialogEnd = true;
+            texts = null;
+            tmpSave = null;
+            dialogNumber = 0;
+        }
+    }
+
+    public void GetInputDown()
+    {
+        if(texts != null)
+            if (isTypingEnd)
+            {
+                tmpSave.text = "";
+                Typing(texts,tmpSave);
+            }
+            else
+            {
+                typingTime = typingTimer_fast;
+            }
+        
+    }
+    
+    public bool GetInputUp()
+    {
+        if (texts != null)
+            typingTime = typingTimer;
+
+        return true;
+    }
+    
+    IEnumerator Typer(char[] chars, TextMeshProUGUI textObj)
+    {
+        int currentChar = 0;
+        int charLength = chars.Length;
+        isTypingEnd = false;
+
+        while (currentChar < charLength)
+        {
+            if (timer >= 0)
+            {
+                yield return null;
+                timer -= Time.unscaledDeltaTime;
+            }
+            else
+            {
+                textObj.text += chars[currentChar].ToString();
+                currentChar++;
+                timer = typingTime;
+            }
+
+            if (currentChar >= charLength)
+            {
+                isTypingEnd = true;
+                dialogNumber++;
+                yield break;
+            }
+            
+        }
+    }
+}
