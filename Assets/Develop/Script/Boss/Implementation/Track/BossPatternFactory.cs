@@ -10,7 +10,7 @@ namespace XRProject.Boss
 
     public static partial class BossPatternFactory
     {
-        public static Track CompletionTrack(Transform transform, IPatternFactoryIngredient ingredients)
+        public static Track CompletionBattleTrack(Transform transform, IPatternFactoryIngredient ingredients)
         {
             Track parentTrack = new Track();
             
@@ -19,6 +19,17 @@ namespace XRProject.Boss
                 .AddAction(Pattern2())
                 ;
             
+            return parentTrack;
+        }
+    
+        public static Track CompletionMovementTrack(Transform transform, IPatternFactoryIngredient ingredients)
+        {
+            Track parentTrack = new Track();
+
+            parentTrack
+                .AddAction(new MovementAction(transform, ingredients))
+                ;
+        
             return parentTrack;
         }
     }

@@ -5,21 +5,13 @@ using UnityEngine;
 
 namespace XRProject.Boss
 {
-    public class OpeningLazerAction : BaseLazerAction
+    public class OpeningBossAction : BaseBossAction
     {
         
-        public OpeningLazerAction(Transform transform, BaseLazerActionData baseData) : base(transform, baseData)
+        public OpeningBossAction(Transform transform, BaseLazerActionData baseData) : base(transform, baseData)
         {
             
             
-        }
-        public void Begin()
-        {
-            
-        }
-
-        public void End()
-        {
         }
 
         public override IEnumerator EValuate()
@@ -46,7 +38,6 @@ namespace XRProject.Boss
             yield return DoClearColoring(0, 4);
         }
 
-        public ITrackPredicate Predicate { get; set; }
     }
 
 }

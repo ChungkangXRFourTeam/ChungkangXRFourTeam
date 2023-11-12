@@ -16,23 +16,14 @@ namespace XRProject.Boss
         public float Offset;
     }
     
-    public class TopBottomLazerAction : BaseLazerAction
+    public class TopBottomBossAction : BaseBossAction
     {
         private TopBottomLazerData _data;
         
-        public TopBottomLazerAction(Transform transform, BaseLazerActionData baseData, TopBottomLazerData data) : base(transform, baseData)
+        public TopBottomBossAction(Transform transform, BaseLazerActionData baseData, TopBottomLazerData data) : base(transform, baseData)
         {
             _data = data;
         }
-        public void Begin()
-        {
-            
-        }
-
-        public void End()
-        {
-        }
-
         public override IEnumerator EValuate()
         {
             var playerTransform = GetPlayerOrNull();
@@ -67,7 +58,6 @@ namespace XRProject.Boss
             yield break;
         }
 
-        public ITrackPredicate Predicate { get; set; }
     }
 
 }

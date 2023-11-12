@@ -4,20 +4,11 @@ using UnityEngine;
 
 namespace XRProject.Boss
 {
-    public class StarLazerAction : BaseLazerAction
+    public class StarBossAction : BaseBossAction
     {
-        public StarLazerAction(Transform transform, BaseLazerActionData baseData) : base(transform, baseData)
+        public StarBossAction(Transform transform, BaseLazerActionData baseData) : base(transform, baseData)
         {
         }
-        public void Begin()
-        {
-            
-        }
-
-        public void End()
-        {
-        }
-
         public override IEnumerator EValuate()
         {
             var playerTransform = GetPlayerOrNull();
@@ -58,7 +49,6 @@ namespace XRProject.Boss
             yield break;
         }
 
-        public ITrackPredicate Predicate { get; set; }
     }
 
 }

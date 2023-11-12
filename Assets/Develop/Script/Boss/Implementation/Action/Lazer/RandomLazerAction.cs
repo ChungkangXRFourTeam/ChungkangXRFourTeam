@@ -6,21 +6,12 @@ using UnityEngine;
 namespace XRProject.Boss
 {
     
-    public class RandomLazerAction : BaseLazerAction
+    public class RandomBossAction : BaseBossAction
     {
         
-        public RandomLazerAction(Transform transform, BaseLazerActionData baseData) : base(transform, baseData)
+        public RandomBossAction(Transform transform, BaseLazerActionData baseData) : base(transform, baseData)
         {
         }
-        public void Begin()
-        {
-            
-        }
-
-        public void End()
-        {
-        }
-
         public override IEnumerator EValuate()
         {
             var playerTransform = GetPlayerOrNull();
@@ -46,7 +37,6 @@ namespace XRProject.Boss
             yield return DoClearColoring(0, 4);
         }
 
-        public ITrackPredicate Predicate { get; set; }
     }
 
 }

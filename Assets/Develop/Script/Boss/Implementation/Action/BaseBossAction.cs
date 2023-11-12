@@ -23,12 +23,12 @@ namespace XRProject.Boss
         public BossLazerController LazerController;
     }
 
-    public abstract class BaseLazerAction : IAction
+    public abstract class BaseBossAction : IAction
     {
         protected BaseLazerActionData BaseData { get; private set; }
         protected Transform transform { get; private set; }
 
-        public BaseLazerAction(Transform transform, BaseLazerActionData baseData)
+        public BaseBossAction(Transform transform, BaseLazerActionData baseData)
         {
             this.transform = transform;
             BaseData = baseData;
@@ -148,11 +148,11 @@ namespace XRProject.Boss
             return DoColoring(start, end, Color.clear,BaseData.AttackClearDuration).WaitForCompletion();
         }
 
-        public void Begin()
+        public virtual void Begin()
         {
         }
 
-        public void End()
+        public virtual void End()
         {
         }
 

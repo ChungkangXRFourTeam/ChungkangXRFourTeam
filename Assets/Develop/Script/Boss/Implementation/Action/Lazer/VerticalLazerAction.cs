@@ -15,21 +15,13 @@ namespace XRProject.Boss
         public int Interation;
     }
     
-    public class VerticalLazerAction : BaseLazerAction
+    public class VerticalBossAction : BaseBossAction
     {
         private VerticalLazerData _data;
         
-        public VerticalLazerAction(Transform transform, BaseLazerActionData baseData, VerticalLazerData data) : base(transform, baseData)
+        public VerticalBossAction(Transform transform, BaseLazerActionData baseData, VerticalLazerData data) : base(transform, baseData)
         {
             _data = data;
-        }
-        public void Begin()
-        {
-            
-        }
-
-        public void End()
-        {
         }
 
         public override IEnumerator EValuate()
@@ -63,7 +55,6 @@ namespace XRProject.Boss
             yield break;
         }
 
-        public ITrackPredicate Predicate { get; set; }
     }
 
 }
