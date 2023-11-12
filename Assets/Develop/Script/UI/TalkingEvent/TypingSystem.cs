@@ -17,7 +17,7 @@ public class TypingSystem : MonoBehaviour
     private TextMeshProUGUI tmpSave;
 
     public static bool isDialogEnd;
-    public static bool isTypingEnd;
+    public bool isTypingEnd;
     private int dialogNumber = 0;
 
     private float timer;
@@ -55,6 +55,7 @@ public class TypingSystem : MonoBehaviour
         isDialogEnd = false;
         texts = dialogs;
         tmpSave = textObj;
+        typingTime = typingTimer;
         if (dialogNumber < dialogs.Length)
         {
             char[] chars = dialogs[dialogNumber].ToCharArray();
@@ -73,23 +74,26 @@ public class TypingSystem : MonoBehaviour
 
     public void GetInputDown()
     {
-        if(texts != null)
+        if (texts != null)
+        {
             if (isTypingEnd)
             {
                 tmpSave.text = "";
                 Typing(texts,tmpSave);
+                timer = typingTime;
             }
             else
             {
                 typingTime = typingTimer_fast;
             }
+            
+        }
         
     }
     
     public bool GetInputUp()
-    {
-        if (texts != null)
-            typingTime = typingTimer;
+    { 
+        typingTime = typingTimer;
 
         return true;
     }
@@ -98,6 +102,7 @@ public class TypingSystem : MonoBehaviour
     {
         int currentChar = 0;
         int charLength = chars.Length;
+        typingTime = typingTimer;
         isTypingEnd = false;
 
         while (currentChar < charLength)
@@ -123,4 +128,5 @@ public class TypingSystem : MonoBehaviour
             
         }
     }
+
 }
