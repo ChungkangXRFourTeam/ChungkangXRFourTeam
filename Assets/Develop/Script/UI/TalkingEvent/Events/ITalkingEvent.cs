@@ -44,5 +44,4 @@ public interface ITalkingEvent
         await UniTask.Delay(TimeSpan.FromSeconds(1.0f));
     }
 
-    public void SetEventTexts();
 }

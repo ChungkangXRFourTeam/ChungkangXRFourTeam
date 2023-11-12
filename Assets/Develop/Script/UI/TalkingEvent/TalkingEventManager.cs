@@ -19,7 +19,6 @@ public class TalkingEventManager : MonoBehaviour
     private void Start()
     {
         _enabledEvent = new TalkingEvent();
-        _enabledEvent.SetEventTexts();
         InvokeCurrentEvent().Forget();
     }
 

@@ -12,15 +12,15 @@ using XRProject.Helper;
 
 public class TalkingEvent : ITalkingEvent
 {
-    List<Dictionary<string, object>> _eventTexts;
-    private GameObject _playerEventText;
-    private GameObject _playerTalkImage;
-    private GameObject _playerEndButton;
-    private string _scriptPath = "EventTextScript/";
-    private Dictionary<string, GameObject> _talkers;
-    private List<string> _comments;
-
-    public void SetEventTexts()
+    protected List<Dictionary<string, object>> _eventTexts;
+    protected  GameObject _playerEventText;
+    protected  GameObject _playerTalkImage;
+    protected  GameObject _playerEndButton;
+    protected string _scriptPath = "EventTextScript/";
+    protected  Dictionary<string, GameObject> _talkers;
+    protected  List<string> _comments;
+    
+    public async UniTask OnEventBefore()
     {
         _scriptPath += "TestScript";
         _playerEventText = GameObject.Find("PlayerEventText");
@@ -29,9 +29,11 @@ public class TalkingEvent : ITalkingEvent
         _eventTexts = CSVReader.Read(_scriptPath);
         _comments = new List<string>();
         _talkers = new Dictionary<string, GameObject>();
+
+        await UniTask.Yield();
     }
 
-    public async UniTask OnEventBefore()
+    public async UniTask OnEventStart()
     {
         _playerTalkImage.SetActive(false);
         _talkers.TryAdd(TalkerTarget.Player.ToString(),_playerEventText);
@@ -65,7 +67,7 @@ public class TalkingEvent : ITalkingEvent
                     if (TypingSystem.isDialogEnd)
                     {
                         _playerTalkImage.SetActive(false);
-                        await UniTask.Delay(TimeSpan.FromMilliseconds(1500));
+                        await UniTask.Delay(TimeSpan.FromMilliseconds(1000));
                         break;
                     }
                 }
@@ -79,7 +81,6 @@ public class TalkingEvent : ITalkingEvent
     
     public async UniTask OnEventEnd()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(1));
 
         GameObject player = GameObject.Find("Player");
         await MoveToPosition(GameObject.Find("Player"), new Vector2(7, player.transform.position.y), 0.08f);
