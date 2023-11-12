@@ -84,20 +84,6 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
         InputManager.RegisterActionToMainGame("BoundMode", OnBoundMode, ActionType.Started);
         InputManager.RegisterActionToMainGame("BoundMode", ExitBoundMode, ActionType.Canceled);
 
-        Interaction.OnContractObject += (info) =>
-        {
-            if (info.TryGetBehaviour(out IBObjectInteractive interactive) &&
-                info.Transform.gameObject.CompareTag("KnockbackObject") &&
-                IsAllowedInteraction)
-            {
-                EffectManager.ImmediateCommand(new EffectCommand()
-                {
-                    EffectKey = "actor/knockbackHit",
-                    Position = transform.position
-                });
-            }
-        };
-
         var isGrounded = new WrappedValue<bool>();
         var isLeftSide = new WrappedValue<bool>();
         var isRightSide = new WrappedValue<bool>();

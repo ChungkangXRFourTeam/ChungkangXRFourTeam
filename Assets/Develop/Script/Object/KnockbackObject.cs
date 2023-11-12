@@ -74,6 +74,10 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
     {
         DoKnockback(info);
 
+        if (info.Transform.TryGetComponent(out PlayerController pc) &&
+            !pc.IsAllowedInteraction)
+            return;
+        
         string key = "actor/knockbackHit";
         if (Properties == EActorPropertiesType.Flame)
         {
