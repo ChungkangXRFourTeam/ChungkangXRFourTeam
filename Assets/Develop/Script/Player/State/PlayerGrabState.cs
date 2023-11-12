@@ -26,7 +26,8 @@ public class PlayerGrabState : BaseState
         if (currentActor.TryGetContractInfo<ActorContractInfo>(out var info) &&
             info.TryGetBehaviour<IBActorThrowable>(out var throwable) &&
             throwable.IsThrowable &&
-            info.TryGetBehaviour<IBActorPhysics>(out var actorPhysics))
+            info.TryGetBehaviour<IBActorPhysics>(out var actorPhysics) &&
+            info.TryGetBehaviour<IBActorAttackable>(out var attackable))
         {
             if (info.TryGetBehaviour<IBActorPropagation>(out var propagation))
             {
@@ -35,6 +36,7 @@ public class PlayerGrabState : BaseState
 
             blackboard.SetProperty("in_currentActor_physics", actorPhysics);
             executor.SetNextState<PlayerSwingState>();
+            attackable.IsAttackable = false;
         }
         else
         {

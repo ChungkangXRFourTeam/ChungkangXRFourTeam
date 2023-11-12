@@ -80,6 +80,11 @@ public interface IBActorPropagation : IActorBehaviour
     public bool IsPropagation { get; }
 }
 
+public interface IBActorAttackable : IActorBehaviour
+{
+    public bool IsAttackable { get; set; }
+}
+
 public interface IBEnemyState : IActorBehaviour
 {
     public bool CheckCurrentState<T>() where T : BaseState;

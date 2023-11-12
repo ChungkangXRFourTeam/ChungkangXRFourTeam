@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
+using UnityEditor.Build.Content;
 using XRProject.Helper;
 
 public class EnemyDefaultState : BaseState, IBEnemyState
@@ -487,7 +488,6 @@ public class EnemyDetectionState : BaseState
 
     private bool TracePlayer(Blackboard blackboard)
     {
-        Debug.Log("trace player");
         blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
         blackboard.GetProperty<Transform>("out_transform", out var transform);
         var playerCollider = GetPlayerOrNull(transform.position, data.DetectionDistance);
@@ -526,12 +526,12 @@ public class EnemyAttackState : BaseState
     public override void Enter(Blackboard blackboard)
     {
         // TODO: 공격 모션 코드 삽입
-        Debug.Log("Begin Attack");
+        blackboard.GetUnWrappedProperty("out_isCaught", out bool isCaught);
+        if (isCaught) return;
         DoHit(blackboard);
         
         
         blackboard.GetProperty<Transform>("out_transform", out var transform);
-        transform.GetComponent<Enemy>().SetThrowable(false);
     }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
@@ -560,10 +560,7 @@ public class EnemyAttackState : BaseState
     public override void Exit(Blackboard blackboard)
     {
         // TODO:  공격 모션 종료 코드 삽입
-        Debug.Log("end Attack");
-        
         blackboard.GetProperty<Transform>("out_transform", out var transform);
-        transform.GetComponent<Enemy>().SetThrowable(true);
     }
 
     private void DoHit(Blackboard blackboard)

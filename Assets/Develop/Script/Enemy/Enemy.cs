@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using XRProject.Helper;
 using Random = UnityEngine.Random;
 
-public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, IBActorThrowable
+public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, IBActorThrowable, IBActorAttackable
 {
     /* seralizedFields */
     [Header("editable")]
@@ -30,6 +30,14 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
     private WrappedTriggerValue _isAttackEnded = new();
     
     /* properties */
+    private WrappedValue<bool> _isCaught = new();
+    public bool IsAttackable 
+    {
+        get => !_isCaught.Value;
+        set => _isCaught.Value = !value;
+    }
+
+    
     public event System.Action<IBActorLife, float, float> ChangedHp;
     public float MaxHp => _data.Hp;
     
@@ -113,6 +121,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             .AddProperty("in_isMoving", new WrappedValue<bool>(false))
             .AddProperty("in_isStop", new WrappedValue<bool>(false))
             .AddProperty("in_isSleep", new WrappedValue<bool>(false))
+            .AddProperty("out_isCaught", _isCaught)
             
             .AddProperty("out_trigger_isPropagating",  new WrappedTriggerValue())
             .AddProperty("out_trigger_isAttackEnded", _isAttackEnded)
@@ -129,6 +138,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
                 .AddBehaivour<IBActorHit>(this)
                 .AddBehaivour<IBActorProperties>(this)
                 .AddBehaivour<IBActorThrowable>(this)
+                .AddBehaivour<IBActorAttackable>(this)
                 .AddBehaivour<IBEnemyState>(container.GetState<EnemyDefaultState>())
         );
         

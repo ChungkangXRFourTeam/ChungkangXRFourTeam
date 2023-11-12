@@ -29,11 +29,19 @@ public class
                 currentActorPropagation.BeginPropagate(v.normalized);
             }
 
-            if (currentActorPhysics.GetTransformOrNull())
+            Transform actorTransform = currentActorPhysics.GetTransformOrNull(); 
+            if (actorTransform)
             {
-                currentActorPhysics.GetTransformOrNull().position = transform.position + Vector3.one * 1.5f;
+                actorTransform.position = transform.position + Vector3.one * 1.5f;
             }
             currentActorPhysics.AddKnockback(swingDir * swingForce);
+
+            if (currentActorPhysics.Interaction.TryGetContractInfo(out ActorContractInfo actorContractInfo) &&
+                actorContractInfo.TryGetBehaviour(out IBActorAttackable attackable))
+            {
+                attackable.IsAttackable = true;
+            }
+
         }
         
         executor.SetNextState<DefaultPlayerState>();
