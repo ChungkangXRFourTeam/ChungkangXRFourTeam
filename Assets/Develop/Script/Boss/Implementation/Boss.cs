@@ -41,14 +41,13 @@ namespace XRProject.Boss
 
             StartCoroutine(CoUpdate());
         }
-
         private IEnumerator CoUpdate()
         {
             while (true)
             {
                 float percentage = CurrentHP / MaxHp;
 
-                if (percentage < 0.5f) break;
+                if (percentage <= 0.5f) break;
                 yield return new WaitForEndOfFrame();
             }
             
@@ -112,7 +111,7 @@ namespace XRProject.Boss
                 float backup = _currentHp;
                 _currentHp = value;
                 ChangedHp?.Invoke(this, backup, _currentHp);
-
+                
                 if (_currentHp <= 0f)
                 {
                     Die();
