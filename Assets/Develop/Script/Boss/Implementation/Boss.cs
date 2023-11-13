@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 namespace XRProject.Boss
@@ -11,6 +12,7 @@ namespace XRProject.Boss
         private Track _movementTrack;
         private TrackPlayer _battlePlayer;
         private TrackPlayer _movementPlayer;
+        private TrackPlayer _patternTranslationPlayer;
 
         [SerializeField] private float _hp;
         [SerializeField] private BaseLazerActionData baseLazerActionData;
@@ -21,6 +23,7 @@ namespace XRProject.Boss
 
         private void Awake()
         {
+            CurrentHP = MaxHp;
             _battleTrack = BossPatternFactory.CompletionBattleTrack(transform, this);
             _battlePlayer = new TrackPlayer();
             _battlePlayer.Play(_battleTrack);
@@ -28,12 +31,37 @@ namespace XRProject.Boss
             _movementTrack = BossPatternFactory.CompletionMovementTrack(transform, this);
             _movementPlayer = new TrackPlayer();
             _movementPlayer.Play(_movementTrack);
+
+            var translationTrack = BossPatternFactory.CompleitionTranslationTrack(transform, this);
+            _patternTranslationPlayer = new TrackPlayer();
+            _patternTranslationPlayer.ActionList.Paused = true;
+            _patternTranslationPlayer.Play(translationTrack);
             
             Interaction.SetContractInfo(ActorContractInfo.Create(transform, ()=>transform).AddBehaivour<IBActorHit>(this));
+
+            StartCoroutine(CoUpdate());
         }
 
-        private void Update()
+        private IEnumerator CoUpdate()
         {
+            while (true)
+            {
+                float percentage = CurrentHP / MaxHp;
+
+                if (percentage < 0.5f) break;
+                yield return new WaitForEndOfFrame();
+            }
+            
+            _battlePlayer.ActionList.Paused = true;
+            _battlePlayer.ActionList.NextTrack();
+            _patternTranslationPlayer.ActionList.Paused = false;
+
+            while (!_patternTranslationPlayer.ActionList.IsActionEndedCurrentTrack)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            
+            _battlePlayer.ActionList.Paused = false;
         }
 
         private void OnDrawGizmos()
@@ -94,7 +122,7 @@ namespace XRProject.Boss
         public event Action<IBActorLife, float, float> ChangedHp;
         public void Die()
         {
-            
+            gameObject.SetActive(false);
         }
     }
 }

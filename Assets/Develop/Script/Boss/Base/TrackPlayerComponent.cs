@@ -7,17 +7,17 @@ namespace XRProject.Boss
 {
     public interface IActionListItem 
     {
-        public Track Parent { get; }
+        public Track ParentTrack { get; }
         public int Index { get; }
     }
     public class BeginTrack : IActionListItem
     {
-        public Track Parent { get; private set; }
+        public Track ParentTrack { get; private set; }
         public Track Item { get; private set; }
         public int Index { get; private set; }
         public BeginTrack(Track parent, Track track, int index) 
         {
-            this.Parent = parent;
+            this.ParentTrack = parent;
             this.Item = track;
             this.Index = index;
         }
@@ -25,12 +25,12 @@ namespace XRProject.Boss
 
     public class EndTrack : IActionListItem
     {
-        public Track Parent { get; private set; }
+        public Track ParentTrack { get; private set; }
         public Track Item { get; private set; }
         public int Index { get; private set; }
         public EndTrack(Track parent, Track track, int index) 
         {
-            this.Parent = parent;
+            this.ParentTrack = parent;
             this.Item = track;
             this.Index = index;
         }
@@ -38,13 +38,13 @@ namespace XRProject.Boss
 
     public class InAction : IActionListItem
     {
-        public Track Parent { get; private set; }
+        public Track ParentTrack { get; private set; }
         public IAction Item { get; private set; }
         public int Index { get; private set; }
 
         public InAction(Track parent, IAction action, int index)
         {
-            this.Parent = parent;
+            this.ParentTrack = parent;
             this.Item = action;
             this.Index = index;
         }
@@ -55,6 +55,8 @@ namespace XRProject.Boss
         public LinkedList<IActionListItem> _linkedList;
         private LinkedListNode<IActionListItem> _curNode;
         private LinkedListNode<IActionListItem> _curBeginNode;
+        public bool Paused { get; set; } = false;
+        private LinkedListNode<IActionListItem> _progressingNode;
 
         private void Inject(Track parent, Track track, int index)
         {
@@ -85,20 +87,41 @@ namespace XRProject.Boss
                 }
 
                 _curNode = _curNode.Next;
-                if (_curNode == null)
-                    break;
             }
         }
 
+        public bool IsActionEndedCurrentTrack
+        {
+            get
+            {
+                if (_progressingNode == null) return false;
+                return _progressingNode.Value is EndTrack;
+            }
+        }
         public IActionListItem GetItemMoveNext()
         {
             if (_curNode == null) return null;
             
             var item = _curNode;
+            _progressingNode = _curNode;
             _curNode = _curNode.Next;
             return item.Value;
         }
+        public void NextTrack()
+        {
+            if (_curBeginNode == null) return;
+            var current = _curBeginNode.Next;
+            if (current == null) return;
 
+            while (current.Value is not BeginTrack)
+            {
+                current = current.Next;
+                if (current == null) return;
+            }
+
+            _curBeginNode = current;
+            _curNode = _curBeginNode.Next;
+        }
         public void GotoCursorOnBasedCurrentTrack(int index)
         {
             if (_curBeginNode == null) return;
@@ -128,15 +151,21 @@ namespace XRProject.Boss
             StartCoroutine(Co(track));
         }
 
-        private ActionList _list = new ActionList();
+        public ActionList ActionList { get; private set; } = new();
 
         private IEnumerator Co(Track track)
         {
-            _list.Create(track);
-
+            ActionList.Create(track);
+            
             while (true)
             {
-                IActionListItem item = _list.GetItemMoveNext();
+                if (ActionList.Paused)
+                {
+                    yield return new WaitForEndOfFrame();
+                    continue;
+                }
+                
+                IActionListItem item = ActionList.GetItemMoveNext();
                 IEnumerator _context = null;
 
                 if (item is InAction inAction)
@@ -155,7 +184,8 @@ namespace XRProject.Boss
                         if (!pass)
                         {
                             inAction.Item.End();
-                            inAction.Item.Predicate?.Process(_list, inAction.Parent, inAction.Index);
+                            inAction.Item.Predicate?.Process(ActionList);
+                            inAction.ParentTrack.Predicate?.Process(ActionList);
                             break;
                         }
                         else
@@ -164,9 +194,13 @@ namespace XRProject.Boss
                         }
                     }
                 }
+                else if (item is BeginTrack beginTrack)
+                {
+                    beginTrack.Item.Predicate?.Process(ActionList);
+                }
                 else if (item is EndTrack endTrack)
                 {
-                    endTrack.Item.Predicate?.Process(_list, endTrack.Item,  -1);
+                    endTrack.Item.Predicate?.Process(ActionList);
                     yield return new WaitForEndOfFrame();
                     
                 }
@@ -180,6 +214,7 @@ namespace XRProject.Boss
     public class TrackPlayer
     {
         public Track CurrentTrack { get; private set; }
+        public ActionList ActionList => _component.ActionList;
 
         private GameObject _playerObject;
         private TrackPlayerComponent _component;

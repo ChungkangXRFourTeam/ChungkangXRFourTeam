@@ -39,6 +39,8 @@ namespace XRProject.Boss
                 .AddAction(new MeleeAction(transform, ingredients, 1))
                 .AddAction(new DelayAction(0.5f))
                 ;
+
+            cTrack.Predicate = new RepeatPredicate() { Index = 2};
             
             return cTrack;
         }

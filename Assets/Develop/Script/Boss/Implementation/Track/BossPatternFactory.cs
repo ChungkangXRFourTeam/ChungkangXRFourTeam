@@ -32,6 +32,18 @@ namespace XRProject.Boss
         
             return parentTrack;
         }
+
+        public static Track CompleitionTranslationTrack(Transform transform, IPatternFactoryIngredient ingredient)
+        {
+            
+            Track parentTrack = new Track();
+
+            parentTrack
+                .AddAction(new BossTranslationAction(transform, ingredient))
+                ;
+        
+            return parentTrack;
+        }
     }
 
 }

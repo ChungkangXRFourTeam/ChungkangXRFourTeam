@@ -11,12 +11,12 @@ namespace XRProject.Boss
         {
             _boss = boss;
         }
-        public void Process(ActionList actionList, Track track, int index)
+        public void Process(ActionList actionList)
         {
             float percentage = _boss.CurrentHP / _boss.MaxHp;
-            if (percentage > 0.5f)
+            if (percentage < 0.5f)
             {
-                actionList.GotoCursorOnBasedCurrentTrack(0);
+                actionList.NextTrack();
             }
         }
     }
