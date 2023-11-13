@@ -11,19 +11,36 @@ namespace XRProject.Boss
             var cTrack = new Track();
 
             cTrack
-                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, true))
+                .AddAction(new OpeningBossAction(transform, ingredients.BaseLazerData))
                 .AddAction(new DelayAction(1f))
-                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                
+                .AddAction(new RandomBossAction(transform, ingredients.BaseLazerData))
                 .AddAction(new DelayAction(2f))
-                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                .AddAction(new RandomBossAction(transform, ingredients.BaseLazerData))
                 .AddAction(new DelayAction(2f))
-                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                .AddAction(new RandomBossAction(transform, ingredients.BaseLazerData))
                 .AddAction(new DelayAction(2f))
-                .AddAction(new NormalLazerAction(transform, ingredients.NormalLazerData, false))
+                .AddAction(new RandomBossAction(transform, ingredients.BaseLazerData))
                 .AddAction(new DelayAction(2f))
+                .AddAction(new RandomBossAction(transform, ingredients.BaseLazerData))
+                .AddAction(new DelayAction(2f))
+                
+                
+                .AddAction(new MeleePositionAction(ingredients))
+                .AddAction(new MeleeAction(transform, ingredients, 0))
+                .AddAction(new MeleeAction(transform, ingredients, 1))
+                .AddAction(new DelayAction(0.5f))
+                
+                .AddAction(new MeleeAction(transform, ingredients, 0))
+                .AddAction(new MeleeAction(transform, ingredients, 1))
+                .AddAction(new DelayAction(0.5f))
+                
+                .AddAction(new MeleeAction(transform, ingredients, 0))
+                .AddAction(new MeleeAction(transform, ingredients, 1))
+                .AddAction(new DelayAction(0.5f))
                 ;
 
-            cTrack.Predicate = new RepeatPredicate() { Index = 0 };
+            cTrack.Predicate = new RepeatPredicate() { Index = 2};
             
             return cTrack;
         }

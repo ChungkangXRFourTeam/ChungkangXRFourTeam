@@ -210,6 +210,16 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
 
     private void OnContractActor(ActorContractInfo info)
     {
+        if (info.Transform.gameObject.CompareTag("Boss"))
+        {
+            if(info.TryGetBehaviour(out IBActorHit bossHit) &&
+                _physicsStrategy.IsSwingState)
+            {
+                bossHit.DoHit(Interaction.ContractInfo,1f);
+            }
+            return;
+        }
+        
         if (info.TryGetBehaviour(out IBActorPhysics physics))
         {
             _physicsStrategy.OnDetectBlock();
@@ -228,6 +238,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
                 damage = 2f;
             }
         }
+        
         if (info.TryGetBehaviour(out IBActorHit actorHit) && IsSwingState)
         {
             actorHit.DoHit(Interaction.ContractInfo, damage);
