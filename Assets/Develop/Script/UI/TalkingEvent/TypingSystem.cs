@@ -55,6 +55,7 @@ public class TypingSystem : MonoBehaviour
         isDialogEnd = false;
         texts = dialogs;
         tmpSave = textObj;
+        textObj.text = "";
         typingTime = typingTimer;
         if (dialogNumber < dialogs.Length)
         {
@@ -114,8 +115,27 @@ public class TypingSystem : MonoBehaviour
             }
             else
             {
-                textObj.text += chars[currentChar].ToString();
-                currentChar++;
+                if (chars[currentChar] == '<')
+                {
+                    string richText = "";
+                    while (true)
+                    {
+                        richText += chars[currentChar].ToString();
+                        if (chars[currentChar] == '>')
+                        {
+                            currentChar++;
+                            break;
+                        }
+                        currentChar++;
+                    }
+
+                    textObj.text += richText;
+                }
+                else
+                {
+                    textObj.text += chars[currentChar].ToString();
+                    currentChar++;
+                }
                 timer = typingTime;
             }
 

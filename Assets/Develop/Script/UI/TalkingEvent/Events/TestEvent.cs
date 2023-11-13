@@ -13,30 +13,28 @@ using XRProject.Helper;
 public class TalkingEvent : ITalkingEvent
 {
     protected List<Dictionary<string, object>> _eventTexts;
-    protected  GameObject _playerEventText;
-    protected  GameObject _playerTalkImage;
-    protected  GameObject _playerEndButton;
+    protected TalkingPanelInfo _playerPanel;
+    protected TalkingPanelInfo _targetPanel;
     protected string _scriptPath = "EventTextScript/";
-    protected  Dictionary<string, GameObject> _talkers;
     protected  List<string> _comments;
+    protected int _textCount;
     
     public async UniTask OnEventBefore()
     {
+        _textCount = 0;
         _scriptPath += "TestScript";
-        _playerEventText = GameObject.Find("PlayerEventText");
-        _playerTalkImage = GameObject.Find("PlayerTalkImage");
-        _playerEndButton = GameObject.Find("PlayerEndButton");
+        _playerPanel = GameObject.FindGameObjectWithTag("Player").GetComponent<TalkingPanelInfo>();
+        _targetPanel = GameObject.Find("Enemy").GetComponent<TalkingPanelInfo>();
         _eventTexts = CSVReader.Read(_scriptPath);
         _comments = new List<string>();
-        _talkers = new Dictionary<string, GameObject>();
 
         await UniTask.Yield();
     }
 
     public async UniTask OnEventStart()
     {
-        _playerTalkImage.SetActive(false);
-        _talkers.TryAdd(TalkerTarget.Player.ToString(),_playerEventText);
+        _playerPanel._talkingImage.SetActive(false);
+        _targetPanel._talkingImage.SetActive(false);
         for (int i = 0; i < _eventTexts.Count; i++)
         {
             _comments.Add(_eventTexts[i][EventTextType.Content.ToString()].ToString());
@@ -50,28 +48,63 @@ public class TalkingEvent : ITalkingEvent
 
     public async UniTask OnEvent()
     {
-        if (_playerEventText.TryGetComponent(out TextMeshProUGUI component))
+        if (_playerPanel._eventText.TryGetComponent(out TextMeshProUGUI playerComponent))
         {
-            InputAction action = InputManager.GetTalkEventAction("NextText");
-            TypingSystem.instance.Typing(_comments.ToArray(),component);
-            _playerTalkImage.SetActive(true);
-            while (true)
+            if (_targetPanel._eventText.TryGetComponent(out TextMeshProUGUI targetComponent))
             {
-                if (action != null)
+                InputAction action = InputManager.GetTalkEventAction("NextText");
+                string[] contents = _comments.ToArray();
+                _playerPanel._talkingImage.SetActive(false);
+                _targetPanel._talkingImage.SetActive(false);
+                string target;
+                while (true)
                 {
-                    _playerEndButton.SetActive(false);
-                    await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
-                    _playerEndButton.SetActive(true);
-                    await UniTask.WaitUntil(() => action.WasPressedThisFrame());
-                    TypingSystem.Instance.GetInputDown();
-                    if (TypingSystem.isDialogEnd)
+                    Debug.Log(contents.Length);
+                    if (action != null)
                     {
-                        _playerTalkImage.SetActive(false);
-                        await UniTask.Delay(TimeSpan.FromMilliseconds(1000));
-                        break;
+                        Debug.Log(_textCount);
+                        if(_textCount != _comments.Count) 
+                            target = _eventTexts[_textCount++][EventTextType.Target.ToString()].ToString();
+                        else
+                        {
+                            target = "";
+                        }
+                        if (target == "Player")
+                        {
+                            _playerPanel._talkingImage.SetActive(true);
+                            _playerPanel._endButton.SetActive(false);
+                            TypingSystem.instance.Typing(contents,playerComponent);
+                        }
+                        else if (target == "Enemy")
+                        {
+                            _targetPanel._talkingImage.SetActive(true);
+                            _targetPanel._endButton.SetActive(false);
+                            TypingSystem.instance.Typing(contents,targetComponent);
+                        }
+                        await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
+                        if (target == "Player")
+                        {
+                            _playerPanel._endButton.SetActive(true);
+                        }
+                        else if (target == "Enemy")
+                        {
+                            _targetPanel._endButton.SetActive(true);
+                        }
+                        await UniTask.WaitUntil(() => action.WasPressedThisFrame());
+                        _playerPanel._talkingImage.SetActive(false);
+                        _targetPanel._talkingImage.SetActive(false);
+                        if (_textCount == _comments.Count)
+                        {
+                            TypingSystem.instance.Typing(contents,playerComponent);
+                        }
+                        if (TypingSystem.isDialogEnd)
+                        {
+                            await UniTask.Delay(TimeSpan.FromMilliseconds(1000));
+                            break;
+                        }
                     }
+
                 }
-                
             }
 
             await UniTask.Yield();
@@ -98,4 +131,5 @@ public class TalkingEvent : ITalkingEvent
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
     }
+    
 }

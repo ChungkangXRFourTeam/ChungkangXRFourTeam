@@ -7,11 +7,8 @@ using Cysharp.Threading.Tasks;
 public enum EventTextType
 {
     ID,
-    Type,
+    Target,
     Content,
-    Speed,
-    Delay,
-    Font_Size
 
 }
 
