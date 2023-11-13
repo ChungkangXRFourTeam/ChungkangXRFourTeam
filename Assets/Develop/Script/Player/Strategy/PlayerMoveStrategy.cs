@@ -72,6 +72,13 @@ public class PlayerMoveStrategy : IStrategy
         upDir = Vector2.zero;
         if (fallingVector.sqrMagnitude > 0f)
         {
+            blackboard.GetProperty("out_interaction", out InteractionController interaction);
+            if (interaction.TryGetContractInfo(out ActorContractInfo aci) &&
+                aci.TryGetBehaviour(out IBActorPhysics p))
+            {
+                p.Stop();
+            }
+            
             _rigid.velocity = Vector2.zero;
             _rigid.AddForce(fallingVector, ForceMode2D.Impulse);
             
