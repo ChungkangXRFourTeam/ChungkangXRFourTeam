@@ -20,10 +20,20 @@ namespace XRProject.Boss
     {
         private TopBottomLazerData _data;
         
-        public TopBottomBossAction(Transform transform, BaseLazerActionData baseData, TopBottomLazerData data) : base(transform, baseData)
+        public TopBottomBossAction(Transform transform, IPatternFactoryIngredient ingredient) : base(transform, ingredient.BaseLazerData)
         {
-            _data = data;
+            _data = ingredient.TopBottomLazerData;
         }
+
+        public override void End()
+        {
+            var lazer = BaseData.LazerController;
+            lazer.GetRendererOrNull(0).startWidth = 1f;
+            lazer.GetRendererOrNull(0).endWidth = 1f;
+            lazer.GetRendererOrNull(1).startWidth = 1f;
+            lazer.GetRendererOrNull(1).endWidth = 1f;
+        }
+
         public override IEnumerator EValuate()
         {
             var playerTransform = GetPlayerOrNull();

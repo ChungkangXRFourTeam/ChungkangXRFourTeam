@@ -6,7 +6,7 @@ namespace XRProject.Boss
 {
     public class StarBossAction : BaseBossAction
     {
-        public StarBossAction(Transform transform, BaseLazerActionData baseData) : base(transform, baseData)
+        public StarBossAction(Transform transform, IPatternFactoryIngredient ingredient) : base(transform,ingredient.BaseLazerData)
         {
         }
         public override IEnumerator EValuate()

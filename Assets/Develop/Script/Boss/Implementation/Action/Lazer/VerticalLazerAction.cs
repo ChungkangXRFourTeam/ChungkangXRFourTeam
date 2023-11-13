@@ -19,9 +19,9 @@ namespace XRProject.Boss
     {
         private VerticalLazerData _data;
         
-        public VerticalBossAction(Transform transform, BaseLazerActionData baseData, VerticalLazerData data) : base(transform, baseData)
+        public VerticalBossAction(Transform transform, IPatternFactoryIngredient ingredient) : base(transform, ingredient.BaseLazerData)
         {
-            _data = data;
+            _data = ingredient.VerticalLazerData;
         }
 
         public override IEnumerator EValuate()

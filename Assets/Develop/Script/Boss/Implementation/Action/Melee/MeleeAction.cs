@@ -15,6 +15,7 @@ namespace XRProject.Boss
     public class MeleeData
     {
         public float _handMoveDuration;
+        public float _handHatMoveSpeed;
         public float _handAttackDuration;
         public float _handWarningDuration;
         public float _attackDelay;
@@ -25,7 +26,35 @@ namespace XRProject.Boss
         public Ease HandWarningEase;
         public Vector2 WarningPointOffset;
     }
-    
+
+
+    public class MeleePositionAction : IAction
+    {
+        private MeleeData _data;
+        public MeleePositionAction(IPatternFactoryIngredient ingredient)
+        {
+            _data = ingredient.MeleeData;
+        }
+        public void Begin()
+        {
+        }
+
+        public void End()
+        {
+        }
+
+        public IEnumerator EValuate()
+        {
+            Sequence s = DOTween.Sequence();
+            for (int i = 0; i < _data.hands.Length; i++)
+            {
+                s.Join(_data.hands[i].DOMove(_data.handPos[i], _data._handMoveDuration).SetEase(_data.HandMoveEase));
+            }
+            yield return s.WaitForCompletion();
+        }
+
+        public ITrackPredicate Predicate { get; set; }
+    }
     public class MeleeAction : BaseBossAction
     {
         private MeleeData _data;
@@ -45,8 +74,19 @@ namespace XRProject.Boss
                 
             var playerTransform = GetPlayerOrNull();
             if (playerTransform == false) yield break;
-                
-            yield return GotoPlayerHat(_data.hands[_index], playerTransform.position);
+
+            float timer = 0f;
+            while (timer <= 2f)
+            {
+                timer += Time.deltaTime;
+                var dir = playerTransform.position - _data.hands[_index].position;
+                dir = dir.normalized;
+                dir.z = dir.y = 0f;
+                _data.hands[_index].position += dir * (_data._handHatMoveSpeed * Time.deltaTime);
+                yield return new WaitForEndOfFrame();
+            }
+            
+            //yield return GotoPlayerHat(_data.hands[_index], playerTransform.position);
             yield return AttackPlayer(_data.hands[_index]);
             yield return GotoHandPosition(_data.hands[_index], _data.handPos[_index]);
         }

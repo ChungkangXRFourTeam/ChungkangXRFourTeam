@@ -166,7 +166,7 @@ namespace XRProject.Boss
                 }
                 else if (item is EndTrack endTrack)
                 {
-                    endTrack.Item.Predicate.Process(_list, endTrack.Item,  -1);
+                    endTrack.Item.Predicate?.Process(_list, endTrack.Item,  -1);
                     yield return new WaitForEndOfFrame();
                     
                 }

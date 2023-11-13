@@ -16,7 +16,7 @@ namespace XRProject.Boss
             
             parentTrack
                 .AddAction(Pattern1(transform, ingredients))
-                .AddAction(Pattern2())
+                .AddAction(Pattern2(transform, ingredients))
                 ;
             
             return parentTrack;
