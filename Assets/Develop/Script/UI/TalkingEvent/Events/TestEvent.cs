@@ -1,14 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Spine.Unity.Editor;
 using UnityEngine;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
-using XRProject.Helper;
 
 public class TalkingEvent : ITalkingEvent
 {
@@ -27,23 +22,25 @@ public class TalkingEvent : ITalkingEvent
         _targetPanel = GameObject.Find("Enemy").GetComponent<TalkingPanelInfo>();
         _eventTexts = CSVReader.Read(_scriptPath);
         _comments = new List<string>();
-
-        await UniTask.Yield();
+        
+        _playerPanel._talkingImage.SetActive(false);
+        _targetPanel._talkingImage.SetActive(false);
+        InputManager.Instance.DisableMainGameAction();
+        InputManager.Instance.InitTalkEventAction();
+        
+        EventFadeChanger.Instance.FadeIn(0.5f);
+        await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1.0f);
     }
 
     public async UniTask OnEventStart()
     {
-        _playerPanel._talkingImage.SetActive(false);
-        _targetPanel._talkingImage.SetActive(false);
+        EventFadeChanger.Instance.FadeOut(0.5f);
+        await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha <= 0);
         for (int i = 0; i < _eventTexts.Count; i++)
         {
             _comments.Add(_eventTexts[i][EventTextType.Content.ToString()].ToString());
-            Debug.Log(_eventTexts[i][EventTextType.Content.ToString()].ToString());
         }
         await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
-        
-        InputManager.Instance.DisableMainGameAction();
-        InputManager.Instance.InitTalkEventAction();
     }
 
     public async UniTask OnEvent()
@@ -59,10 +56,8 @@ public class TalkingEvent : ITalkingEvent
                 string target;
                 while (true)
                 {
-                    Debug.Log(contents.Length);
                     if (action != null)
                     {
-                        Debug.Log(_textCount);
                         if(_textCount != _comments.Count) 
                             target = _eventTexts[_textCount++][EventTextType.Target.ToString()].ToString();
                         else
