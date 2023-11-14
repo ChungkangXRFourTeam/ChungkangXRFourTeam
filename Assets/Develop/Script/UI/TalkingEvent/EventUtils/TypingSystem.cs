@@ -50,12 +50,13 @@ public class TypingSystem : MonoBehaviour
         
     }
 
-    public void Typing(string[] dialogs, TextMeshProUGUI textObj)
+    public void Typing(string[] dialogs, TextMeshProUGUI textObj, bool isClear = true)
     {
         isDialogEnd = false;
         texts = dialogs;
         tmpSave = textObj;
-        textObj.text = "";
+        if(isClear) 
+            textObj.text = "";
         typingTime = typingTimer;
         if (dialogNumber < dialogs.Length)
         {
