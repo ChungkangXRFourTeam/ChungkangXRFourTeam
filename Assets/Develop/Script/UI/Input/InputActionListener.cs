@@ -196,8 +196,41 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         {
             ""name"": ""TalkEvent"",
             ""id"": ""7709b953-2828-4452-91cb-8f807ff6a219"",
-            ""actions"": [],
-            ""bindings"": []
+            ""actions"": [
+                {
+                    ""name"": ""NextText"",
+                    ""type"": ""Button"",
+                    ""id"": ""4debb507-b0b4-4512-a47b-92eafab7dac4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(pressPoint=1.401298E-45)"",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""50532f4c-d05e-45f9-8f0d-2bb0e977a30d"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextText"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a821e860-7327-4914-8653-af7cb359b914"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextText"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -213,6 +246,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         m_MainGame_Swing = m_MainGame.FindAction("Swing", throwIfNotFound: true);
         // TalkEvent
         m_TalkEvent = asset.FindActionMap("TalkEvent", throwIfNotFound: true);
+        m_TalkEvent_NextText = m_TalkEvent.FindAction("NextText", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -368,10 +402,12 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
     // TalkEvent
     private readonly InputActionMap m_TalkEvent;
     private List<ITalkEventActions> m_TalkEventActionsCallbackInterfaces = new List<ITalkEventActions>();
+    private readonly InputAction m_TalkEvent_NextText;
     public struct TalkEventActions
     {
         private @InputActionListener m_Wrapper;
         public TalkEventActions(@InputActionListener wrapper) { m_Wrapper = wrapper; }
+        public InputAction @NextText => m_Wrapper.m_TalkEvent_NextText;
         public InputActionMap Get() { return m_Wrapper.m_TalkEvent; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -381,10 +417,16 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_TalkEventActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_TalkEventActionsCallbackInterfaces.Add(instance);
+            @NextText.started += instance.OnNextText;
+            @NextText.performed += instance.OnNextText;
+            @NextText.canceled += instance.OnNextText;
         }
 
         private void UnregisterCallbacks(ITalkEventActions instance)
         {
+            @NextText.started -= instance.OnNextText;
+            @NextText.performed -= instance.OnNextText;
+            @NextText.canceled -= instance.OnNextText;
         }
 
         public void RemoveCallbacks(ITalkEventActions instance)
@@ -414,5 +456,6 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
     }
     public interface ITalkEventActions
     {
+        void OnNextText(InputAction.CallbackContext context);
     }
 }

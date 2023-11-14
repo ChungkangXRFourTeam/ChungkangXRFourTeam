@@ -174,8 +174,41 @@
         {
             "name": "TalkEvent",
             "id": "7709b953-2828-4452-91cb-8f807ff6a219",
-            "actions": [],
-            "bindings": []
+            "actions": [
+                {
+                    "name": "NextText",
+                    "type": "Button",
+                    "id": "4debb507-b0b4-4512-a47b-92eafab7dac4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(pressPoint=1.401298E-45)",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "50532f4c-d05e-45f9-8f0d-2bb0e977a30d",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NextText",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a821e860-7327-4914-8653-af7cb359b914",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NextText",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
