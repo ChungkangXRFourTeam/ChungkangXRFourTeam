@@ -24,7 +24,10 @@ public class CinemachineCameraControll : MonoBehaviour
     }
 
     private void Update()
-    { 
+    {
+        // test
+        SetZoomKeyState(Input.GetMouseButton(1));
+
         ZoomCamera();
     }
 
