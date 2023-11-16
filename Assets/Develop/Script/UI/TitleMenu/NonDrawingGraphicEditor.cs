@@ -1,7 +1,8 @@
 using UnityEngine;
-using UnityEditor;
-using UnityEditor.UI;
 
+#if UNITY_EDITOR
+using UnityEditor.UI;
+using UnityEditor;
 [CanEditMultipleObjects, CustomEditor(typeof(NonDrawingGraphic), false)]
 public class NonDrawingGraphicEditor : GraphicEditor
 {
@@ -14,3 +15,5 @@ public class NonDrawingGraphicEditor : GraphicEditor
         base.serializedObject.ApplyModifiedProperties();
     }
 }
+
+#endif
