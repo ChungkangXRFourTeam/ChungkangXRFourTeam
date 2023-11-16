@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class TalkingEventManager : MonoBehaviour
 {
     private bool _isEventEnd;
@@ -18,8 +18,11 @@ public class TalkingEventManager : MonoBehaviour
 
     private void Start()
     {
-        _enabledEvent = new CutScneEventTemplate();
-        InvokeCurrentEvent().Forget();
+        if(SceneManager.GetActiveScene().name == "QuetesTest")
+            _enabledEvent = new TalkingEvent();
+        
+        if(_enabledEvent != null) 
+            InvokeCurrentEvent().Forget();
     }
 
     private void Update()

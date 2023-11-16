@@ -16,6 +16,7 @@ public class TalkingEvent : ITalkingEvent
     
     public async UniTask OnEventBefore()
     {
+        EventFadeChanger.Instance.Fade_img = GameObject.FindGameObjectWithTag("Fade").GetComponent<CanvasGroup>();
         _textCount = 0;
         _scriptPath += "TestScript";
         _playerPanel = GameObject.FindGameObjectWithTag("Player").GetComponent<TalkingPanelInfo>();
@@ -27,8 +28,6 @@ public class TalkingEvent : ITalkingEvent
         _targetPanel._talkingImage.SetActive(false);
         InputManager.Instance.DisableMainGameAction();
         InputManager.Instance.InitTalkEventAction();
-        
-        EventFadeChanger.Instance.FadeIn(0.5f);
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1.0f);
     }
 

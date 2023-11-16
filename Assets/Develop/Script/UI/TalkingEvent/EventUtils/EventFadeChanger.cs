@@ -25,6 +25,8 @@ public class EventFadeChanger : MonoBehaviour
         instance = this;
  
         DontDestroyOnLoad(gameObject);
+
+            Fade_img = GameObject.FindWithTag("Fade").GetComponent<CanvasGroup>();
     }
     
     public void FadeIn(float duration, string sceneName = null){
