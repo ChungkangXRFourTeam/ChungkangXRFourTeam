@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using JetBrains.Annotations;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 using XRProject.Helper;
@@ -20,7 +21,9 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
     [SerializeField] private Collider2D _body;
     [SerializeField] private Rigidbody2D _rigid;
     [SerializeField] private InteractionController _interaction;
-
+    [SerializeField] private SkeletonAnimation _deathSkeletonAnimation;
+    [SerializeField] private SkeletonAnimation _defaultSkeletonAnimation;
+    [SerializeField] private SkeletonAnimation _shotSkeletonAnimation;
     /* fields */
     private ActorPhysicsStrategy _physicsStrategy = new();
     private StateExecutor _executor;
@@ -75,6 +78,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
     public InteractionController Interaction => _interaction;
     private bool IsSwingState => _physicsStrategy.IsSwingState;
     public string test;
+    public WrappedValue<float> testMixDuration;
 
     /* unity functions */
     private void Awake()
@@ -110,6 +114,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             .AddProperty("out_rigidbody", Rigid)
             .AddProperty("out_strategyExecutor", strategyExecutor)
             .AddProperty("out_interaction", Interaction)
+            .AddProperty("out_skeletonAnimation", GetComponentInChildren<SkeletonAnimation>())
             .AddProperty("test", "")
             
             .AddProperty("out_enemyData", _data)
@@ -117,6 +122,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             .AddProperty("out_isEnteredPatrollSpace", new WrappedValue<bool>(false))
             .AddProperty("out_propagationInfo", _propagationInfo = new PropagationInfo(Interaction))
             .AddProperty("out_enemyBody", _body)
+            .AddProperty("test_testMixDuration", testMixDuration)
             
             .AddProperty("in_isMoving", new WrappedValue<bool>(false))
             .AddProperty("in_isStop", new WrappedValue<bool>(false))
@@ -124,7 +130,6 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             .AddProperty("out_isCaught", _isCaught)
             
             .AddProperty("out_trigger_isPropagating",  new WrappedTriggerValue())
-            .AddProperty("out_trigger_isAttackEnded", _isAttackEnded)
             ;
 
         _executor = StateExecutor.Create(container, blackboard);
@@ -149,6 +154,17 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
         // Color 셋팅
         Properties = Properties;
         _effectImage.enabled = false;
+
+        _shotSkeletonAnimation.AnimationState.Complete += x =>
+        {
+            _defaultSkeletonAnimation.gameObject.SetActive(true);
+            _shotSkeletonAnimation.gameObject.SetActive(false);
+        };
+        _shotSkeletonAnimation.AnimationState.Start += x =>
+        {
+            _defaultSkeletonAnimation.gameObject.SetActive(false);
+            _shotSkeletonAnimation.gameObject.SetActive(true);
+        };
     }
     
 
@@ -157,19 +173,6 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
         test = _executor.Blackboard.GetProperty<string>("test");
         _executor.Execute();
         //_body.isTrigger = !IsSwingState;
-    }
-
-    private float _attackTimer;
-    private void LateUpdate()
-    {
-        // Attack ai test
-        _attackTimer += Time.deltaTime;
-
-        if (_attackTimer >= _data.AttackSpeed)
-        {
-            _isAttackEnded.Value = true;
-            _attackTimer = 0f;
-        }
     }
 
 
@@ -205,7 +208,14 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             _effectTweener.Kill();
             _effectTweener = null;
         }
-        Destroy(gameObject);
+        
+        _defaultSkeletonAnimation.gameObject.SetActive(false);
+        _deathSkeletonAnimation.gameObject.SetActive(true);
+        _deathSkeletonAnimation.AnimationState.Complete += x =>
+        {
+            Debug.Log("des");
+            Destroy(gameObject);
+        };
     }
 
     private void OnContractActor(ActorContractInfo info)
@@ -263,6 +273,9 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
                 EffectKey = "actor/enemyHit",
                 Position = transform.position
             });
+
+            _shotSkeletonAnimation.gameObject.SetActive(true);
+            _shotSkeletonAnimation.AnimationState.SetAnimation(0, "shot", false);
         }
     }
     private void AnimatePropertiesHitEffect(EActorPropertiesType type)

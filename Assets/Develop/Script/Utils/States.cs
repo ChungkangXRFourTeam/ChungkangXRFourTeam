@@ -356,6 +356,8 @@ namespace XRProject.Helper
 
         public BaseState CurrentState => _currentState;
 
+        private bool _first = true;
+
         public void SetNextState<T>() where T : BaseState
         {
             _nextState = _container.GetState<T>();
@@ -371,6 +373,12 @@ namespace XRProject.Helper
             bool loop = false;
             int count = 0;
             List<string> names = new List<string>();
+
+            if (_first)
+            {
+                _first = false;
+                _currentState?.Enter(Blackboard);
+            }
             
             do
             {

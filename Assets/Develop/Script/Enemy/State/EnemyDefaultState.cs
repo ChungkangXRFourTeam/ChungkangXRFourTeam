@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using DG.Tweening;
+using Spine.Unity;
 using TMPro;
 using UnityEditor.Build.Content;
 using XRProject.Helper;
+using Debug = UnityEngine.Debug;
 
 public class EnemyDefaultState : BaseState, IBEnemyState
 {
@@ -113,6 +116,9 @@ public class EnemyPatrollState : BaseState
         _goLeft = Random.value > 0.5f;
         blackboard.GetProperty<PropagationInfo>("out_propagationInfo", out var pi);
         pi.Count = 0;
+        
+        blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
+        ani.AnimationState.SetAnimation(0, "move", true);
     }
 
     public override bool Update(Blackboard blackboard, StateExecutor executor)
@@ -423,6 +429,11 @@ public class EnemyPropagatingState : BaseState
 
 public class EnemyNothingState : BaseState
 {
+    public override void Enter(Blackboard blackboard)
+    {
+        blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
+        ani.AnimationState.SetAnimation(0, "ide", true);
+    }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
         bool gotoPatrollSpace = EnemyPatrollState.ReadyGotoPatroll(blackboard);
@@ -523,6 +534,23 @@ public class EnemyDetectionState : BaseState
 }
 public class EnemyAttackState : BaseState
 {
+    private bool _isAttackEnded;
+    private SkeletonAnimation _ani;
+    private const string ANI_ATTACK_KEY = "attack";
+    public override void Init(Blackboard blackboard)
+    {
+        blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
+        _ani = ani;
+        _isAttackEnded = true;
+        ani.AnimationState.Complete += trackEntry =>
+        {
+            if(trackEntry.Animation.Name == ANI_ATTACK_KEY)
+            {
+                _isAttackEnded = true;
+            }
+        };
+        
+    }
     public override void Enter(Blackboard blackboard)
     {
         // TODO: 공격 모션 코드 삽입
@@ -530,12 +558,16 @@ public class EnemyAttackState : BaseState
         if (isCaught) return;
         DoHit(blackboard);
         
+        blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
+        blackboard.GetUnWrappedProperty("test_testMixDuration", out float testMixDuration);
+        ani.AnimationState.Data.SetMix("move","attack", testMixDuration);
+        ani.AnimationState.SetAnimation(0, ANI_ATTACK_KEY, false);
+        _isAttackEnded = false;
         
         blackboard.GetProperty<Transform>("out_transform", out var transform);
     }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
-        blackboard.GetUnWrappedProperty<bool>("out_trigger_isAttackEnded", out var isAttackEnded);
         bool gotoSwing = EnemySwingState.ReadyGotoSwing(blackboard);
         bool gotoPropagation = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
 
@@ -547,7 +579,7 @@ public class EnemyAttackState : BaseState
         {
             executor.SetNextState<EnemySwingState>();
         }
-        else if (isAttackEnded)
+        else if (_isAttackEnded)
         {
             executor.SetNextState<EnemyPatrollState>();
             return false;
