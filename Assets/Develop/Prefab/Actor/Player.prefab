@@ -270,7 +270,8 @@ GameObject:
   - component: {fileID: 7575043131559424839}
   - component: {fileID: 5786440116261882233}
   - component: {fileID: 7150456207733829141}
-  - component: {fileID: 1249441776031645013}
+  - component: {fileID: 2527561398445271357}
+  - component: {fileID: 3889060650916041569}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -288,7 +289,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.0226243, y: -0.7535259, z: 0.08085455}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1881445829787610848}
@@ -421,6 +422,7 @@ MonoBehaviour:
   _meleeHand: {fileID: 0}
   _traceLineRenderer: {fileID: 2891379630436183497}
   _interaction: {fileID: 5145877283976636205}
+  _aniController: {fileID: 3889060650916041569}
   _playerData: {fileID: 11400000, guid: 9149e9dc172c01541bc512ec975e788a, type: 2}
   _moveData: {fileID: 11400000, guid: df434e0ac0c86fd43ab7b5db02f275ef, type: 2}
   _meleeAttackData: {fileID: 11400000, guid: dbf9b6fbb8e79f4429c8545ff7e1bf56, type: 2}
@@ -506,7 +508,7 @@ Animator:
   m_GameObject: {fileID: 2374883332254647771}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 60b95823797760741bc9b6378b032984, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4f3108bda89d9d449ab43af543a21a7a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -517,7 +519,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1249441776031645013
+--- !u!114 &2527561398445271357
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -526,10 +528,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 2374883332254647771}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ddb6b4a60f9fb14bbf8f9cd03513d18, type: 3}
+  m_Script: {fileID: 11500000, guid: e5a464f8f9486c346b0ebfcf3aac27d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 0}
+  _ani: {fileID: 3889060650916041569}
+  _foot: {fileID: 3007115574203045399}
+  _interaction: {fileID: 5145877283976636205}
+--- !u!114 &3889060650916041569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2374883332254647771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df90467b13b1a247a9b6ae7e0f4f72d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ani: {fileID: 7150456207733829141}
+  DState: 
 --- !u!1 &3593518873788793651
 GameObject:
   m_ObjectHideFlags: 0

@@ -52,7 +52,8 @@ public class PlayerMoveStrategy : IStrategy
         blackboard.GetUnWrappedProperty("out_isGrounded", out bool isGrounded);
         blackboard.GetUnWrappedProperty("out_isLeftSide", out bool isLeftSide);
         blackboard.GetUnWrappedProperty("out_isRightSide", out bool isRightSide);
-
+        blackboard.GetProperty("out_aniController", out PlayerAnimationController ani);
+        
         var movingVector = GetMovingVector() * Mathf.Max(info.SpeedFactor, 1f);
         var jumpingVector = upDir * _data.JumpForce;
         var fallingVector = downDir * _data.DownForce;
@@ -91,16 +92,6 @@ public class PlayerMoveStrategy : IStrategy
                 FlipRotation = 1f
             });
         }
-        if (jumpingVector.sqrMagnitude > 0f)
-        {
-            EffectManager.ImmediateCommand(new EffectCommand()
-            {
-                EffectKey = "player/jumpDust",
-                Position = transform.position,
-                Rotation = Quaternion.Euler(0f, 0f, 0f),
-                Scale = Vector3.one * 1.5f
-            });
-        }
 
         if (movingVector.sqrMagnitude > 0f)
         {
@@ -126,6 +117,17 @@ public class PlayerMoveStrategy : IStrategy
             {
                 _effect.IsEnabled = false;
             }
+        }
+        
+        if (jumpingVector.sqrMagnitude > 0f)
+        {
+            EffectManager.ImmediateCommand(new EffectCommand()
+            {
+                EffectKey = "player/jumpDust",
+                Position = transform.position,
+                Rotation = Quaternion.Euler(0f, 0f, 0f),
+                Scale = Vector3.one * 1.5f
+            });
         }
 
         _prevPosition = transform.position;

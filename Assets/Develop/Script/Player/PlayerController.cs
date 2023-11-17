@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     [SerializeField] private Transform _meleeHand;
     [SerializeField] private LineRenderer _traceLineRenderer;
     [SerializeField] private InteractionController _interaction;
+    [SerializeField] private PlayerAnimationController _aniController;
     
     [Header("can edit this, it is behaviour related data of player")]
     /* datas */
@@ -44,6 +45,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     /* properties */
     public InteractionController Interaction => _interaction;
     public EActorPropertiesType Properties => _properties;
+    public bool AniKnockback { get; set; }
 
     public bool IsAllowedInteraction
     {
@@ -100,6 +102,18 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             .AddBehaivour<IBActorLife>(this)
         );
 
+        Interaction.OnContractObject += x =>
+        {
+            if (x.TryGetBehaviour(out IBObjectInteractive interactive))
+            {
+                AniKnockback = true;
+            }
+            else
+            {
+                AniKnockback = false;
+            }
+        };
+
         // Strategy initializing..
         var strategyContainer = new StrategyContainer();
         var strategyBlackboard = new Blackboard();
@@ -120,6 +134,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             .AddProperty("out_buffData", _buffData)
             .AddProperty("out_meleeHand", _meleeHand)
             .AddProperty("out_traceLineRenderer", _traceLineRenderer)
+            .AddProperty("out_aniController", _aniController)
             .AddProperty("in_isGrabState", new WrappedValue<bool>(false))
             ;
 
@@ -144,6 +159,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
 
         fsmBlackboard
             .AddProperty("out_strategyExecutor", strategyExecutor)
+            .AddProperty("out_aniController", _aniController)
             ;
 
         _stateExecutor = StateExecutor.Create(stateContainer, fsmBlackboard);
@@ -168,7 +184,9 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
         if (other.transform.TryGetComponent<IBObjectInteractive>(out var com))
         {
             if (com.IsSelectiveObject && !IsAllowedInteraction)
+            {
                 _physicsStrategy.OnDetectBlock();
+            }
         }
         else
         {
