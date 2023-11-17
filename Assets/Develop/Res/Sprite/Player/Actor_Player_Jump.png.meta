@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4449cb6912f2eef429ee2a77c2258bee
+guid: 15befc561fecc1a47841acb862de80ea
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Actor_Player_Run_0
+      name: Actor_Player_Jump_0
       rect:
         serializedVersion: 2
-        x: 796
-        y: 5148
-        width: 1356
-        height: 798
+        x: 752
+        y: 2939
+        width: 1036
+        height: 646
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,62 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 40bee8a1a53c8b947b3cdd4d52989484
-      internalID: 1911974664
+      spriteID: f63f92d4c17978148b9df98c57a0ba52
+      internalID: -2070308998
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Actor_Player_Run_1
+      name: Actor_Player_Jump_1
       rect:
         serializedVersion: 2
-        x: 2964
-        y: 5134
-        width: 1401
-        height: 820
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 834b8890e4d131b44b0e9ed1f6cdd8b5
-      internalID: -967510963
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Actor_Player_Run_2
-      rect:
-        serializedVersion: 2
-        x: 5125
-        y: 5144
-        width: 1420
-        height: 781
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9ec7aeda7adcf2b499c3756045e1af37
-      internalID: -93536157
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Actor_Player_Run_3
-      rect:
-        serializedVersion: 2
-        x: 904
+        x: 3053
         y: 2941
-        width: 1248
-        height: 805
+        width: 859
+        height: 638
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -187,20 +145,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5341bc8453318be498c688822e294a8b
-      internalID: -2100263173
+      spriteID: 9ccdb7aa985faea4990cf062f29c9f76
+      internalID: -346443970
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Actor_Player_Run_4
+      name: Actor_Player_Jump_2
       rect:
         serializedVersion: 2
-        x: 3112
-        y: 2943
-        width: 1218
-        height: 825
+        x: 5081
+        y: 3399
+        width: 1172
+        height: 750
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -208,20 +166,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1c2acb12cdb8edf43a2e3a1362c67900
-      internalID: 1074572096
+      spriteID: 097410c578207c24b972e097577b877a
+      internalID: 1127086405
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Actor_Player_Run_5
+      name: Actor_Player_Jump_3
       rect:
         serializedVersion: 2
-        x: 5328
-        y: 2944
-        width: 1211
-        height: 791
+        x: 744
+        y: 1338
+        width: 1159
+        height: 828
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -229,20 +187,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd61aa69abe65954ba6826c9ab61cf97
-      internalID: -1127045412
+      spriteID: 81eaf45bbb6dbb14cabf96611c04d2a7
+      internalID: 1370864206
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Actor_Player_Run_6
+      name: Actor_Player_Jump_4
       rect:
         serializedVersion: 2
-        x: 740
-        y: 819
-        width: 1411
-        height: 727
+        x: 3053
+        y: 741
+        width: 859
+        height: 638
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -250,20 +208,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c32139deeaddd2348a708a5fc1a9bec4
-      internalID: -860307850
+      spriteID: c78c00bac8bcb8f47b2730e6cb9dd4e3
+      internalID: 1089932087
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Actor_Player_Run_7
+      name: Actor_Player_Jump_5
       rect:
         serializedVersion: 2
-        x: 2946
-        y: 785
-        width: 1393
-        height: 746
+        x: 5154
+        y: 739
+        width: 1036
+        height: 646
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -271,8 +229,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 699c6903aa547e349ac4db65e01af442
-      internalID: 244115751
+      spriteID: 15a99a5e8b8647746840be7397da6b5d
+      internalID: -1822688446
       vertices: []
       indices: 
       edges: []
@@ -288,14 +246,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Actor_Player_Run_0: 1911974664
-      Actor_Player_Run_1: -967510963
-      Actor_Player_Run_2: -93536157
-      Actor_Player_Run_3: -2100263173
-      Actor_Player_Run_4: 1074572096
-      Actor_Player_Run_5: -1127045412
-      Actor_Player_Run_6: -860307850
-      Actor_Player_Run_7: 244115751
+      Actor_Player_Jump_0: -2070308998
+      Actor_Player_Jump_1: -346443970
+      Actor_Player_Jump_2: 1127086405
+      Actor_Player_Jump_3: 1370864206
+      Actor_Player_Jump_4: 1089932087
+      Actor_Player_Jump_5: -1822688446
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

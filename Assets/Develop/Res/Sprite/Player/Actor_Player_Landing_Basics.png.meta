@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4449cb6912f2eef429ee2a77c2258bee
+guid: e35769b51f7005d4cb2bf0c1c4c407d6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Actor_Player_Run_0
+      name: Actor_Player_Landing_Basics_0
       rect:
         serializedVersion: 2
-        x: 796
-        y: 5148
-        width: 1356
-        height: 798
+        x: 723
+        y: 2958
+        width: 700
+        height: 624
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 40bee8a1a53c8b947b3cdd4d52989484
-      internalID: 1911974664
+      spriteID: aa4fdffd3f8e2384c876749aadf92712
+      internalID: 2498183
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Actor_Player_Run_1
+      name: Actor_Player_Landing_Basics_1
       rect:
         serializedVersion: 2
-        x: 2964
-        y: 5134
-        width: 1401
-        height: 820
+        x: 2973
+        y: 2848
+        width: 1009
+        height: 630
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,20 +145,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 834b8890e4d131b44b0e9ed1f6cdd8b5
-      internalID: -967510963
+      spriteID: 813240b4f007fae44b0900cb64714060
+      internalID: -1052819659
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Actor_Player_Run_2
+      name: Actor_Player_Landing_Basics_2
       rect:
         serializedVersion: 2
-        x: 5125
-        y: 5144
-        width: 1420
-        height: 781
+        x: 818
+        y: 719
+        width: 1085
+        height: 567
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,113 +166,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9ec7aeda7adcf2b499c3756045e1af37
-      internalID: -93536157
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Actor_Player_Run_3
-      rect:
-        serializedVersion: 2
-        x: 904
-        y: 2941
-        width: 1248
-        height: 805
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5341bc8453318be498c688822e294a8b
-      internalID: -2100263173
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Actor_Player_Run_4
-      rect:
-        serializedVersion: 2
-        x: 3112
-        y: 2943
-        width: 1218
-        height: 825
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1c2acb12cdb8edf43a2e3a1362c67900
-      internalID: 1074572096
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Actor_Player_Run_5
-      rect:
-        serializedVersion: 2
-        x: 5328
-        y: 2944
-        width: 1211
-        height: 791
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fd61aa69abe65954ba6826c9ab61cf97
-      internalID: -1127045412
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Actor_Player_Run_6
-      rect:
-        serializedVersion: 2
-        x: 740
-        y: 819
-        width: 1411
-        height: 727
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c32139deeaddd2348a708a5fc1a9bec4
-      internalID: -860307850
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Actor_Player_Run_7
-      rect:
-        serializedVersion: 2
-        x: 2946
-        y: 785
-        width: 1393
-        height: 746
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 699c6903aa547e349ac4db65e01af442
-      internalID: 244115751
+      spriteID: 0854e766a6adb554c91370cc17979783
+      internalID: 733189143
       vertices: []
       indices: 
       edges: []
@@ -288,14 +183,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Actor_Player_Run_0: 1911974664
-      Actor_Player_Run_1: -967510963
-      Actor_Player_Run_2: -93536157
-      Actor_Player_Run_3: -2100263173
-      Actor_Player_Run_4: 1074572096
-      Actor_Player_Run_5: -1127045412
-      Actor_Player_Run_6: -860307850
-      Actor_Player_Run_7: 244115751
+      Actor_Player_Landing_Basics_0: 2498183
+      Actor_Player_Landing_Basics_1: -1052819659
+      Actor_Player_Landing_Basics_2: 733189143
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
