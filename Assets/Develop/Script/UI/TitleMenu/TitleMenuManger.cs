@@ -121,7 +121,7 @@ public class TitleMenuManger : MonoBehaviour
 
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1.0f);
 
-        AsyncOperation sceneLoad = SceneManager.LoadSceneAsync("QuetesTest");
+        AsyncOperation sceneLoad = SceneManager.LoadSceneAsync("Tutorial");
 
         await UniTask.WaitUntil(() => sceneLoad.isDone);
     }

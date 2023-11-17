@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +17,12 @@ public class EventFadeChanger : MonoBehaviour
         }
     }
     private static EventFadeChanger instance;
- 
+
+    private void Awake()
+    {
+        SceneManager.sceneLoaded += OnSceneChanged;
+    }
+
     void Start () {
         if (instance != null) {
             DestroyImmediate(this.gameObject);
@@ -25,12 +31,10 @@ public class EventFadeChanger : MonoBehaviour
         instance = this;
  
         DontDestroyOnLoad(gameObject);
-
-            Fade_img = GameObject.FindWithTag("Fade").GetComponent<CanvasGroup>();
     }
     
-    public void FadeIn(float duration, string sceneName = null){
-        Fade_img.DOFade(1, duration)
+    public void FadeIn(float duration,float value = 1.0f, string sceneName = null){
+        Fade_img.DOFade(value, duration)
             .OnStart(()=>{
                 Fade_img.blocksRaycasts = true; //아래 레이캐스트 막기
             })
@@ -49,4 +53,8 @@ public class EventFadeChanger : MonoBehaviour
             });
     }
 
+    public void OnSceneChanged(Scene scene, LoadSceneMode mode)
+    {
+        Fade_img = GameObject.FindWithTag("Fade").GetComponent<CanvasGroup>();
+    }
 }
