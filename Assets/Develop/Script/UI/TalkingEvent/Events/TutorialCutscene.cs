@@ -75,7 +75,7 @@ public class TutorialCutscene : ITalkingEvent
                 vignette.intensity.value = 0.75f;
         }
         
-        _eyeBlackStart = _eyeBlack.transform.position;
+        _eyeBlackStart = GameObject.Find("BlurPanel").transform.Find("EyeBlackStart").position;
         _eyeBlackEnd = GameObject.Find("BlurPanel").transform.Find("EyeBlackEnd").position;
         
         _nonTargetPanel._panel.SetActive(false);
@@ -206,7 +206,7 @@ public class TutorialCutscene : ITalkingEvent
             Talk(contents,target);
             await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
             _playerPanel._endButton.SetActive(true);
-            _targetPanel._endButton.SetActive(false);
+            _targetPanel._endButton.SetActive(true);
             await UniTask.WaitUntil(() => action.WasPressedThisFrame());
             _playerPanel._panel.SetActive(false);
             _targetPanel._panel.SetActive(false);
