@@ -150,7 +150,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""3ffc430f-227d-4062-a609-11acdae99e14"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -161,7 +161,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""d1b32849-3386-4e4d-a0ba-ec4a94f61e76"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
