@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using XRProject.Helper;
@@ -17,6 +18,7 @@ public class PlayerMoveStrategy : IStrategy
     private bool _inputLock;
     private EffectItem _effect;
     private Rigidbody2D _rigid;
+    
     
     private Vector2 GetMovingVector()
     {
@@ -47,9 +49,20 @@ public class PlayerMoveStrategy : IStrategy
     private Vector2 _prevPosition;
     public void Update(Blackboard blackboard)
     {
+        blackboard.GetUnWrappedProperty("out_isGrounded", out bool isGrounded);
+        if (_inputLock)
+        {
+            if (isGrounded)
+            {
+                Sequence s = DOTween.Sequence();
+                s.SetDelay(0.2f).OnComplete(() => _inputLock = false);
+            }
+
+            return;
+        }
+        
         blackboard.GetProperty("out_buffInfo", out BuffInfo info);
         blackboard.GetProperty("out_transform", out Transform transform);
-        blackboard.GetUnWrappedProperty("out_isGrounded", out bool isGrounded);
         blackboard.GetUnWrappedProperty("out_isLeftSide", out bool isLeftSide);
         blackboard.GetUnWrappedProperty("out_isRightSide", out bool isRightSide);
         blackboard.GetProperty("out_aniController", out PlayerAnimationController ani);
@@ -79,7 +92,8 @@ public class PlayerMoveStrategy : IStrategy
             {
                 p.Stop();
             }
-            
+
+            _inputLock = true;
             _rigid.velocity = Vector2.zero;
             _rigid.AddForce(fallingVector, ForceMode2D.Impulse);
             

@@ -13,7 +13,7 @@ public enum EPCAniState : int
     Falling_Basics,
     Falling_Bouncing,
     Falling_Dash,
-    Falling_Jump,
+    Landing_Jump,
     Landing_Basics,
     Landing_Dash,
     Throw_1,

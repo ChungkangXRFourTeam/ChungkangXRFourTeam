@@ -46,7 +46,9 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     public InteractionController Interaction => _interaction;
     public EActorPropertiesType Properties => _properties;
     public bool AniKnockback { get; set; }
-
+    [SerializeField]
+    private WrappedValue<bool> _grabState = new(false);
+    public bool GrabState => _grabState.Value;
     public bool IsAllowedInteraction
     {
         get => _isAllowedInteraction;
@@ -135,7 +137,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             .AddProperty("out_meleeHand", _meleeHand)
             .AddProperty("out_traceLineRenderer", _traceLineRenderer)
             .AddProperty("out_aniController", _aniController)
-            .AddProperty("in_isGrabState", new WrappedValue<bool>(false))
+            .AddProperty("in_isGrabState", _grabState)
             ;
 
         strategyContainer

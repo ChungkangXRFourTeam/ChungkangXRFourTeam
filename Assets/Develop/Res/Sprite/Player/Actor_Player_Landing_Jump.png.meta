@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a4892561bd07dd3408cd23d0f3d8a11b
+guid: 2e833691b0212044bb34f9f40a5097b6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,22 +110,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Actor_Player_Throw_02_0
+      name: Actor_Player_Landing_Jump_0
       rect:
         serializedVersion: 2
-        x: 553
-        y: 656
-        width: 1350
-        height: 744
-      alignment: 9
-      pivot: {x: 0.4776916, y: 0.13492994}
+        x: 852
+        y: 741
+        width: 859
+        height: 638
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 07dfe225fe1d3a245b8730816368fded
-      internalID: 1518122136
+      spriteID: 03545e6cc5ee1d840b89eea3dcf71419
+      internalID: 1003589073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Landing_Jump_1
+      rect:
+        serializedVersion: 2
+        x: 2953
+        y: 739
+        width: 1036
+        height: 646
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27e1d86ace9ebe4499aad264e5bbffc5
+      internalID: 1833961685
       vertices: []
       indices: 
       edges: []
@@ -141,7 +162,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Actor_Player_Throw_02_0: 1518122136
+      Actor_Player_Landing_Jump_0: 1003589073
+      Actor_Player_Landing_Jump_1: 1833961685
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
