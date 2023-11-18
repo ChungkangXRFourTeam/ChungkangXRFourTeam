@@ -125,5 +125,9 @@ public class TalkingEvent : ITalkingEvent
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
     }
-    
+
+    public bool IsInvalid()
+    {
+        return false;
+    }
 }

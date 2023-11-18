@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class CutScneEventTemplate : ITalkingEvent
 {
@@ -28,12 +29,12 @@ public class CutScneEventTemplate : ITalkingEvent
 
     public async UniTask OnEvent()
     {
-        
+        await UniTask.Yield();
     }
 
     public async UniTask OnEventEnd()
     {
-        
+        await UniTask.Yield();
     }
 
     protected void GetTextScript(string fileName)
@@ -41,5 +42,10 @@ public class CutScneEventTemplate : ITalkingEvent
         _scriptPath += fileName;
         _eventInfo = CSVReader.Read(_scriptPath);
         _comments = new List<string>();
+    }
+
+    public bool IsInvalid()
+    {
+        return SceneManager.GetActiveScene().name == "Tutorial";
     }
 }
