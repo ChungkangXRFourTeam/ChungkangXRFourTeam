@@ -57,6 +57,7 @@ public class PlayerSwingState : BaseState
         var grabOffset = data.GrabOffset;
         grabOffset.x *= ox;
         actorTransform.position = (Vector2)transform.position + grabOffset ;
+        currentActorPhysics.Stop();
         
         var swingDir = PlayerCalculation.GetSwingDirection(Camera.main, transform.position+ Vector3.one * 1.5f);
         var points = PlayerCalculation.GetReflectionPoints(
