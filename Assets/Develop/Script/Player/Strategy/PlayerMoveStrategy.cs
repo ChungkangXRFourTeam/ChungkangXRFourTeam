@@ -47,6 +47,7 @@ public class PlayerMoveStrategy : IStrategy
     }
 
     private Vector2 _prevPosition;
+    private Sequence _inputLockSequence;
     public void Update(Blackboard blackboard)
     {
         blackboard.GetUnWrappedProperty("out_isGrounded", out bool isGrounded);
@@ -54,8 +55,15 @@ public class PlayerMoveStrategy : IStrategy
         {
             if (isGrounded)
             {
-                Sequence s = DOTween.Sequence();
-                s.SetDelay(0.2f).OnComplete(() => _inputLock = false);
+                if (_inputLockSequence != null)
+                    return;
+                
+                _inputLockSequence = DOTween.Sequence();
+                _inputLockSequence.SetDelay(0.25f).OnComplete(() =>
+                {
+                    _inputLock = false;
+                    _inputLockSequence = null;
+                });
             }
 
             return;
