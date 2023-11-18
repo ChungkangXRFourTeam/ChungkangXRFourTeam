@@ -22,23 +22,11 @@ public enum TalkerTarget
 }
 public interface ITalkingEvent
 {
-    public async UniTask OnEventBefore()
-    {
-        await UniTask.Delay(TimeSpan.FromSeconds(1.0f));
-    }
-    public async UniTask OnEvent()
-    {
-        await UniTask.Delay(TimeSpan.FromSeconds(1.0f));
-    }
+    public UniTask OnEventBefore();
+    public UniTask OnEvent();
+    public UniTask OnEventEnd();
+    public UniTask OnEventStart();
 
-    public async UniTask OnEventEnd()
-    {
-        await UniTask.Delay(TimeSpan.FromSeconds(1.0f));
-    }
-
-    public async UniTask OnEventStart()
-    {
-        await UniTask.Delay(TimeSpan.FromSeconds(1.0f));
-    }
+    public bool IsInvalid();
 
 }

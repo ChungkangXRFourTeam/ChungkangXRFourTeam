@@ -3,53 +3,71 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 public class TalkingEventManager : MonoBehaviour
 {
     private bool _isEventEnd;
-    [SerializeField]
-    private GameObject _player;
-    public ITalkingEvent _enabledEvent;
+    private static TalkingEventManager instance = null;
+    private Dictionary<string, ITalkingEvent> _sceneEvents;
+    public UnityEvent _sceneEvent;
+    
     private void Awake()
     {
-        _player = GameObject.FindGameObjectWithTag("Player");
-    }
-
-
-    private void Start()
-    {
-        _enabledEvent = new CutScneEventTemplate();
-        InvokeCurrentEvent().Forget();
-    }
-
-    private void Update()
-    {
-        if(_player.TryGetComponent(out PlayerController controller))
+        if (null == instance)
         {
-            if (!_isEventEnd)
+            instance = this;
+                
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        _sceneEvents = new Dictionary<string, ITalkingEvent>();
+    }
+    
+
+    public static TalkingEventManager Instance
+    {
+        get
+        {
+            if (null == instance)
             {
-                controller.enabled = false;
+                return null;
             }
-            else
+            return instance;
+        }
+    }
+    
+    public async UniTask InvokeCurrentEvent(ITalkingEvent sceneEvent)
+    {
+        
+            if (sceneEvent.IsInvalid())
             {
-                controller.enabled = true;
+                _isEventEnd = false;
+        
+                await sceneEvent.OnEventBefore();
+                await sceneEvent.OnEventStart();
+                await sceneEvent.OnEvent();
+                await sceneEvent.OnEventEnd();
             }
+        
+            _isEventEnd = true; 
+    }
+    
+    
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        switch (scene.name)
+        {
+            case "Tutorial":
+                _sceneEvents.TryAdd("StartTutorial", new TutorialCutscene());
+                break;
         }
     }
 
-    public async UniTask InvokeCurrentEvent()
-    {
-        if (_enabledEvent != null)
-        {
-            _isEventEnd = false;
-        
-            await _enabledEvent.OnEventBefore();
-            await _enabledEvent.OnEventStart();
-            await _enabledEvent.OnEvent();
-            await _enabledEvent.OnEventEnd();
-        
-            _isEventEnd = true;
-            _enabledEvent = null;
-        }
-    }
+    
 }
