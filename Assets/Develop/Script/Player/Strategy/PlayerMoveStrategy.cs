@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using XRProject.Helper;
@@ -17,6 +18,7 @@ public class PlayerMoveStrategy : IStrategy
     private bool _inputLock;
     private EffectItem _effect;
     private Rigidbody2D _rigid;
+    
     
     private Vector2 GetMovingVector()
     {
@@ -45,14 +47,34 @@ public class PlayerMoveStrategy : IStrategy
     }
 
     private Vector2 _prevPosition;
+    private Sequence _inputLockSequence;
     public void Update(Blackboard blackboard)
     {
+        blackboard.GetUnWrappedProperty("out_isGrounded", out bool isGrounded);
+        if (_inputLock)
+        {
+            if (isGrounded)
+            {
+                if (_inputLockSequence != null)
+                    return;
+                
+                _inputLockSequence = DOTween.Sequence();
+                _inputLockSequence.SetDelay(0.25f).OnComplete(() =>
+                {
+                    _inputLock = false;
+                    _inputLockSequence = null;
+                });
+            }
+
+            return;
+        }
+        
         blackboard.GetProperty("out_buffInfo", out BuffInfo info);
         blackboard.GetProperty("out_transform", out Transform transform);
-        blackboard.GetUnWrappedProperty("out_isGrounded", out bool isGrounded);
         blackboard.GetUnWrappedProperty("out_isLeftSide", out bool isLeftSide);
         blackboard.GetUnWrappedProperty("out_isRightSide", out bool isRightSide);
-
+        blackboard.GetProperty("out_aniController", out PlayerAnimationController ani);
+        
         var movingVector = GetMovingVector() * Mathf.Max(info.SpeedFactor, 1f);
         var jumpingVector = upDir * _data.JumpForce;
         var fallingVector = downDir * _data.DownForce;
@@ -78,7 +100,8 @@ public class PlayerMoveStrategy : IStrategy
             {
                 p.Stop();
             }
-            
+
+            _inputLock = true;
             _rigid.velocity = Vector2.zero;
             _rigid.AddForce(fallingVector, ForceMode2D.Impulse);
             
@@ -89,16 +112,6 @@ public class PlayerMoveStrategy : IStrategy
                 Rotation = Quaternion.Euler(0f, 0f, 180f),
                 Scale = Vector3.one * 2.5f,
                 FlipRotation = 1f
-            });
-        }
-        if (jumpingVector.sqrMagnitude > 0f)
-        {
-            EffectManager.ImmediateCommand(new EffectCommand()
-            {
-                EffectKey = "player/jumpDust",
-                Position = transform.position,
-                Rotation = Quaternion.Euler(0f, 0f, 0f),
-                Scale = Vector3.one * 1.5f
             });
         }
 
@@ -126,6 +139,17 @@ public class PlayerMoveStrategy : IStrategy
             {
                 _effect.IsEnabled = false;
             }
+        }
+        
+        if (jumpingVector.sqrMagnitude > 0f)
+        {
+            EffectManager.ImmediateCommand(new EffectCommand()
+            {
+                EffectKey = "player/jumpDust",
+                Position = transform.position,
+                Rotation = Quaternion.Euler(0f, 0f, 0f),
+                Scale = Vector3.one * 1.5f
+            });
         }
 
         _prevPosition = transform.position;

@@ -17,8 +17,6 @@ public class PlayerSwingState : BaseState
         var timeScale = blackboard.GetUnWrappedProperty<float>("out_timeScale");
         
         Time.timeScale = timeScale;
-        
-        
     }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
@@ -34,6 +32,7 @@ public class PlayerSwingState : BaseState
         var lineRenderer = blackboard.GetProperty<LineRenderer>("out_lineRenderer");
         var transform = blackboard.GetProperty<Transform>("out_transform");
         var minmumCloseDistance = blackboard.GetUnWrappedProperty<float>("out_minmumCloseDistance");
+        var data = blackboard.GetProperty<PlayerSwingAttackData>("out_data");
         
 
         var actorTransform = currentActorPhysics.GetTransformOrNull();
@@ -53,8 +52,12 @@ public class PlayerSwingState : BaseState
             actorBoxCollider.size.y * actorTransform.lossyScale.y
         );
 
-        var actorPos = (dir * minmumCloseDistance) + (Vector2)transform.position;
-        actorTransform.position = actorPos;
+        float cameraX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+        float ox = cameraX >= transform.position.x ? 1f : -1f;
+        var grabOffset = data.GrabOffset;
+        grabOffset.x *= ox;
+        actorTransform.position = (Vector2)transform.position + grabOffset ;
+        currentActorPhysics.Stop();
         
         var swingDir = PlayerCalculation.GetSwingDirection(Camera.main, transform.position+ Vector3.one * 1.5f);
         var points = PlayerCalculation.GetReflectionPoints(

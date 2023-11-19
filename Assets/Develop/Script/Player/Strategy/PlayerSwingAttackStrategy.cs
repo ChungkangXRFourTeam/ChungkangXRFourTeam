@@ -31,6 +31,7 @@ public class PlayerSwingAttackStrategy : IStrategy
             .AddProperty("out_transform", sendedBlackboard.GetProperty<Transform>("out_transform"))
             .AddProperty("out_grabDistance",new WrappedValue<float>(_data.GrabDistance))
             .AddProperty("out_timeScale", new WrappedValue<float>(_data.TimeScale))
+            .AddProperty("out_data", _data)
             .AddProperty("out_minmumCloseDistance",new WrappedValue<float>(_data.MinmumCloseDistance))
             .AddProperty("out_swingForce", new WrappedValue<float>(_data.SwingForce))
             .AddProperty("in_currentActor_physics", null)

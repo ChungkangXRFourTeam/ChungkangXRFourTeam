@@ -57,6 +57,8 @@ public class PlayerMeleeAttackStrategy : IStrategy
 
     private void OnEffectHit(EffectItem item, Blackboard blackboard, ActorContractInfo info)
     {
+        if (info.Transform.gameObject.CompareTag("Player")) return;
+        
         if (
             blackboard.TryGetProperty<WrappedValue<int>>("out_remaingProperties", out var propertiesCount) &&
             blackboard.TryGetProperty<InteractionController>("out_interaction", out var myInteraction) &&
