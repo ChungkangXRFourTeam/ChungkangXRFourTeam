@@ -92,7 +92,7 @@ public class PlayerMoveStrategy : IStrategy
 
         downDir = Vector2.zero;
         upDir = Vector2.zero;
-        if (fallingVector.sqrMagnitude > 0f)
+        if (fallingVector.sqrMagnitude > 0f && isGrounded == false)
         {
             blackboard.GetProperty("out_interaction", out InteractionController interaction);
             if (interaction.TryGetContractInfo(out ActorContractInfo aci) &&

@@ -22,6 +22,7 @@ public class PlayerAnimationState : MonoBehaviour
     private Rigidbody2D _rigid;
     private PlayerController _playerController;
 
+    public bool IsFall => _foot.IsGrounded == false && _fallAction.IsPressed();
     public bool IsBouncing => 
         _interaction.GetContractInfoOrNull<ActorContractInfo>()
         .GetBehaviourOrNull<IBActorPhysics>()
@@ -94,7 +95,7 @@ B:
                 SetState(Throw);
                 yield break;
             }
-            if (_fallAction.IsPressed())
+            if (IsFall)
             {
                 SetState(Fall);
                 yield break;
@@ -129,7 +130,7 @@ B:
                 SetState(Throw);
                 yield break;
             }
-            if (_fallAction.IsPressed())
+            if (IsFall)
             {
                 SetState(Fall);
                 yield break;
@@ -143,7 +144,7 @@ B:
             SetState(Throw);
             yield break;
         }
-        if (_fallAction.IsPressed())
+        if (IsFall)
         {
             SetState(Fall);
             yield break;
@@ -221,10 +222,10 @@ B:
             {
                 SetState(Bouncing);
             }
-            if (_fallAction.IsPressed())
-            {
-                SetState(Fall);
-            }
+            //if (_fallAction.IsPressed())
+            //
+            //   SetState(Fall);
+            //
             else if (IsJump)
             {
                 SetState(Jump);
@@ -261,7 +262,7 @@ B:
                 SetState(Bouncing);
                 yield break;
             }
-            if (_fallAction.IsPressed())
+            if (IsFall)
             {
                 SetState(Fall);
                 yield break;
@@ -336,7 +337,7 @@ B:
             {
                 SetState(Bouncing);
             }
-            else if (_fallAction.IsPressed())
+            else if (IsFall)
             {
                 SetState(Fall);
             }
