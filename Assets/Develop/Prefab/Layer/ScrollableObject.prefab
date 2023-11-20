@@ -76,7 +76,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 2051151137
-  m_SortingLayer: -2
+  m_SortingLayer: -3
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -106,7 +106,7 @@ MonoBehaviour:
   _verticalFactor: 0
   _spriteSize: 1
   allowChangeSizeWhenCameraSizeChanged: 0
-  _spriteZoomOutSize: 1
+  isOverable: 0
   _leftPoint: {fileID: 4615568631318797647}
   _rightPoint: {fileID: 3793604083245789168}
   _upPoint: {fileID: 320296322601736489}
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 3793604083245789168}
   - component: {fileID: 7138445206007518457}
   - component: {fileID: 9219952916281132443}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 4671528727470473645}
   - component: {fileID: 6448422560255054793}
   - component: {fileID: 1598825081676821215}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,7 +332,7 @@ GameObject:
   - component: {fileID: 320296322601736489}
   - component: {fileID: 3534091924419375565}
   - component: {fileID: 4867479706713182554}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -437,7 +437,7 @@ GameObject:
   - component: {fileID: 4615568631318797647}
   - component: {fileID: 9148711905017695113}
   - component: {fileID: 7914480113294515795}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
