@@ -22,7 +22,7 @@ public class EffectManager : MonoBehaviour
             Destroy(_inst.gameObject);
         }
         
-        var obj = new GameObject("EffectManager/");
+        var obj = new GameObject("[EffectManager]");
         _inst = obj.AddComponent<EffectManager>();
         DontDestroyOnLoad(obj);
 

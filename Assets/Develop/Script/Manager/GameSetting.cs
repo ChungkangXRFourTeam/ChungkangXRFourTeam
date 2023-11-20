@@ -12,6 +12,7 @@ public class GameSetting : MonoBehaviour
     private void Awake()
     {
         EffectManager.Init();
+        SoundManager.Init();
 
 #if UNITY_EDITOR
         Application.targetFrameRate = 60;
