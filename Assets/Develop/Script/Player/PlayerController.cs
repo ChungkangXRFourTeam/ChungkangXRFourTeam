@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     private float _currentHp;
     private WrappedValue<int> _propertiesCount = new WrappedValue<int>(0);
     private WrappedValue<bool> _isAllowedInteraction = new(false);
+    [SerializeField]
     private EActorPropertiesType _properties = EActorPropertiesType.None;
     
     /* properties */
@@ -79,6 +80,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
 
     /* events */
     public event Action<IBActorLife, float, float> ChangedHp;
+    public event Action<EActorPropertiesType> ChangedProperties;
     
     /* unity functions */
     private void Awake()
@@ -106,6 +108,10 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
 
         Interaction.OnContractObject += x =>
         {
+            if (x.TryGetBehaviour(out IBObjectKnockback knockback))
+            {
+                SetProperties(x,knockback.Properties);
+            }
             if (x.TryGetBehaviour(out IBObjectInteractive interactive))
             {
                 AniKnockback = true;
@@ -222,6 +228,9 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
         if (type != EActorPropertiesType.None)
             _propertiesCount.Value = 10;
 
+        if(type != _properties)
+            ChangedProperties?.Invoke(type);
+        
         _properties = type;
 
         DOTween.Kill(this, false);

@@ -29,6 +29,11 @@ public interface IBObjectInteractive : IObjectBehaviour
 {
     public bool IsSelectiveObject {get; }
 }
+
+public interface IBObjectKnockback : IObjectBehaviour
+{
+    public EActorPropertiesType Properties { get; }
+}
 public interface IBObjectPatrollSpace : IObjectBehaviour
 {
     public Vector2 LeftPoint { get; }

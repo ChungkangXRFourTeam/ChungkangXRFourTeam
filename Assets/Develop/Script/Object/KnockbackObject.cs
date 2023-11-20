@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class KnockbackObject : MonoBehaviour, IBObjectInteractive
+public class KnockbackObject : MonoBehaviour, IBObjectInteractive, IBObjectKnockback
 {
     [Header("튕기는 힘")] [SerializeField] private float _knockbackForce;
 
@@ -41,6 +41,7 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive
 
         Interaction.SetContractInfo(ObjectContractInfo.Create(transform, () => false)
             .AddBehaivour<IBObjectInteractive>(this)
+            .AddBehaivour<IBObjectKnockback>(this)
         );
         Interaction.OnContractActor += OnContractActor;
     }

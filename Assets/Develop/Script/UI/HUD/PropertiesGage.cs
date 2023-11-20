@@ -17,8 +17,6 @@ public class PropertiesGage : MonoBehaviour
     [SerializeField] private Color _emptyColor;
     [SerializeField] private float _animationDuration;
     private PlayerController _pc;
-    private EActorPropertiesType _prevType;
-    private float _prevValue;
 
     private void SetAmount(EActorPropertiesType type, float value)
     {
@@ -35,20 +33,12 @@ public class PropertiesGage : MonoBehaviour
             color = _waterColor;
         }
 
-        if (!Mathf.Approximately(_prevValue, value))
-        {
-            _gageImage.DOFillAmount(value, _animationDuration);
-            _headImage.DOFillAmount(value, _animationDuration);
-        }
+        DOTween.Kill(this);
+        _gageImage.DOFillAmount(value, _animationDuration).SetId(this);
+        _headImage.DOFillAmount(value, _animationDuration).SetId(this);
 
-        if (_prevType != type)
-        {
-            _gageImage.DOColor(color, _animationDuration);
-            _headImage.DOColor(color, _animationDuration);
-        }
-
-        _prevType = type;
-        _prevValue = value;
+        _gageImage.DOColor(color, _animationDuration).SetId(this);
+        _headImage.DOColor(color, _animationDuration).SetId(this);
     }
 
     private void Awake()
@@ -58,22 +48,31 @@ public class PropertiesGage : MonoBehaviour
         if (!_gageImage || !_headImage)
         {
             XLog.LogError("PropertiesGage: image is null", "player");
+            enabled = false;
             return;
         }
 
         if (!_pc)
         {
             XLog.LogError("PropertiesGage: it couldn't find player ", "player");
+            enabled = false;
+            return;
         }
 
         _gageImage.fillAmount = 0f;
         _gageImage.color = _emptyColor;
         _headImage.color = _emptyColor;
+
+        _pc.ChangedProperties += OnChangeProperties;
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        if (!_pc) return;
-        SetAmount(_pc.Properties, _pc.RemainingPropertie / 10f);
+        _pc.ChangedProperties -= OnChangeProperties;
+    }
+
+    private void OnChangeProperties(EActorPropertiesType type)
+    {
+        SetAmount(type, _pc.RemainingPropertie / 10f);
     }
 }
