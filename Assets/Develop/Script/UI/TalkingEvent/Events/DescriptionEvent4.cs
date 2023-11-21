@@ -11,7 +11,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class DescriptionEvent : ITalkingEvent
+public class DescriptionEvent4 : ITalkingEvent
 {
     
     private List<Dictionary<string, object>> _eventTexts;
@@ -19,6 +19,7 @@ public class DescriptionEvent : ITalkingEvent
     private TalkingPanelInfo _playerPanel;
     private TalkingPanelInfo _targetPanel;
     private GameObject _observer;
+    private GameObject _upWall;
     private Animator _playerAnim;
     private string _scriptPath = "EventTextScript/";
     private  List<string> _comments;
@@ -32,21 +33,18 @@ public class DescriptionEvent : ITalkingEvent
         _playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         _playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _observer = GameObject.FindGameObjectWithTag("Observer");
-        _scriptPath += "DescriptionText";
+        _scriptPath += "DescriptionText4";
         _eventTexts = CSVReader.Read(_scriptPath);
         _comments = new List<string>();
         for (int i = 0; i < _eventTexts.Count; i++)
         {
             _comments.Add(_eventTexts[i][EventTextType.Content.ToString()].ToString());
         }
-        
         contents = _comments.ToArray();
         target = "";
         
         _playerPanel = GameObject.FindGameObjectWithTag("Player").GetComponent<TalkingPanelInfo>();
         _targetPanel = GameObject.FindGameObjectWithTag("Observer").GetComponent<TalkingPanelInfo>();
-        Vector2 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
-        _observer.transform.position = new Vector2(playerPos.x + 14f, 2.5f);
         _observer.SetActive(false);
         await UniTask.Yield();
     }
@@ -55,18 +53,26 @@ public class DescriptionEvent : ITalkingEvent
     {
         InputManager.Instance.DisableMainGameAction();
         InputManager.Instance.InitTalkEventAction();
-        _targetPanel._panel.SetActive(false);
-        _playerPanel._panel.SetActive(false);
+        
+        Rigidbody2D playerRigid = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
+        await UniTask.WaitUntil(() => playerRigid.velocity.y == 0);
+        
         EventFadeChanger.Instance.FadeIn(0.3f);
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1.0f);
         _observer.SetActive(true);
         await UniTask.Yield();
+        
+        
     }
 
     public async UniTask OnEvent()
     {
+        Vector2 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
+        _observer.transform.position = new Vector2(playerPos.x + 9f, playerPos.y + 2.5f);
         EventFadeChanger.Instance.FadeOut(0.7f);
         InputAction action = InputManager.GetTalkEventAction("NextText");
+        _textCount = 0;
+        
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha <= 0f);
         if(action != null)
             while (_textCount < contents.Length-1)
@@ -87,7 +93,8 @@ public class DescriptionEvent : ITalkingEvent
 
     public async UniTask OnEventEnd()
     {
-        TextMeshProUGUI description = GameObject.Find("DescriptionMonitor 2").transform.Find("Description Canvas").transform
+        
+        TextMeshProUGUI description = GameObject.Find("DescriptionMonitor 6").transform.Find("Description Canvas").transform
             .GetChild(0).GetComponent<TextMeshProUGUI>();
         
         TypingSystem.Instance.Typing(contents,description);
@@ -96,6 +103,7 @@ public class DescriptionEvent : ITalkingEvent
         
         InputManager.Instance.InitMainGameAction();
         InputManager.Instance.DisableTalkEventAction();
+        
         await UniTask.Yield();
     }
 

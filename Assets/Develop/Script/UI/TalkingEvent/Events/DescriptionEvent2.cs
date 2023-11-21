@@ -39,7 +39,7 @@ public class DescriptionEvent2 : ITalkingEvent
         {
             _comments.Add(_eventTexts[i][EventTextType.Content.ToString()].ToString());
         }
-        
+        _textCount = 0;
         contents = _comments.ToArray();
         target = "";
         
@@ -53,14 +53,18 @@ public class DescriptionEvent2 : ITalkingEvent
 
     public async UniTask OnEventStart()
     {
-        _playerAnim.SetBool("isMoved",false);
         InputManager.Instance.DisableMainGameAction();
         InputManager.Instance.InitTalkEventAction();
+        
+        Rigidbody2D playerRigid = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
+        await UniTask.WaitUntil(() => playerRigid.velocity.y <= 0);
         
         EventFadeChanger.Instance.FadeIn(0.3f);
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1.0f);
         _observer.SetActive(true);
         await UniTask.Yield();
+        
+        
     }
 
     public async UniTask OnEvent()
@@ -89,10 +93,13 @@ public class DescriptionEvent2 : ITalkingEvent
     public async UniTask OnEventEnd()
     {
         
+        
         TextMeshProUGUI description = GameObject.Find("DescriptionMonitor 3").transform.Find("Description Canvas").transform
             .GetChild(0).GetComponent<TextMeshProUGUI>();
         
         TypingSystem.Instance.Typing(contents,description);
+        
+        await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
         
         InputManager.Instance.InitMainGameAction();
         InputManager.Instance.DisableTalkEventAction();
@@ -112,7 +119,8 @@ public class DescriptionEvent2 : ITalkingEvent
         switch (target)
         {
             case "Player" : 
-                _playerPanel._panel.SetActive(true);
+                if(_textCount != _comments.Count) 
+                    _playerPanel._panel.SetActive(true);
                 _playerPanel._endButton.SetActive(false);
                 if(_playerPanel._eventText.TryGetComponent(out TextMeshProUGUI playerComponent)) 
                     TypingSystem.instance.Typing(contents,playerComponent);
