@@ -11,6 +11,8 @@ public class PlayerSwingAttackStrategy : IStrategy
     private StateExecutor _executor;
     private CinemachineCameraControll _cameraControll;
 
+    public float CoolTime => _executor.Blackboard.GetUnWrappedProperty<float>("in_coolTime");
+
     public void Init(Blackboard sendedBlackboard)
     {
         _cameraControll = GameObject.FindWithTag("VirtualCamera")?.GetComponent<CinemachineCameraControll>();
@@ -38,6 +40,7 @@ public class PlayerSwingAttackStrategy : IStrategy
             .AddProperty("in_currentActor_propagation", null)
             .AddProperty("in_currentActor_life", null)
             .AddProperty("in_swingDir", new WrappedNullableValue<Vector2>())
+            .AddProperty("in_coolTime", new WrappedValue<float>())
             .AddProperty("out_lineRenderer", _lineRenderer)
             ;
         
@@ -53,6 +56,12 @@ public class PlayerSwingAttackStrategy : IStrategy
         {
             _cameraControll.SetZoomKeyState(_executor.CurrentState is PlayerSwingState);
         }
+        
+        
+        _executor.Blackboard.GetWrappedProperty<float>("in_coolTime", out var coolTime);
+        coolTime.Value -= Time.deltaTime;
+        if (coolTime < 0f) coolTime.Value = 0f;
+        
 
         blackboard.GetWrappedProperty<bool>("in_isGrabState").Value = _executor.CurrentState is not DefaultPlayerState;
     }

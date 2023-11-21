@@ -57,6 +57,8 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     }
 
     public int RemainingPropertie => _propertiesCount;
+    public float SwingCoolTime => _swingAttackStrategy.CoolTime;
+    public float MaxSwingCoolTime => _swingAttackData.CoolTime;
 
 
     public bool IsDestroyed { get; private set; }

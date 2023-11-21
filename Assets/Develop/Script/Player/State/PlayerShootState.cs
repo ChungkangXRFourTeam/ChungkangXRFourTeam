@@ -4,9 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using XRProject.Helper;
 
-public class 
-    PlayerShootState : BaseState
+public class PlayerShootState : BaseState
 {
+    public override void Enter(Blackboard blackboard)
+    {
+        blackboard.GetWrappedProperty<float>("in_coolTime", out var coolTime);
+        blackboard.GetProperty<PlayerSwingAttackData>("out_data", out var data);
+        coolTime.Value = data.CoolTime;
+    }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
         blackboard.GetPropertyOrNull<IBActorPhysics>("in_currentActor_physics", out var currentActorPhysics);
