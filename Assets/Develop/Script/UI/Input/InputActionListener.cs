@@ -161,7 +161,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""d1b32849-3386-4e4d-a0ba-ec4a94f61e76"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
