@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 public class TalkingEventManager : MonoBehaviour
 {
-    private bool _isEventEnd;
+    public bool _isEventEnd;
     private static TalkingEventManager instance = null;
     private Dictionary<string, ITalkingEvent> _sceneEvents;
     public UnityEvent _sceneEvent;
@@ -27,6 +27,7 @@ public class TalkingEventManager : MonoBehaviour
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         _sceneEvents = new Dictionary<string, ITalkingEvent>();
+        _isEventEnd = true;
     }
     
 
@@ -44,8 +45,7 @@ public class TalkingEventManager : MonoBehaviour
     
     public async UniTask InvokeCurrentEvent(ITalkingEvent sceneEvent)
     {
-        
-            if (sceneEvent.IsInvalid())
+            if (sceneEvent.IsInvalid() && _isEventEnd)
             {
                 _isEventEnd = false;
         

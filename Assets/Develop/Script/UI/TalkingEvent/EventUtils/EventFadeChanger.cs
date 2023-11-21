@@ -57,4 +57,9 @@ public class EventFadeChanger : MonoBehaviour
     {
         Fade_img = GameObject.FindWithTag("Fade").GetComponent<CanvasGroup>();
     }
+
+    public void ChangeFadeObject(CanvasGroup fade)
+    {
+        Fade_img = fade;
+    }
 }
