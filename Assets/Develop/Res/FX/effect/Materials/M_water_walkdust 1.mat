@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_ringglow_b_o
-  m_Shader: {fileID: 4800000, guid: 081c2c994df441e4da4aeb3b18b340bb, type: 3}
+  m_Name: M_water_walkdust 1
+  m_Shader: {fileID: 4800000, guid: 4b1adfcf10b9a0b4d97318307eca577a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _T_glow4:
-        m_Texture: {fileID: 2800000, guid: dde7c1e88f1480444b60dd1d369ce3f8, type: 3}
+        m_Texture: {fileID: 2800000, guid: a88b739f80430944cbbf578f7f220dfd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texcoord:
@@ -70,7 +70,7 @@ Material:
     - _SpecularHighlights: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color0: {r: 10.680629, g: 10.680629, b: 10.680629, a: 1}
+    - _Color0: {r: 5.649403, g: 9.01464, b: 13.766361, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
