@@ -2,7 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+public static class VolumeName {
+    public const string Master = "MASTER_VOLUME";
+    public const string Background = "BACKGROUND_VOLUME";
+    public const string SFX= "SOUND_EFFECT_VOLUME";
+    public const string Music = "MUSIC_VOLUME";
+}
 
 [System.Serializable]
 public struct SoundCommand
@@ -14,7 +19,7 @@ public struct SoundCommand
     
     // TODO: AudioSource의 설정값들을 조절하고 싶다면, 이곳에 변수를 추가하기
     internal AudioClip clip;
-    
+    internal string volumeKey;
 }
 
 internal partial class SoundScheduleItem
@@ -23,5 +28,6 @@ internal partial class SoundScheduleItem
     private void SetProperties(ref SoundCommand command, ref AudioSource source)
     {
         source.clip = command.clip;
+        source.volume = SoundManager.GetSoundVolume(command.volumeKey);
     }
 }

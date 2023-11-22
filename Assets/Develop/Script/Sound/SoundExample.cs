@@ -11,12 +11,11 @@ public class SoundExample : MonoBehaviour
         // 올바른 예 1
         if (GUILayout.Button("valid case1 play"))
         {
-            if (SoundManager.TryGetSound("ui/02_SFX_title_clickMouse", out var sound))
+            SoundManager.ScheduleSound(new SoundCommand()
             {
-                var source = GetComponent<AudioSource>();
-                source.clip = sound;
-                source.Play();
-            }
+                Key = "bgm/bgm_main_a",
+                volumeKey = VolumeName.Music
+            });
         }
 
         // 올바른 예 2
@@ -33,18 +32,22 @@ public class SoundExample : MonoBehaviour
         {
             SoundManager.ScheduleSound(new SoundCommand()
             {
-                Key = "ui/02_SFX_title_clickMouse"
+                Key = "ui/02_SFX_title_clickMouse",
+                volumeKey = VolumeName.SFX
             });
             
             // Duration: 몇초 뒤에 재생될지 설정
+            // volumeKey: 사운드의 타입 키값. 키값은 VolumeName에 정의되어있음
             SoundManager.ScheduleSound(new SoundCommand()
             {
                 Key = "ui/02_SFX_title_clickMouse",
+                volumeKey = VolumeName.SFX,
                 Duration = 1f
             });
             SoundManager.ScheduleSound(new SoundCommand()
             {
                 Key = "ui/02_SFX_title_clickMouse",
+                volumeKey = VolumeName.SFX,
                 Duration = 2f
             });
         }

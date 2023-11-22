@@ -10,18 +10,22 @@ using TD = System.Collections.Generic.Dictionary<string,UnityEngine.AudioClip>;
 public class SoundManager : MonoBehaviour
 {
     private static SoundManager _inst;
+    private static float _volumeInitValue = 0.5f;
 
     private SoundTableSet _tables;
     private Dictionary<string, TD> _tableDict;
     private SoundScheduler _scheduler;
+    private Dictionary<string, float> _volumeDict;
 
     private const string PATH = "SoundTable/SoundTableSet";
     private const string LOG_SIGNATURE = "sound";
+    private readonly string[] VOLUMES = { "MASTER_VOLUME", "BACKGROUND_VOLUME", "SOUND_EFFECT_VOLUME", "MUSIC_VOLUME" };
     
     public static void Init()
     {
         InstanceInit();
         TableInit();
+        SoundVolumeInit();
     }
 
     #region Initializer
@@ -74,6 +78,31 @@ public class SoundManager : MonoBehaviour
         }
 
     }
+
+    private static void SoundVolumeInit()
+    {
+        string[] volumes = _inst.VOLUMES;
+        
+        if (!PlayerPrefs.HasKey("isNew"))
+        {
+            foreach (string volume in volumes)
+            {
+                PlayerPrefs.SetFloat(volume,_volumeInitValue);
+            }
+            PlayerPrefs.SetInt("isNew",1);
+        }
+        
+        var volumeDict = new Dictionary<string, float>();
+        _inst._volumeDict = volumeDict;
+        
+        foreach (string volume in volumes)
+        {
+            if(volumeDict.ContainsKey(volume))
+                XLog.LogError($"SoundVolume key ('{volume}') is already exist",LOG_SIGNATURE);
+            
+            volumeDict.Add(volume,PlayerPrefs.GetFloat(volume));
+        }
+    }
     #endregion
 
     #region private
@@ -81,8 +110,10 @@ public class SoundManager : MonoBehaviour
     {
         _inst._scheduler.Release();
         _tableDict = null;
+        _volumeDict = null;
         _tables = null;
         _inst = null;
+        
     }
     private static bool CheckInit()
     {
@@ -186,6 +217,22 @@ public class SoundManager : MonoBehaviour
             
             _inst._scheduler.Schedule(command);
         }
+    }
+
+    public static float GetSoundVolume(string key)
+    {
+        if (_inst._volumeDict.TryGetValue(key, out float commandVolume) && 
+            _inst._volumeDict.TryGetValue(VolumeName.Master, out float masterVolume))
+        {
+            return commandVolume * masterVolume;
+        }
+
+        return 0f;
+    }
+
+    public static void SetSoundVolume(string key,float value)
+    {
+        _inst._volumeDict[key] = value;
     }
     
 }

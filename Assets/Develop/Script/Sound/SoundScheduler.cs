@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XRProject.Utils.Log;
 
 internal class SoundScheduler : MonoBehaviour
 {
@@ -126,6 +127,7 @@ internal class SoundScheduler : MonoBehaviour
             {
                 currentNode = currentNode.Next;
                 item.scheduleTimer += Time.deltaTime;
+                item.SetVolumeIfChanged();
             }
         }
     }
@@ -174,5 +176,12 @@ internal partial class SoundScheduleItem
     {
         SetProperties(ref Command, ref _source);
         _source.Play();
+    }
+
+    public void SetVolumeIfChanged()
+    {
+        float currentValue = SoundManager.GetSoundVolume(Command.volumeKey);
+        if (_source.volume - currentValue != 0f)
+            _source.volume = currentValue;
     }
 }
