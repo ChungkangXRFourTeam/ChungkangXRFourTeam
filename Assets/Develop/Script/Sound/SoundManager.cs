@@ -219,6 +219,12 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 사운드 종류에 따른 볼륨값을 가져옵니다.
+    /// 사운드 크기는 사운드 종류 볼륨 * 마스터 볼륨 값입니다.
+    /// 키 값은 VolumeName 클래스 안에 정의되어 있습니다.
+    /// </summary>
+    /// <param name="key">볼륨 정보를 가져오게 할 key값</param>
     public static float GetSoundVolume(string key)
     {
         if (_inst._volumeDict.TryGetValue(key, out float commandVolume) && 
@@ -229,7 +235,7 @@ public class SoundManager : MonoBehaviour
 
         return 0f;
     }
-
+    
     public static void SetSoundVolume(string key,float value)
     {
         _inst._volumeDict[key] = value;

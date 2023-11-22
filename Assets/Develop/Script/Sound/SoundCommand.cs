@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//사운드 볼륨 키값을 가지고 있는 클래스
+//절대 수정하지 말것
 public static class VolumeName {
     public const string Master = "MASTER_VOLUME";
     public const string Background = "BACKGROUND_VOLUME";
