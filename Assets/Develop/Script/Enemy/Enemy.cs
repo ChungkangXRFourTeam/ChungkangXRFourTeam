@@ -2,12 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using JetBrains.Annotations;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 using XRProject.Helper;
-using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, IBActorThrowable, IBActorAttackable
 {
@@ -16,14 +14,13 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
     [SerializeField] private EnemyData _data;
     [SerializeField] private bool _isThrowable;
     [SerializeField] private EActorPropertiesType _properties;
-    [Header("don't edit this")]
+
+    [Header("don't edit this")] 
+    [SerializeField] private AnimationBodyChanger _bodyChanger;
     [SerializeField] private Image _effectImage;
     [SerializeField] private Collider2D _body;
     [SerializeField] private Rigidbody2D _rigid;
     [SerializeField] private InteractionController _interaction;
-    [SerializeField] private SkeletonAnimation _deathSkeletonAnimation;
-    [SerializeField] private SkeletonAnimation _defaultSkeletonAnimation;
-    [SerializeField] private SkeletonAnimation _shotSkeletonAnimation;
     /* fields */
     private ActorPhysicsStrategy _physicsStrategy = new();
     private StateExecutor _executor;
@@ -114,7 +111,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             .AddProperty("out_rigidbody", Rigid)
             .AddProperty("out_strategyExecutor", strategyExecutor)
             .AddProperty("out_interaction", Interaction)
-            .AddProperty("out_skeletonAnimation", GetComponentInChildren<SkeletonAnimation>())
+            .AddProperty("out_skeletonAnimation", _bodyChanger.GetBodyGetComponentOrNull<SkeletonAnimation>("default"))
             .AddProperty("test", "")
             
             .AddProperty("out_enemyData", _data)
@@ -155,16 +152,25 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
         Properties = Properties;
         _effectImage.enabled = false;
 
-        _shotSkeletonAnimation.AnimationState.Complete += x =>
+        var shotBody = _bodyChanger.GetBodyGetComponentOrNull<SkeletonAnimation>("shot");
+        var defaultBody = _bodyChanger.GetBodyGetComponentOrNull<SkeletonAnimation>("default");
+
+        if (shotBody && defaultBody)
         {
-            _defaultSkeletonAnimation.gameObject.SetActive(true);
-            _shotSkeletonAnimation.gameObject.SetActive(false);
-        };
-        _shotSkeletonAnimation.AnimationState.Start += x =>
+            shotBody.AnimationState.Complete += x =>
+            {
+                _bodyChanger.Change("default");
+            };
+            shotBody.AnimationState.Start += x =>
+            {
+                _bodyChanger.Change("shot");
+            };
+        }
+        else
         {
-            _defaultSkeletonAnimation.gameObject.SetActive(false);
-            _shotSkeletonAnimation.gameObject.SetActive(true);
-        };
+            Debug.LogError("Body is null");
+        }
+        
     }
     
 
@@ -209,9 +215,10 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             _effectTweener = null;
         }
         
-        _defaultSkeletonAnimation.gameObject.SetActive(false);
-        _deathSkeletonAnimation.gameObject.SetActive(true);
-        _deathSkeletonAnimation.AnimationState.Complete += x =>
+        _bodyChanger
+            .Change("death")
+            .GetBodyGetComponentOrNull<SkeletonAnimation>("death")!
+            .AnimationState.Complete += x =>
         {
             Debug.Log("des");
             Destroy(gameObject);
@@ -274,8 +281,11 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
                 Position = transform.position
             });
 
-            _shotSkeletonAnimation.gameObject.SetActive(true);
-            _shotSkeletonAnimation.AnimationState.SetAnimation(0, "shot", false);
+            _bodyChanger
+                .Change("shot")
+                .GetBodyGetComponentOrNull<SkeletonAnimation>("shot")?
+                .AnimationState.SetAnimation(0, "shot", false)
+                ;
         }
     }
     private void AnimatePropertiesHitEffect(EActorPropertiesType type)

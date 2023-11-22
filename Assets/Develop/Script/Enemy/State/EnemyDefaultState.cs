@@ -552,18 +552,27 @@ public class EnemyAttackState : BaseState
     }
     public override void Enter(Blackboard blackboard)
     {
-        // TODO: 공격 모션 코드 삽입
         blackboard.GetUnWrappedProperty("out_isCaught", out bool isCaught);
         if (isCaught) return;
         DoHit(blackboard);
         
+        // TODO: 공격 모션 코드 삽입
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+        blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
         blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
         blackboard.GetUnWrappedProperty("test_testMixDuration", out float testMixDuration);
+        
+        var playerCollider = EnemyDetectionState.GetPlayerOrNull(transform.position, data.AttackDistance);
+        if (playerCollider == false) return;
+        
+        float angle = playerCollider.transform.position.x - transform.position.x;
+        if (angle >= 0f) angle = 180f;
+        else angle = 0f;
+        ani.transform.rotation = Quaternion.Euler(0f, angle, 0f);
         ani.AnimationState.Data.SetMix("move","attack", testMixDuration);
         ani.AnimationState.SetAnimation(0, ANI_ATTACK_KEY, false);
         _isAttackEnded = false;
         
-        blackboard.GetProperty<Transform>("out_transform", out var transform);
     }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
