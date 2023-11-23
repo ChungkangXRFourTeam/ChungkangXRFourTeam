@@ -161,7 +161,8 @@ internal partial class SoundScheduleItem
     {
         scheduleTimer = 0f;
         pendingTimer = 0f;
-        _source.clip = null;
+        if(_source)
+            _source.clip = null;
         Command = new SoundCommand();
     }
 
