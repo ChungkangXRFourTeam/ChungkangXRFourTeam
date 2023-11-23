@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5141071853278093310}
   - component: {fileID: 5987181185116237279}
   m_Layer: 0
-  m_Name: P_Hedgehog_Fire_Water
+  m_Name: P_Hedgehog_Fire_Water_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,6 +56,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5141071853278093310}
     m_Modifications:
+    - target: {fileID: 1345497230367885476, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 2357839070583288964, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
       propertyPath: m_Name
       value: P_monster_fire_blue
@@ -99,6 +103,50 @@ PrefabInstance:
     - target: {fileID: 5248990356011632651, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534170417653751762, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: ShapeModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534170417653751762, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: ShapeModule.m_Rotation.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534170417653751762, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: InitialModule.startRotation.scalar
+      value: 3.1415925
+      objectReference: {fileID: 0}
+    - target: {fileID: 8505044250645542689, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: ShapeModule.m_Position.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8505044250645542689, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: ShapeModule.m_Rotation.y
+      value: 270
+      objectReference: {fileID: 0}
+    - target: {fileID: 8505044250645542689, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: InitialModule.startRotation.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9182586153129502713, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: ShapeModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9182586153129502713, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: ShapeModule.m_Scale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9182586153129502713, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: ShapeModule.m_Rotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9182586153129502713, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: InitialModule.startRotation.scalar
+      value: 3.1415925
+      objectReference: {fileID: 0}
+    - target: {fileID: 9182586153129502713, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+      propertyPath: InitialModule.randomizeRotationDirection
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

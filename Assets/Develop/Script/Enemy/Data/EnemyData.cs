@@ -20,6 +20,7 @@ public class EnemyData : ScriptableObject
     [SerializeField] private float _sheepAttackSpeed;
     [SerializeField] private float _hedgehogAttackDuration;
     [SerializeField] private float _hedgehogAttackTick;
+    [SerializeField] private Vector2 _hedgehogAttackOffset;
     public float SleepDecisionTime => _SleepDecisionTime;   
     public float PropagationForce => _propagationForce;
 
@@ -38,4 +39,5 @@ public class EnemyData : ScriptableObject
     public float SheepAttackSpeed => _sheepAttackSpeed;
     public float HedgehogAttackDuration => _hedgehogAttackDuration;
     public float HedgehogAttackTick => _hedgehogAttackTick;
+    public Vector2 HedgehogAttackOffset => _hedgehogAttackOffset;
 }

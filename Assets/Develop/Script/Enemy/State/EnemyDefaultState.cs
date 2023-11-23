@@ -631,6 +631,8 @@ public class EnemyAttackState : BaseState
     private const string ANI_ATTACK_HEDGEHOG_AFTER_KEY = "after_Attack";
     private float _hedgehogAttackDurationTimer = 0f;
     private float _hedgehogAttackTickTimer = 0f;
+    private HedgehogEffect _flameEffect;
+    private HedgehogEffect _waterEffect;
     public override void Init(Blackboard blackboard)
     {
         blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
@@ -649,13 +651,16 @@ public class EnemyAttackState : BaseState
                 bodyChanger.Change("move");
             }
         };
-        
+
+        _flameEffect = EffectManager.EffectItem("actor/hedgehog_flame").EffectObject.GetComponent<HedgehogEffect>();
+        _waterEffect = EffectManager.EffectItem("actor/hedgehog_water").EffectObject.GetComponent<HedgehogEffect>();
     }
     public override void Enter(Blackboard blackboard)
     {
         // TODO: 공격 모션 코드 삽입
         blackboard.GetProperty<Transform>("out_transform", out var transform);
         blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+        blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
         blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
         blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
         
@@ -684,6 +689,17 @@ public class EnemyAttackState : BaseState
             _hedgehogAttackDurationTimer = 0f;
             _isAttackEnded = false;
             dirty = false;
+
+            if (interaction.TryGetContractInfo(out ActorContractInfo info) &&
+                info.TryGetBehaviour(out IBActorProperties properties))
+            {
+                if(properties.Properties == EActorPropertiesType.Flame)
+                    _flameEffect.Play((Vector2)transform.position + data.HedgehogAttackOffset,
+                        rotation);
+                else
+                    _waterEffect.Play((Vector2)transform.position + data.HedgehogAttackOffset,
+                        rotation);
+            }
         }
         
     }
