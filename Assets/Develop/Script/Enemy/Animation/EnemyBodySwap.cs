@@ -13,6 +13,11 @@ public class ChangeableAnimationBody : MonoBehaviour
     {
         throw new NotImplementedException();
     }
+
+    public virtual T GetComponentOrNull<T>() where T : Component
+    {
+        return GetComponent<T>();
+    }
 }
 
 
@@ -62,7 +67,7 @@ public class AnimationBodyChanger
         {
             if (pair.Key == key && pair.Body)
             {
-                pair.CachedComponent = pair.Body.GetComponent<T>();
+                pair.CachedComponent = pair.Body.GetComponentOrNull<T>();
 
                 return (T)pair.CachedComponent;
             }
