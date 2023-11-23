@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XRProject.Utils.Log;
 
 internal class SoundScheduler : MonoBehaviour
 {
@@ -126,6 +127,8 @@ internal class SoundScheduler : MonoBehaviour
             {
                 currentNode = currentNode.Next;
                 item.scheduleTimer += Time.deltaTime;
+                // 실시간으로 볼륨 크기를 조절 할 수 있게 추가: 서범석, 23/11/23-02:01
+                item.SetVolumeIfChanged();
             }
         }
     }
@@ -174,5 +177,13 @@ internal partial class SoundScheduleItem
     {
         SetProperties(ref Command, ref _source);
         _source.Play();
+    }
+    
+    // 볼륨이 변경 될때마다 현재 재생되고 있는 사운드의 소리를 조절함: 서범석, 23/11/23-02:01
+    public void SetVolumeIfChanged()
+    {
+        float currentValue = SoundManager.GetSoundVolume(Command.volumeKey);
+        if (_source.volume - currentValue != 0f)
+            _source.volume = currentValue;
     }
 }

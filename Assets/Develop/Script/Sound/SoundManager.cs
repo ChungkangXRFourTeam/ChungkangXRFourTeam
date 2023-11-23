@@ -10,18 +10,22 @@ using TD = System.Collections.Generic.Dictionary<string,UnityEngine.AudioClip>;
 public class SoundManager : MonoBehaviour
 {
     private static SoundManager _inst;
+    private static float _volumeInitValue = 0.5f;
 
     private SoundTableSet _tables;
     private Dictionary<string, TD> _tableDict;
     private SoundScheduler _scheduler;
+    private Dictionary<string, float> _volumeDict;
 
     private const string PATH = "SoundTable/SoundTableSet";
     private const string LOG_SIGNATURE = "sound";
+    private readonly string[] VOLUMES = { "MASTER_VOLUME", "BACKGROUND_VOLUME", "SOUND_EFFECT_VOLUME", "MUSIC_VOLUME" };
     
     public static void Init()
     {
         InstanceInit();
         TableInit();
+        SoundVolumeInit();
     }
 
     #region Initializer
@@ -35,9 +39,11 @@ public class SoundManager : MonoBehaviour
 
         _inst = new GameObject("[SoundManager]").AddComponent<SoundManager>();
         DontDestroyOnLoad(_inst.gameObject);
-
         _inst._scheduler = new GameObject("SoundScheduler").AddComponent<SoundScheduler>();
         _inst._scheduler.Init();
+        
+        /// 스케쥴러가 씬 이동마다 Destroy되어 다음 씬에서 호출되지 않는 문제를 막기 위해 선언
+        DontDestroyOnLoad(_inst._scheduler);
     }
 
     private static void TableInit()
@@ -74,6 +80,31 @@ public class SoundManager : MonoBehaviour
         }
 
     }
+
+    private static void SoundVolumeInit()
+    {
+        string[] volumes = _inst.VOLUMES;
+        
+        if (!PlayerPrefs.HasKey("isNew"))
+        {
+            foreach (string volume in volumes)
+            {
+                PlayerPrefs.SetFloat(volume,_volumeInitValue);
+            }
+            PlayerPrefs.SetInt("isNew",1);
+        }
+        
+        var volumeDict = new Dictionary<string, float>();
+        _inst._volumeDict = volumeDict;
+        
+        foreach (string volume in volumes)
+        {
+            if(volumeDict.ContainsKey(volume))
+                XLog.LogError($"SoundVolume key ('{volume}') is already exist",LOG_SIGNATURE);
+            
+            volumeDict.Add(volume,PlayerPrefs.GetFloat(volume));
+        }
+    }
     #endregion
 
     #region private
@@ -81,8 +112,10 @@ public class SoundManager : MonoBehaviour
     {
         _inst._scheduler.Release();
         _tableDict = null;
+        _volumeDict = null;
         _tables = null;
         _inst = null;
+        
     }
     private static bool CheckInit()
     {
@@ -186,6 +219,28 @@ public class SoundManager : MonoBehaviour
             
             _inst._scheduler.Schedule(command);
         }
+    }
+
+    /// <summary>
+    /// 사운드 종류에 따른 볼륨값을 가져옵니다.
+    /// 사운드 크기는 사운드 종류 볼륨 * 마스터 볼륨 값입니다.
+    /// 키 값은 VolumeName 클래스 안에 정의되어 있습니다.
+    /// </summary>
+    /// <param name="key">볼륨 정보를 가져오게 할 key값</param>
+    public static float GetSoundVolume(string key)
+    {
+        if (_inst._volumeDict.TryGetValue(key, out float commandVolume) && 
+            _inst._volumeDict.TryGetValue(VolumeName.Master, out float masterVolume))
+        {
+            return commandVolume * masterVolume;
+        }
+
+        return 0f;
+    }
+    
+    public static void SetSoundVolume(string key,float value)
+    {
+        _inst._volumeDict[key] = value;
     }
     
 }
