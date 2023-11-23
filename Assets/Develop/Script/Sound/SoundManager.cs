@@ -39,9 +39,11 @@ public class SoundManager : MonoBehaviour
 
         _inst = new GameObject("[SoundManager]").AddComponent<SoundManager>();
         DontDestroyOnLoad(_inst.gameObject);
-
         _inst._scheduler = new GameObject("SoundScheduler").AddComponent<SoundScheduler>();
         _inst._scheduler.Init();
+        
+        /// 스케쥴러가 씬 이동마다 Destroy되어 다음 씬에서 호출되지 않는 문제를 막기 위해 선언
+        DontDestroyOnLoad(_inst._scheduler);
     }
 
     private static void TableInit()
