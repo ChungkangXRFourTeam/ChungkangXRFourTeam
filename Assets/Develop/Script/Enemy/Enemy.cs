@@ -2,13 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using JetBrains.Annotations;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 using XRProject.Helper;
-using Random = UnityEngine.Random;
 
+public enum EEnemyType
+{
+    Hedgehog,
+    Sheep
+}
 public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, IBActorThrowable, IBActorAttackable
 {
     /* seralizedFields */
@@ -16,14 +19,14 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
     [SerializeField] private EnemyData _data;
     [SerializeField] private bool _isThrowable;
     [SerializeField] private EActorPropertiesType _properties;
-    [Header("don't edit this")]
+    [SerializeField] private EEnemyType _enemyType;
+
+    [Header("don't edit this")] 
+    [SerializeField] private AnimationBodyChanger _bodyChanger;
     [SerializeField] private Image _effectImage;
     [SerializeField] private Collider2D _body;
     [SerializeField] private Rigidbody2D _rigid;
     [SerializeField] private InteractionController _interaction;
-    [SerializeField] private SkeletonAnimation _deathSkeletonAnimation;
-    [SerializeField] private SkeletonAnimation _defaultSkeletonAnimation;
-    [SerializeField] private SkeletonAnimation _shotSkeletonAnimation;
     /* fields */
     private ActorPhysicsStrategy _physicsStrategy = new();
     private StateExecutor _executor;
@@ -31,6 +34,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
     private Tweener _effectTweener = null;
     private bool _isDestroyed = false;
     private WrappedTriggerValue _isAttackEnded = new();
+    private WrappedValue<bool> _isSpineAttackEvent=new(); 
     
     /* properties */
     private WrappedValue<bool> _isCaught = new();
@@ -114,15 +118,18 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             .AddProperty("out_rigidbody", Rigid)
             .AddProperty("out_strategyExecutor", strategyExecutor)
             .AddProperty("out_interaction", Interaction)
-            .AddProperty("out_skeletonAnimation", GetComponentInChildren<SkeletonAnimation>())
-            .AddProperty("test", "")
+            .AddProperty("out_skeletonAnimation", _bodyChanger.GetBodyGetComponentOrNull<SkeletonAnimation>("default"))
+            .AddProperty("out_animator", _bodyChanger.GetBodyGetComponentOrNull<Animator>("move"))
+            .AddProperty("out_bodyChanger", _bodyChanger)
+            .AddProperty("out_isSpineAttackEvent", _isSpineAttackEvent)
             
             .AddProperty("out_enemyData", _data)
             .AddProperty("out_patrollPoints", new WrappedValue<(Vector2, Vector2)>())
             .AddProperty("out_isEnteredPatrollSpace", new WrappedValue<bool>(false))
             .AddProperty("out_propagationInfo", _propagationInfo = new PropagationInfo(Interaction))
             .AddProperty("out_enemyBody", _body)
-            .AddProperty("test_testMixDuration", testMixDuration)
+            .AddProperty("out_enemyType", new WrappedValue<EEnemyType>(_enemyType))
+            .AddProperty("out_", _isSpineAttackEvent)
             
             .AddProperty("in_isMoving", new WrappedValue<bool>(false))
             .AddProperty("in_isStop", new WrappedValue<bool>(false))
@@ -148,6 +155,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
         );
         
         Interaction.OnContractActor += OnContractActor;
+        Interaction.OnContractObject += OnContractObject;
         
         _currentHp = MaxHp;
 
@@ -155,24 +163,66 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
         Properties = Properties;
         _effectImage.enabled = false;
 
-        _shotSkeletonAnimation.AnimationState.Complete += x =>
+        if (_enemyType == EEnemyType.Sheep)
         {
-            _defaultSkeletonAnimation.gameObject.SetActive(true);
-            _shotSkeletonAnimation.gameObject.SetActive(false);
-        };
-        _shotSkeletonAnimation.AnimationState.Start += x =>
+            var shotBody = _bodyChanger.GetBodyGetComponentOrNull<SkeletonAnimation>("shot");
+            var defaultBody = _bodyChanger.GetBodyGetComponentOrNull<SkeletonAnimation>("default");
+
+            if (shotBody && defaultBody)
+            {
+                shotBody.AnimationState.Complete += x =>
+                {
+                    _bodyChanger.Change("default");
+                };
+                shotBody.AnimationState.Start += x =>
+                {
+                    _bodyChanger.Change("shot");
+                };
+
+                defaultBody.state.Event += (t, e) =>
+                {
+                    if (e.Data.Name == "attack")
+                    {
+                        _isSpineAttackEvent.Value = true;
+                    }
+                };
+            }
+        }
+        else if (_enemyType == EEnemyType.Hedgehog)
         {
-            _defaultSkeletonAnimation.gameObject.SetActive(false);
-            _shotSkeletonAnimation.gameObject.SetActive(true);
-        };
+            var shotBody = _bodyChanger.GetBodyGetComponentOrNull<SkeletonAnimation>("shot");
+            var attackBody = _bodyChanger.GetBodyGetComponentOrNull<SkeletonAnimation>("default");
+
+            if (shotBody)
+            {
+                shotBody.AnimationState.Complete += x =>
+                {
+                    _bodyChanger.Change("move");
+                };
+                shotBody.AnimationState.Start += x =>
+                {
+                    _bodyChanger.Change("shot");
+                };
+            }
+            if (attackBody)
+            {
+                attackBody.AnimationState.Complete += x =>
+                {
+                    _bodyChanger.Change("move");
+                };
+                attackBody.AnimationState.Start += x =>
+                {
+                    _bodyChanger.Change("default");
+                };
+            }
+        }
+        
     }
     
 
     private void Update()
     {
-        test = _executor.Blackboard.GetProperty<string>("test");
         _executor.Execute();
-        //_body.isTrigger = !IsSwingState;
     }
 
 
@@ -208,16 +258,27 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             _effectTweener.Kill();
             _effectTweener = null;
         }
-        
-        _defaultSkeletonAnimation.gameObject.SetActive(false);
-        _deathSkeletonAnimation.gameObject.SetActive(true);
-        _deathSkeletonAnimation.AnimationState.Complete += x =>
+
+        if (_enemyType == EEnemyType.Sheep || true/*고슴도치랑 양이랑 사용 모션 같음*/)
         {
-            Debug.Log("des");
-            Destroy(gameObject);
-        };
+            _bodyChanger
+                .Change("death")
+                .GetBodyGetComponentOrNull<SkeletonAnimation>("death")!
+                .AnimationState.Complete += x =>
+            {
+                Destroy(gameObject);
+            };
+        }
     }
 
+    private void OnContractObject(ObjectContractInfo info)
+    {
+        if (info.TryGetBehaviour(out IBObjectKnockback knockback))
+        {
+            SetProperties(info, knockback.Properties);
+        }    
+    }
+    
     private void OnContractActor(ActorContractInfo info)
     {
         if (info.Transform.gameObject.CompareTag("Boss"))
@@ -274,8 +335,14 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
                 Position = transform.position
             });
 
-            _shotSkeletonAnimation.gameObject.SetActive(true);
-            _shotSkeletonAnimation.AnimationState.SetAnimation(0, "shot", false);
+            if (_enemyType == EEnemyType.Sheep || true /*고슴도치랑 양 사용 모션 같음*/)
+            {
+                _bodyChanger
+                    .Change("shot")
+                    .GetBodyGetComponentOrNull<SkeletonAnimation>("shot")?
+                    .AnimationState.SetAnimation(0, "shot", false)
+                    ;
+            }
         }
     }
     private void AnimatePropertiesHitEffect(EActorPropertiesType type)

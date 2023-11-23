@@ -6,6 +6,7 @@ using UnityEngine;
 using DG.Tweening;
 using Spine.Unity;
 using TMPro;
+using Unity.VisualScripting;
 using XRProject.Helper;
 using Debug = UnityEngine.Debug;
 
@@ -60,14 +61,28 @@ public class EnemyDefaultState : BaseState, IBEnemyState
     {
         blackboard.GetProperty<StrategyExecutor>("out_strategyExecutor", out var se);
         blackboard.GetProperty<Transform>("out_transform", out var transform);
+        blackboard.GetUnWrappedProperty<bool>("out_isCaught", out var isCaught);
+        blackboard.GetUnWrappedProperty<EEnemyType>("out_enemyType", out var enemyType);
 
         
         transform.GetComponentInChildren<TMP_Text>()?
             .SetText($"{_actionExecutor.CurrentState.ToString()}\n{_movingObserverExecutor.CurrentState.ToString()}\n{(_interaction.ContractInfo as ActorContractInfo).GetBehaviourOrNull<IBActorPropagation>().Count}");
 
-        se.Execute();
-        _actionExecutor.Execute();
-        _movingObserverExecutor.Execute();
+        if (isCaught == false)
+        {
+            se.Execute();
+            _actionExecutor.Execute();
+            _movingObserverExecutor.Execute();
+        }
+
+        if (isCaught && enemyType == EEnemyType.Hedgehog)
+        {
+            blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
+            blackboard.GetProperty("out_animator", out Animator ani);
+
+            bodyChanger.Change("move");
+            ani.SetTrigger("grab");
+        }
 
         return false;
     }
@@ -116,8 +131,20 @@ public class EnemyPatrollState : BaseState
         blackboard.GetProperty<PropagationInfo>("out_propagationInfo", out var pi);
         pi.Count = 0;
         
-        blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
-        ani.AnimationState.SetAnimation(0, "move", true);
+        blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
+
+        if (enemyType == EEnemyType.Sheep)
+        {
+            blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
+            ani.AnimationState.SetAnimation(0, "move", true);
+        }
+        else if (enemyType == EEnemyType.Hedgehog)
+        {
+            blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
+            blackboard.GetProperty("out_animator", out Animator ani);
+            bodyChanger.Change("move");
+            ani.SetTrigger("run");
+        }
     }
 
     public override bool Update(Blackboard blackboard, StateExecutor executor)
@@ -127,6 +154,18 @@ public class EnemyPatrollState : BaseState
         bool gotoProgagating = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
         bool gotoDetection = EnemyDetectionState.GotoDetection(blackboard);
 
+        
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+        blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+        blackboard.GetUnWrappedProperty<EEnemyType>("out_enemyType", out var enemyType);
+        float angle = TargetPoint.x - transform.position.x;
+        if (angle >= 0f) angle = enemyType == EEnemyType.Hedgehog ? 0f : 180f;
+        else angle = enemyType == EEnemyType.Hedgehog ? 180f : 0f;
+        var rotation = Quaternion.Euler(0f, angle, 
+            0f);
+
+        transform.rotation = rotation;
+        
         if (gotoProgagating)
         {
             executor.SetNextState<EnemyPropagatingState>();
@@ -430,8 +469,16 @@ public class EnemyNothingState : BaseState
 {
     public override void Enter(Blackboard blackboard)
     {
-        blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
-        ani.AnimationState.SetAnimation(0, "ide", true);
+        blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
+
+        if (enemyType == EEnemyType.Sheep)
+        {
+            blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
+            ani.AnimationState.SetAnimation(0, "ide", true);
+        }
+        else if (enemyType == EEnemyType.Hedgehog)
+        {
+        }
     }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
@@ -462,6 +509,17 @@ public class EnemyNothingState : BaseState
 
 public class EnemyDetectionState : BaseState
 {
+    public override void Enter(Blackboard blackboard)
+    {
+        blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
+        if (enemyType == EEnemyType.Hedgehog)
+        {
+            blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
+            blackboard.GetProperty("out_animator", out Animator ani);
+            bodyChanger.Change("move");
+            ani.SetTrigger("run");
+        }
+    }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
         bool gotoAttack = EnemyAttackState.GotoAttack(blackboard);
@@ -469,6 +527,20 @@ public class EnemyDetectionState : BaseState
         bool gotoProgagating = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
         bool gotoDetection = EnemyDetectionState.GotoDetection(blackboard);
 
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+        blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+        var playerCollider = EnemyDetectionState.GetPlayerOrNull(transform.position, data.DetectionDistance);
+        if (playerCollider)
+        {
+            blackboard.GetUnWrappedProperty<EEnemyType>("out_enemyType", out var enemyType);
+            float angle = playerCollider.transform.position.x - transform.position.x;
+            if (angle >= 0f) angle = enemyType == EEnemyType.Hedgehog ? 0f : 180f;
+            else angle = enemyType == EEnemyType.Hedgehog ? 180f : 0f;
+            var rotation = Quaternion.Euler(0f, angle, 
+                0f);
+            transform.rotation = rotation;
+        }
+        
         if (gotoProgagating)
         {
             executor.SetNextState<EnemyPropagatingState>();
@@ -535,7 +607,9 @@ public class EnemyAttackState : BaseState
 {
     private bool _isAttackEnded;
     private SkeletonAnimation _ani;
-    private const string ANI_ATTACK_KEY = "attack";
+    private const string ANI_ATTACK_SHEEP_KEY = "attack";
+    private const string ANI_ATTACK_HEDGEHOG_KEY = "All_att_ani";
+    private float _hedgehogAttackTimer = 0f;
     public override void Init(Blackboard blackboard)
     {
         blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
@@ -543,7 +617,7 @@ public class EnemyAttackState : BaseState
         _isAttackEnded = true;
         ani.AnimationState.Complete += trackEntry =>
         {
-            if(trackEntry.Animation.Name == ANI_ATTACK_KEY)
+            if(trackEntry.Animation.Name == ANI_ATTACK_SHEEP_KEY)
             {
                 _isAttackEnded = true;
             }
@@ -552,21 +626,68 @@ public class EnemyAttackState : BaseState
     }
     public override void Enter(Blackboard blackboard)
     {
-        // TODO: 공격 모션 코드 삽입
         blackboard.GetUnWrappedProperty("out_isCaught", out bool isCaught);
         if (isCaught) return;
-        DoHit(blackboard);
         
-        blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
-        blackboard.GetUnWrappedProperty("test_testMixDuration", out float testMixDuration);
-        ani.AnimationState.Data.SetMix("move","attack", testMixDuration);
-        ani.AnimationState.SetAnimation(0, ANI_ATTACK_KEY, false);
-        _isAttackEnded = false;
-        
+        // TODO: 공격 모션 코드 삽입
         blackboard.GetProperty<Transform>("out_transform", out var transform);
+        blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+        blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
+        blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
+        
+        var playerCollider = EnemyDetectionState.GetPlayerOrNull(transform.position, data.AttackDistance);
+        if (playerCollider == false) return;
+
+        float angle = playerCollider.transform.position.x - transform.position.x;
+        if (angle >= 0f) angle = enemyType == EEnemyType.Hedgehog ? 0f : 180f;
+        else angle = enemyType == EEnemyType.Hedgehog ? 180f : 0f;
+        var rotation = Quaternion.Euler(0f, angle, 
+            0f);
+        
+        if (enemyType == EEnemyType.Sheep)
+        {
+            ani.transform.rotation = rotation;
+            ani.AnimationState.SetAnimation(0, ANI_ATTACK_SHEEP_KEY, false);
+            _isAttackEnded = false;
+        }
+        else if(enemyType == EEnemyType.Hedgehog)
+        {
+            blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
+            bodyChanger.Change("default");
+            ani.transform.rotation = rotation;
+            ani.AnimationState.SetAnimation(0, ANI_ATTACK_HEDGEHOG_KEY, false);
+            _hedgehogAttackTimer = 0f;
+        }
+        
     }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
+        blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
+        if (enemyType == EEnemyType.Hedgehog)
+        {
+            _hedgehogAttackTimer += Time.deltaTime;
+            
+            blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+            if (_hedgehogAttackTimer > data.HedgehogAttackDuration)
+            {
+                _isAttackEnded = true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (enemyType == EEnemyType.Sheep)
+        {
+            blackboard.GetWrappedProperty<bool>("out_isSpineAttackEvent", out var attackEvent);
+            if (attackEvent)
+            {
+                DoHit(blackboard);
+                attackEvent.Value = false;
+            }
+        }
+
+        
         bool gotoSwing = EnemySwingState.ReadyGotoSwing(blackboard);
         bool gotoPropagation = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
 
@@ -584,14 +705,17 @@ public class EnemyAttackState : BaseState
             return false;
         }
         
-        
         return false;
     }
 
     public override void Exit(Blackboard blackboard)
     {
+        blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
+        
         // TODO:  공격 모션 종료 코드 삽입
-        blackboard.GetProperty<Transform>("out_transform", out var transform);
+        if(enemyType == EEnemyType.Hedgehog)
+        {
+        }
     }
 
     private void DoHit(Blackboard blackboard)
