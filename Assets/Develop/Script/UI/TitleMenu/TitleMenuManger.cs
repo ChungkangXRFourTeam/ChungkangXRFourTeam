@@ -51,10 +51,10 @@ public class TitleMenuManger : MonoBehaviour
 
     public void LoadSettings()
     {
-        _allVolumeSlider.value = PlayerPrefs.GetFloat("ALL_VOLUME");
-        _backgroundVolumeSlider.value = PlayerPrefs.GetFloat("BACKGROUND_VOLUME");
-        _soundEffectVolumeSlider.value = PlayerPrefs.GetFloat("SOUND_EFFECT_VOLUME");
-        _musicVolumeSlider.value = PlayerPrefs.GetFloat("MUSIC_VOLUME");
+        _allVolumeSlider.value = PlayerPrefs.GetFloat(VolumeName.Master);
+        _backgroundVolumeSlider.value = PlayerPrefs.GetFloat(VolumeName.Background);
+        _soundEffectVolumeSlider.value = PlayerPrefs.GetFloat(VolumeName.SFX);
+        _musicVolumeSlider.value = PlayerPrefs.GetFloat(VolumeName.Music);
         _brightnessSlider.value = PlayerPrefs.GetFloat("BRIGHTNESS");
         _mouseSensitivitySlider.value = PlayerPrefs.GetFloat("MOUSE_SENSITIVITY");
     }
