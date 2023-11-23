@@ -68,20 +68,15 @@ public class EnemyDefaultState : BaseState, IBEnemyState
         transform.GetComponentInChildren<TMP_Text>()?
             .SetText($"{_actionExecutor.CurrentState.ToString()}\n{_movingObserverExecutor.CurrentState.ToString()}\n{(_interaction.ContractInfo as ActorContractInfo).GetBehaviourOrNull<IBActorPropagation>().Count}");
 
-        if (isCaught == false)
-        {
-            se.Execute();
-            _actionExecutor.Execute();
-            _movingObserverExecutor.Execute();
-        }
+        se.Execute();
+        _actionExecutor.Execute();
+        _movingObserverExecutor.Execute();
 
         if (isCaught && enemyType == EEnemyType.Hedgehog)
         {
             blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
-            blackboard.GetProperty("out_animator", out Animator ani);
 
-            bodyChanger.Change("move");
-            ani.SetTrigger("grab");
+            bodyChanger.Change("move").GetBodyGetComponentOrNull<Animator>("move")?.SetTrigger("grab");
         }
 
         return false;
@@ -135,15 +130,22 @@ public class EnemyPatrollState : BaseState
 
         if (enemyType == EEnemyType.Sheep)
         {
-            blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
-            ani.AnimationState.SetAnimation(0, "move", true);
+            blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
+            var ani = bodyChanger
+                .Change("default")
+                .GetBodyGetComponentOrNull<SkeletonAnimation>("default");
+            if (ani.AnimationName != "move")
+            {
+                ani.AnimationState.SetAnimation(0,"move", true);
+            }
         }
         else if (enemyType == EEnemyType.Hedgehog)
         {
             blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
-            blackboard.GetProperty("out_animator", out Animator ani);
-            bodyChanger.Change("move");
-            ani.SetTrigger("run");
+            bodyChanger
+                .Change("move")
+                .GetBodyGetComponentOrNull<Animator>("move")?
+                .SetTrigger("run");
         }
     }
 
@@ -511,17 +513,33 @@ public class EnemyDetectionState : BaseState
 {
     public override void Enter(Blackboard blackboard)
     {
+        blackboard.GetUnWrappedProperty<bool>("out_isCaught", out var isCaught);
+        if (isCaught) return;
+        
         blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
         if (enemyType == EEnemyType.Hedgehog)
         {
             blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
-            blackboard.GetProperty("out_animator", out Animator ani);
-            bodyChanger.Change("move");
-            ani.SetTrigger("run");
+            bodyChanger
+                .Change("move")
+                .GetBodyGetComponentOrNull<Animator>("move")?
+                .SetTrigger("run");
+        }
+        else
+        {
+            blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
+            var ani = bodyChanger
+                .Change("default")
+                .GetBodyGetComponentOrNull<SkeletonAnimation>("default");
+            if (ani.AnimationName != "move")
+            {
+                ani.AnimationState.SetAnimation(0,"move", true);
+            }
         }
     }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
+        
         bool gotoAttack = EnemyAttackState.GotoAttack(blackboard);
         bool gotoSwingState = EnemySwingState.ReadyGotoSwing(blackboard);
         bool gotoProgagating = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
@@ -608,8 +626,11 @@ public class EnemyAttackState : BaseState
     private bool _isAttackEnded;
     private SkeletonAnimation _ani;
     private const string ANI_ATTACK_SHEEP_KEY = "attack";
-    private const string ANI_ATTACK_HEDGEHOG_KEY = "All_att_ani";
-    private float _hedgehogAttackTimer = 0f;
+    private const string ANI_ATTACK_HEDGEHOG_BEFORE_KEY = "before_Attack";
+    private const string ANI_ATTACK_HEDGEHOG_REMAIN_KEY = "Attack";
+    private const string ANI_ATTACK_HEDGEHOG_AFTER_KEY = "after_Attack";
+    private float _hedgehogAttackDurationTimer = 0f;
+    private float _hedgehogAttackTickTimer = 0f;
     public override void Init(Blackboard blackboard)
     {
         blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
@@ -621,14 +642,17 @@ public class EnemyAttackState : BaseState
             {
                 _isAttackEnded = true;
             }
+            if(trackEntry.Animation.Name == ANI_ATTACK_HEDGEHOG_AFTER_KEY)
+            {
+                _isAttackEnded = true;
+                blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
+                bodyChanger.Change("move");
+            }
         };
         
     }
     public override void Enter(Blackboard blackboard)
     {
-        blackboard.GetUnWrappedProperty("out_isCaught", out bool isCaught);
-        if (isCaught) return;
-        
         // TODO: 공격 모션 코드 삽입
         blackboard.GetProperty<Transform>("out_transform", out var transform);
         blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
@@ -655,41 +679,64 @@ public class EnemyAttackState : BaseState
             blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
             bodyChanger.Change("default");
             ani.transform.rotation = rotation;
-            ani.AnimationState.SetAnimation(0, ANI_ATTACK_HEDGEHOG_KEY, false);
-            _hedgehogAttackTimer = 0f;
+            ani.AnimationState.SetAnimation(0, ANI_ATTACK_HEDGEHOG_BEFORE_KEY, false);
+            ani.AnimationState.AddAnimation(0, ANI_ATTACK_HEDGEHOG_REMAIN_KEY, true, 0f);
+            _hedgehogAttackDurationTimer = 0f;
+            _isAttackEnded = false;
+            dirty = false;
         }
         
     }
+
+    private bool dirty = false;
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
-        blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
-        if (enemyType == EEnemyType.Hedgehog)
+        blackboard.GetUnWrappedProperty<bool>("out_isCaught", out var isCaught);
+        if (isCaught)
         {
-            _hedgehogAttackTimer += Time.deltaTime;
+            _isAttackEnded = true;
+        }
             
-            blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
-            if (_hedgehogAttackTimer > data.HedgehogAttackDuration)
-            {
-                _isAttackEnded = true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else if (enemyType == EEnemyType.Sheep)
+        if (_isAttackEnded == false)
         {
-            blackboard.GetWrappedProperty<bool>("out_isSpineAttackEvent", out var attackEvent);
-            if (attackEvent)
+            blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
+            if (enemyType == EEnemyType.Hedgehog)
             {
-                DoHit(blackboard);
-                attackEvent.Value = false;
+                _hedgehogAttackDurationTimer += Time.deltaTime;
+            
+                blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+                if (_hedgehogAttackDurationTimer > data.HedgehogAttackDuration && dirty == false)
+                {
+                    dirty = true;
+                    blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
+                    ani.AnimationState.SetAnimation(0, ANI_ATTACK_HEDGEHOG_AFTER_KEY, false);
+                }
+                else
+                {
+                    if (_hedgehogAttackTickTimer > data.HedgehogAttackTick)
+                    {
+                        DoHitHedgehog(blackboard);
+                        _hedgehogAttackTickTimer = 0f;
+                    }
+                }
             }
+            else if (enemyType == EEnemyType.Sheep)
+            {
+                blackboard.GetWrappedProperty<bool>("out_isSpineAttackEvent", out var attackEvent);
+                if (attackEvent)
+                {
+                    DoHitSheep(blackboard);
+                    attackEvent.Value = false;
+                }
+            }
+            
+            return false;
         }
-
         
         bool gotoSwing = EnemySwingState.ReadyGotoSwing(blackboard);
         bool gotoPropagation = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
+        bool gotoDetection = EnemyDetectionState.GotoDetection(blackboard);
+        bool gotoPatroll = EnemyPatrollState.ReadyGotoPatroll(blackboard);
 
         if (gotoPropagation)
         {
@@ -699,10 +746,13 @@ public class EnemyAttackState : BaseState
         {
             executor.SetNextState<EnemySwingState>();
         }
-        else if (_isAttackEnded)
+        else if (gotoDetection)
+        {
+            executor.SetNextState<EnemyDetectionState>();
+        }
+        else if (gotoPatroll)
         {
             executor.SetNextState<EnemyPatrollState>();
-            return false;
         }
         
         return false;
@@ -713,16 +763,31 @@ public class EnemyAttackState : BaseState
         blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
         
         // TODO:  공격 모션 종료 코드 삽입
-        if(enemyType == EEnemyType.Hedgehog)
-        {
-        }
+
+        _isAttackEnded = true;
     }
 
-    private void DoHit(Blackboard blackboard)
+    private void DoHitSheep(Blackboard blackboard)
     {
         blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
         blackboard.GetProperty<Transform>("out_transform", out var transform);
+        
         var playerCollider = EnemyDetectionState.GetPlayerOrNull(transform.position, data.AttackDistance);
+
+        if (!playerCollider) return;
+        if (playerCollider.TryGetComponent(out InteractionController interaction) &&
+            interaction.TryGetContractInfo(out ActorContractInfo info) &&
+            info.TryGetBehaviour(out IBActorHit hit))
+        {
+            blackboard.GetProperty<InteractionController>("out_interaction", out var myInteraction);
+            hit.DoHit(myInteraction.ContractInfo, data.Damage);
+        }
+    }
+    private void DoHitHedgehog(Blackboard blackboard)
+    {
+        blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+        var playerCollider = EnemyDetectionState.GetPlayerOrNull(transform.position, Mathf.Infinity);
 
         if (!playerCollider) return;
         if (playerCollider.TryGetComponent(out InteractionController interaction) &&
@@ -735,6 +800,9 @@ public class EnemyAttackState : BaseState
     }
     public static bool GotoAttack(Blackboard blackboard)
     {
+        blackboard.GetUnWrappedProperty<bool>("out_isCaught", out var isCaught);
+        if (isCaught) return false;
+
         blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
         blackboard.GetProperty<Transform>("out_transform", out var transform);
 

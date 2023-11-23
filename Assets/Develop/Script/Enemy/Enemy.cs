@@ -119,7 +119,6 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             .AddProperty("out_strategyExecutor", strategyExecutor)
             .AddProperty("out_interaction", Interaction)
             .AddProperty("out_skeletonAnimation", _bodyChanger.GetBodyGetComponentOrNull<SkeletonAnimation>("default"))
-            .AddProperty("out_animator", _bodyChanger.GetBodyGetComponentOrNull<Animator>("move"))
             .AddProperty("out_bodyChanger", _bodyChanger)
             .AddProperty("out_isSpineAttackEvent", _isSpineAttackEvent)
             
@@ -204,17 +203,6 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
                     _bodyChanger.Change("shot");
                 };
             }
-            if (attackBody)
-            {
-                attackBody.AnimationState.Complete += x =>
-                {
-                    _bodyChanger.Change("move");
-                };
-                attackBody.AnimationState.Start += x =>
-                {
-                    _bodyChanger.Change("default");
-                };
-            }
         }
         
     }
@@ -222,6 +210,8 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
 
     private void Update()
     {
+        if (_isDestroyed) return;
+        
         _executor.Execute();
     }
 
@@ -261,13 +251,15 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
 
         if (_enemyType == EEnemyType.Sheep || true/*고슴도치랑 양이랑 사용 모션 같음*/)
         {
-            _bodyChanger
+            var ani = _bodyChanger
                 .Change("death")
-                .GetBodyGetComponentOrNull<SkeletonAnimation>("death")!
-                .AnimationState.Complete += x =>
+                .GetBodyGetComponentOrNull<SkeletonAnimation>("death");
+            
+            ani!.AnimationState.Complete += x =>
             {
                 Destroy(gameObject);
             };
+            ani!.AnimationState.SetAnimation(0, "death", false);
         }
     }
 
@@ -319,6 +311,8 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
 
     public void DoHit(BaseContractInfo caller, float damage)
     {
+        if (CurrentHP <= 0) return;
+        
         CurrentHP -= damage;
 
         if (caller.Transform.gameObject.CompareTag("Player") &&
@@ -328,14 +322,14 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             {
                 AnimatePropertiesHitEffect(properties.Properties);
             }
-            
+
             EffectManager.ImmediateCommand( new EffectCommand()
             {
                 EffectKey = "actor/enemyHit",
                 Position = transform.position
             });
 
-            if (_enemyType == EEnemyType.Sheep || true /*고슴도치랑 양 사용 모션 같음*/)
+            if ((_enemyType == EEnemyType.Sheep || true /*고슴도치랑 양 사용 모션 같음*/) && CurrentHP > 0)
             {
                 _bodyChanger
                     .Change("shot")

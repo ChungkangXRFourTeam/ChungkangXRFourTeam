@@ -51,7 +51,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1768591922105821956
 Transform:
   m_ObjectHideFlags: 0
@@ -315,7 +315,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1224751407, guid: 196494c3ee162b5458acad64fafd0d77, type: 3}
+  m_Sprite: {fileID: -1822076198, guid: 991b61ad101cdbb449c4a1c752b33964, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -480,7 +480,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1726083395999407824
 Transform:
   m_ObjectHideFlags: 0
@@ -588,7 +588,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8501502817262328758
 Transform:
   m_ObjectHideFlags: 0
@@ -798,7 +798,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 60dec917cae321449b66ccdeefa56590, type: 2}
     - target: {fileID: 7060214802358025822, guid: 64da2069bfa81fc47ab2b5e30808f666, type: 3}
       propertyPath: _properties
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7060214802358025822, guid: 64da2069bfa81fc47ab2b5e30808f666, type: 3}
       propertyPath: _bodyChanger._pairs.Array.size

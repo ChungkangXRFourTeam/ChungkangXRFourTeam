@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(menuName="XR/Enemy/EnemyData", fileName="EnemyData ", order = 3)]
 public class EnemyData : ScriptableObject
@@ -16,8 +17,9 @@ public class EnemyData : ScriptableObject
     [SerializeField] private float _detectionDistance;
     [SerializeField] private float _attackDistance;
     [SerializeField] private float _damage;
-    [SerializeField] private float _attackSpeed;
+    [SerializeField] private float _sheepAttackSpeed;
     [SerializeField] private float _hedgehogAttackDuration;
+    [SerializeField] private float _hedgehogAttackTick;
     public float SleepDecisionTime => _SleepDecisionTime;   
     public float PropagationForce => _propagationForce;
 
@@ -33,6 +35,7 @@ public class EnemyData : ScriptableObject
 
     public float AttackDistance => _attackDistance;
     public float Damage => _damage;
-    public float AttackSpeed => _attackSpeed;
+    public float SheepAttackSpeed => _sheepAttackSpeed;
     public float HedgehogAttackDuration => _hedgehogAttackDuration;
+    public float HedgehogAttackTick => _hedgehogAttackTick;
 }
