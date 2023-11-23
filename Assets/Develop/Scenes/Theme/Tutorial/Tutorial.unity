@@ -1602,7 +1602,7 @@ GameObject:
   - component: {fileID: 1034509723}
   m_Layer: 0
   m_Name: Tile_T03
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3100,6 +3100,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile_T01
       objectReference: {fileID: 0}
+    - target: {fileID: 3385826658868873092, guid: c1565b9df7c682445bab4d8416bd08e0, type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     - target: {fileID: 3818202597711401610, guid: c1565b9df7c682445bab4d8416bd08e0, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.3241887
@@ -3377,6 +3381,10 @@ PrefabInstance:
     - target: {fileID: 6959654412492138008, guid: 2e72df566368cbf45a3ceb9896cfc0ea, type: 3}
       propertyPath: m_Name
       value: Tile_T02
+      objectReference: {fileID: 0}
+    - target: {fileID: 6959654412492138008, guid: 2e72df566368cbf45a3ceb9896cfc0ea, type: 3}
+      propertyPath: m_TagString
+      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
