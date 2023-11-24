@@ -170,7 +170,8 @@ internal partial class SoundScheduleItem
     {
         Reset();
         
-        GameObject.Destroy(_source.gameObject);
+        if(_source)
+            GameObject.Destroy(_source.gameObject);
         _source = null;
     }
 
