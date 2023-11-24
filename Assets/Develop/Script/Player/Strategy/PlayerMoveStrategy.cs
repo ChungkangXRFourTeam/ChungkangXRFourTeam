@@ -53,7 +53,7 @@ public class PlayerMoveStrategy : IStrategy
                     return;
                 
                 _inputLockSequence = DOTween.Sequence();
-                _inputLockSequence.SetDelay(0.25f).OnComplete(() =>
+                _inputLockSequence.SetDelay(0.35f).OnComplete(() =>
                 {
                     _inputLock = false;
                     _inputLockSequence = null;
