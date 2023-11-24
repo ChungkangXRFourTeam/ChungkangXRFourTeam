@@ -35,6 +35,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
     private bool _isDestroyed = false;
     private WrappedTriggerValue _isAttackEnded = new();
     private WrappedValue<bool> _isSpineAttackEvent=new(); 
+    private WrappedValue<bool> _isSpineHitEvent=new(); 
     
     /* properties */
     private WrappedValue<bool> _isCaught = new();
@@ -121,6 +122,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             .AddProperty("out_skeletonAnimation", _bodyChanger.GetBodyGetComponentOrNull<SkeletonAnimation>("default"))
             .AddProperty("out_bodyChanger", _bodyChanger)
             .AddProperty("out_isSpineAttackEvent", _isSpineAttackEvent)
+            .AddProperty("out_isSpineHitEvent", _isSpineHitEvent)
             
             .AddProperty("out_enemyData", _data)
             .AddProperty("out_patrollPoints", new WrappedValue<(Vector2, Vector2)>())
@@ -128,7 +130,6 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             .AddProperty("out_propagationInfo", _propagationInfo = new PropagationInfo(Interaction))
             .AddProperty("out_enemyBody", _body)
             .AddProperty("out_enemyType", new WrappedValue<EEnemyType>(_enemyType))
-            .AddProperty("out_", _isSpineAttackEvent)
             
             .AddProperty("in_isMoving", new WrappedValue<bool>(false))
             .AddProperty("in_isStop", new WrappedValue<bool>(false))
@@ -196,10 +197,12 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             {
                 shotBody.AnimationState.Complete += x =>
                 {
+                    _isSpineHitEvent.Value = false;
                     _bodyChanger.Change("move");
                 };
                 shotBody.AnimationState.Start += x =>
                 {
+                    _isSpineHitEvent.Value = true;
                     _bodyChanger.Change("shot");
                 };
             }
@@ -249,7 +252,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
             _effectTweener = null;
         }
 
-        if (_enemyType == EEnemyType.Sheep || true/*고슴도치랑 양이랑 사용 모션 같음*/)
+        if (_enemyType == EEnemyType.Sheep)
         {
             var ani = _bodyChanger
                 .Change("death")
@@ -260,6 +263,18 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
                 Destroy(gameObject);
             };
             ani!.AnimationState.SetAnimation(0, "death", false);
+        }
+        else
+        {
+            var ani = _bodyChanger
+                .Change("death")
+                .GetBodyGetComponentOrNull<SkeletonAnimation>("death");
+            
+            ani!.AnimationState.Complete += x =>
+            {
+                Destroy(gameObject);
+            };
+            ani!.AnimationState.SetAnimation(0, "animation", false);
         }
     }
 
@@ -329,7 +344,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
                 Position = transform.position
             });
 
-            if ((_enemyType == EEnemyType.Sheep || true /*고슴도치랑 양 사용 모션 같음*/) && CurrentHP > 0)
+            if ((_enemyType == EEnemyType.Sheep || _enemyType == EEnemyType.Hedgehog) && CurrentHP > 0)
             {
                 _bodyChanger
                     .Change("shot")

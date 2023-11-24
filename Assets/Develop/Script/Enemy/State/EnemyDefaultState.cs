@@ -1,14 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using DG.Tweening;
 using Spine.Unity;
 using TMPro;
-using Unity.VisualScripting;
 using XRProject.Helper;
-using Debug = UnityEngine.Debug;
 
 public class EnemyDefaultState : BaseState, IBEnemyState
 {
@@ -63,7 +59,6 @@ public class EnemyDefaultState : BaseState, IBEnemyState
         blackboard.GetProperty<Transform>("out_transform", out var transform);
         blackboard.GetUnWrappedProperty<bool>("out_isCaught", out var isCaught);
         blackboard.GetUnWrappedProperty<EEnemyType>("out_enemyType", out var enemyType);
-
         
         transform.GetComponentInChildren<TMP_Text>()?
             .SetText($"{_actionExecutor.CurrentState.ToString()}\n{_movingObserverExecutor.CurrentState.ToString()}\n{(_interaction.ContractInfo as ActorContractInfo).GetBehaviourOrNull<IBActorPropagation>().Count}");
@@ -631,6 +626,11 @@ public class EnemyAttackState : BaseState
     private const string ANI_ATTACK_HEDGEHOG_AFTER_KEY = "after_Attack";
     private float _hedgehogAttackDurationTimer = 0f;
     private float _hedgehogAttackTickTimer = 0f;
+    private HedgehogEffect _flameEffectLeft;
+    private HedgehogEffect _flameEffectRight;
+    private HedgehogEffect _waterEffectLeft;
+    private HedgehogEffect _waterEffectRight;
+    private bool _attackLeft = false;
     public override void Init(Blackboard blackboard)
     {
         blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
@@ -649,13 +649,52 @@ public class EnemyAttackState : BaseState
                 bodyChanger.Change("move");
             }
         };
-        
+
+        _flameEffectLeft = EffectManager.EffectItem("actor/hedgehog_flame_left").EffectObject.GetComponent<HedgehogEffect>();
+        _flameEffectRight = EffectManager.EffectItem("actor/hedgehog_flame_right").EffectObject.GetComponent<HedgehogEffect>();
+        _waterEffectLeft = EffectManager.EffectItem("actor/hedgehog_water_left").EffectObject.GetComponent<HedgehogEffect>();
+        _waterEffectRight = EffectManager.EffectItem("actor/hedgehog_water_right").EffectObject.GetComponent<HedgehogEffect>();
+    }
+
+    private HedgehogEffect GetCurrentHedgehogEffect(Blackboard blackboard)
+    {
+        blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+        blackboard.GetProperty<Transform>("out_transform", out var transform);
+        blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
+        var playerCollider = EnemyDetectionState.GetPlayerOrNull(transform.position, data.AttackDistance);
+        if (playerCollider == false) return null;
+
+        float angle = playerCollider.transform.position.x - transform.position.x;
+        bool playerOnLeft = angle < 0f;
+        if (angle >= 0f) angle = 0f;
+        else angle = 180f;
+        var rotation = Quaternion.Euler(0f, angle, 
+            0f);
+        HedgehogEffect currentEffect = null;
+            
+        if (interaction.TryGetContractInfo(out ActorContractInfo info) &&
+            info.TryGetBehaviour(out IBActorProperties properties))
+        {
+            if (properties.Properties == EActorPropertiesType.Flame)
+            {
+                currentEffect = playerOnLeft ? _flameEffectLeft : _flameEffectRight;
+            }
+            else
+            {
+                currentEffect = playerOnLeft ? _waterEffectLeft : _waterEffectRight;
+            }
+            
+            var effectPos = transform.position + (rotation * data.HedgehogAttackOffset);
+            currentEffect.transform.position = effectPos;
+        }
+
+        return currentEffect;
     }
     public override void Enter(Blackboard blackboard)
     {
-        // TODO: 공격 모션 코드 삽입
         blackboard.GetProperty<Transform>("out_transform", out var transform);
         blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
+        blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
         blackboard.GetProperty("out_skeletonAnimation", out SkeletonAnimation ani);
         blackboard.GetUnWrappedProperty("out_enemyType", out EEnemyType enemyType);
         
@@ -663,6 +702,7 @@ public class EnemyAttackState : BaseState
         if (playerCollider == false) return;
 
         float angle = playerCollider.transform.position.x - transform.position.x;
+        _attackLeft = angle < 0f;
         if (angle >= 0f) angle = enemyType == EEnemyType.Hedgehog ? 0f : 180f;
         else angle = enemyType == EEnemyType.Hedgehog ? 180f : 0f;
         var rotation = Quaternion.Euler(0f, angle, 
@@ -684,6 +724,8 @@ public class EnemyAttackState : BaseState
             _hedgehogAttackDurationTimer = 0f;
             _isAttackEnded = false;
             dirty = false;
+
+            GetCurrentHedgehogEffect(blackboard)?.Play();
         }
         
     }
@@ -691,9 +733,25 @@ public class EnemyAttackState : BaseState
     private bool dirty = false;
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
+        blackboard.GetUnWrappedProperty("out_isSpineHitEvent", out bool isSpineHitEvent);
         blackboard.GetUnWrappedProperty<bool>("out_isCaught", out var isCaught);
+        if (isSpineHitEvent)
+        {
+            var cf = GetCurrentHedgehogEffect(blackboard);
+            if (cf)
+            {
+                cf.transform.position = Vector2.one * 99999f;
+            }
+            _isAttackEnded = true;
+            return false;
+        }
         if (isCaught)
         {
+            var cf = GetCurrentHedgehogEffect(blackboard);
+            if (cf)
+            {
+                cf.transform.position = Vector2.one * 99999f;
+            }
             _isAttackEnded = true;
         }
             
@@ -703,6 +761,8 @@ public class EnemyAttackState : BaseState
             if (enemyType == EEnemyType.Hedgehog)
             {
                 _hedgehogAttackDurationTimer += Time.deltaTime;
+
+                GetCurrentHedgehogEffect(blackboard);
             
                 blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
                 if (_hedgehogAttackDurationTimer > data.HedgehogAttackDuration && dirty == false)
@@ -717,6 +777,10 @@ public class EnemyAttackState : BaseState
                     {
                         DoHitHedgehog(blackboard);
                         _hedgehogAttackTickTimer = 0f;
+                    }
+                    else
+                    {
+                        _hedgehogAttackTickTimer += Time.deltaTime;
                     }
                 }
             }
@@ -788,8 +852,16 @@ public class EnemyAttackState : BaseState
         blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
         blackboard.GetProperty<Transform>("out_transform", out var transform);
         var playerCollider = EnemyDetectionState.GetPlayerOrNull(transform.position, Mathf.Infinity);
-
+        
         if (!playerCollider) return;
+
+
+        if (playerCollider.transform.position.x - transform.position.x < 0f != _attackLeft ||
+            playerCollider.transform.position.y - (transform.position.y + data.HedgehogAttackOffset.y) > 0.5f)
+        {
+            return;
+        }
+        
         if (playerCollider.TryGetComponent(out InteractionController interaction) &&
             interaction.TryGetContractInfo(out ActorContractInfo info) &&
             info.TryGetBehaviour(out IBActorHit hit))

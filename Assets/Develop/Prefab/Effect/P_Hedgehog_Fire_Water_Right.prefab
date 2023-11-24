@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5141071853278093310}
+  - component: {fileID: 5987181185116237279}
   m_Layer: 0
-  m_Name: P_Hedgehog_Fire_Water
+  m_Name: P_Hedgehog_Fire_Water_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,6 +33,21 @@ Transform:
   - {fileID: 2507453979825114073}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5987181185116237279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6323818541549528081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5850aaa717ef93643afe142541956e31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _one: {fileID: 187652432629193728}
+  _two: {fileID: 1547960104063575083}
+  _trail: {fileID: 2023119366311081203}
 --- !u!1001 &7643854275962717138
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5248990356011632651, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.18
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5248990356011632651, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
       propertyPath: m_LocalPosition.y
@@ -62,15 +78,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5248990356011632651, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5248990356011632651, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5248990356011632651, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5248990356011632651, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -89,6 +105,21 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+--- !u!198 &187652432629193728 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7534170417653751762, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+  m_PrefabInstance: {fileID: 7643854275962717138}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &1547960104063575083 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 9182586153129502713, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+  m_PrefabInstance: {fileID: 7643854275962717138}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2023119366311081203 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8505044250645542689, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
+  m_PrefabInstance: {fileID: 7643854275962717138}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2507453979825114073 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5248990356011632651, guid: 14bfaa24453abf0428bb91103dea8970, type: 3}
