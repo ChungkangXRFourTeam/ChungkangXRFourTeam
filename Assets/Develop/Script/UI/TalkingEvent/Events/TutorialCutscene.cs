@@ -28,7 +28,7 @@ public class TutorialCutscene : ITalkingEvent
 
     private GameObject _player;
     private Rigidbody2D _playerRigid;
-    private Animator _playerAnim;
+    private PlayerAnimationController _playerAnim;
 
     private float _imageScrollSpeed = 5.0f;
 
@@ -50,7 +50,7 @@ public class TutorialCutscene : ITalkingEvent
     {
         _player = GameObject.FindGameObjectWithTag("Player");
         
-        _playerAnim = _player.GetComponent<Animator>();
+        _playerAnim = _player.GetComponent<PlayerAnimationController>();
         _playerRigid = _player.GetComponent<Rigidbody2D>();
         
         _nonTargetPanel = GameObject.Find("Facing CutScene").GetComponent<TalkingPanelInfo>();
@@ -255,7 +255,12 @@ public class TutorialCutscene : ITalkingEvent
         }
         
         GameObject endPosition = GameObject.Find("CutScene EndPosition");
-        _player.GetComponent<SpriteRenderer>().flipX = true;
+        _playerAnim.SetState(new PAniState()
+        {
+            Restart = false,
+            Rotation = Quaternion.Euler(0,180,0),
+            State = EPCAniState.Run
+        });
         
         while (Mathf.Abs(_player.transform.position.x - endPosition.transform.position.x) >= 0.4f)
         {
@@ -263,7 +268,12 @@ public class TutorialCutscene : ITalkingEvent
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
         EventFadeChanger.Instance.FadeIn(0.3f);
-        
+        _playerAnim.SetState(new PAniState()
+        {
+            Restart = false,
+            Rotation = Quaternion.identity,
+            State = EPCAniState.Idle
+        });
     }
 
     public async UniTask OnEventEnd()

@@ -67,7 +67,7 @@ public class DescriptionEvent3 : ITalkingEvent
     public async UniTask OnEvent()
     {
         Vector2 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
-        _observer.transform.position = new Vector2(playerPos.x + 9f, playerPos.y + 2.5f);
+        _observer.transform.position = new Vector2(playerPos.x + 9f, playerPos.y + 7.5f);
         EventFadeChanger.Instance.FadeOut(0.7f);
         InputAction action = InputManager.GetTalkEventAction("NextText");
         _textCount = 0;

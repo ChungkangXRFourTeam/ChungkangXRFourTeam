@@ -46,7 +46,7 @@ public class DescriptionEvent2 : ITalkingEvent
         _playerPanel = GameObject.FindGameObjectWithTag("Player").GetComponent<TalkingPanelInfo>();
         _targetPanel = GameObject.FindGameObjectWithTag("Observer").GetComponent<TalkingPanelInfo>();
         Vector2 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
-        _observer.transform.position = new Vector2(playerPos.x + 14f, 2.5f);
+        _observer.transform.position = new Vector2(playerPos.x + 14f, 7.5f);
         _observer.SetActive(false);
         await UniTask.Yield();
     }
