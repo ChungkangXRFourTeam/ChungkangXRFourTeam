@@ -11,7 +11,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class DescriptionEvent4 : ITalkingEvent
+public class DescriptionEvent5 : ITalkingEvent
 {
     
     private List<Dictionary<string, object>> _eventTexts;
@@ -33,7 +33,7 @@ public class DescriptionEvent4 : ITalkingEvent
         _playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         _playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _observer = GameObject.FindGameObjectWithTag("Observer");
-        _scriptPath += "DescriptionText4";
+        _scriptPath += "DescriptionText5";
         _eventTexts = CSVReader.Read(_scriptPath);
         _comments = new List<string>();
         for (int i = 0; i < _eventTexts.Count; i++)
@@ -94,7 +94,7 @@ public class DescriptionEvent4 : ITalkingEvent
     public async UniTask OnEventEnd()
     {
         
-        TextMeshProUGUI description = GameObject.Find("DescriptionMonitor 5").transform.Find("Description Canvas").transform
+        TextMeshProUGUI description = GameObject.Find("DescriptionMonitor 6").transform.Find("Description Canvas").transform
             .GetChild(0).GetComponent<TextMeshProUGUI>();
         
         TypingSystem.Instance.Typing(contents,description);

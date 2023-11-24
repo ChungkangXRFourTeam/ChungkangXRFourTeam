@@ -36,6 +36,9 @@ public class EventStarter : MonoBehaviour
             case "Description 4":
                 TalkingEventManager.Instance.InvokeCurrentEvent(new DescriptionEvent4()).Forget();
                 break;
+            case "Description 5":
+                TalkingEventManager.Instance.InvokeCurrentEvent(new DescriptionEvent5()).Forget();
+                break;
         }
 
         _collider.enabled = false;
