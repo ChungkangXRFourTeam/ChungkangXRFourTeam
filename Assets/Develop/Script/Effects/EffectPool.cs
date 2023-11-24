@@ -193,6 +193,8 @@ public class EffectItem
             Interaction.ClearContractEvent();
             Interaction.IsEnabled = true;
         }
+
+        IsEnabled = false;
     }
 }
 
@@ -222,7 +224,6 @@ public class EffectPoolItemContainer
                 throw new NullReferenceException($"EffectPool: effect를 불러올 수 없음.\n'{TableKey}/{ItemKey}'");
 
             var effect = new EffectItem(obj, this);
-            effect.IsEnabled = false;
             effect.Reset();
             _stack.Push(effect);
         }
@@ -232,7 +233,6 @@ public class EffectPoolItemContainer
 
     public void Push(EffectItem item)
     {
-        item.IsEnabled = false;
         item.Reset();
         _stack.Push(item);
     }

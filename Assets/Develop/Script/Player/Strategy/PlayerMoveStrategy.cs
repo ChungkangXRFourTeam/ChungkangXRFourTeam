@@ -16,7 +16,6 @@ public class PlayerMoveStrategy : IStrategy
     private Vector2 downDir;
     private Vector2 upDir;
     private bool _inputLock;
-    private EffectItem _effect;
     private Rigidbody2D _rigid;
     
     
@@ -31,11 +30,6 @@ public class PlayerMoveStrategy : IStrategy
     public void Init(Blackboard blackboard)
     {
         blackboard.GetProperty("out_transform", out Transform transform);
-        _effect = EffectManager.EffectItem("player/backTrail");
-        
-        if(_effect != null)
-            _effect.EffectObject.transform.SetParent(transform);
-
         _prevPosition = transform.position;
 
         InputManager.RegisterActionToMainGame("Move",OnMove,ActionType.Performed);
@@ -113,32 +107,6 @@ public class PlayerMoveStrategy : IStrategy
                 Scale = Vector3.one * 2.5f,
                 FlipRotation = 1f
             });
-        }
-
-        if (movingVector.sqrMagnitude > 0f)
-        {
-            if (_effect != null)
-            {
-                var dir = (Vector2)transform.position - _prevPosition;
-                dir = dir.normalized;
-
-                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                
-                _effect.IsEnabled = true;
-                _effect.ApplyCommand(new EffectCommand()
-                {
-                    Position = transform.position,
-                    Scale = Vector3.one * _data.EffectBackTrailScaleFactor,
-                    Rotation = Quaternion.Euler(0f, 0f, 180 + angle)
-                });
-            }
-        }
-        else
-        {
-            if (_effect != null)
-            {
-                _effect.IsEnabled = false;
-            }
         }
         
         if (jumpingVector.sqrMagnitude > 0f)
