@@ -19,16 +19,20 @@ public class HedgehogEffect : MonoBehaviour
         trailMain.duration = trail;
     }
 
-    public void Play(Vector2 pos, Quaternion rotation)
+    public void Play(Vector2 pos)
     {
         transform.position = pos;
-        transform.rotation = rotation;
         
         gameObject.SetActive(true);
         _one.Play();
         _two.Play();
         _trail.Play();
     }
-    
-    
+    public void Play()
+    {
+        gameObject.SetActive(true);
+        _one.Play();
+        _two.Play();
+        _trail.Play();
+    }
 }

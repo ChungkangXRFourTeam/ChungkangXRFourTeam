@@ -76,8 +76,9 @@ public class ParallaxLayer : MonoBehaviour
             float sizeX = _renderer.sprite.bounds.size.x;
             float sizeY = _renderer.sprite.bounds.size.y;
             
-            Debug.Log(sizeX);
-            Debug.Log(sizeY);
+            // 방해되서 지움, 23/11/24 21:19 손형준
+            //Debug.Log(sizeX);
+            //Debug.Log(sizeY);
             
             _leftPoint.position = new Vector2((posX - (sizeX / 2) * transform.localScale.x), posY);
             _rightPoint.position = new Vector2((posX + (sizeX  / 2) * transform.localScale.x), posY);
