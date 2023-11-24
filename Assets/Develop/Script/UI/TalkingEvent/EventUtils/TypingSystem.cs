@@ -62,7 +62,6 @@ public class TypingSystem : MonoBehaviour
         {
             char[] chars = dialogs[dialogNumber].ToCharArray();
             StartCoroutine(Typer(chars,textObj));
-            
         }
         else
         {
@@ -144,6 +143,13 @@ public class TypingSystem : MonoBehaviour
             {
                 isTypingEnd = true;
                 dialogNumber++;
+                if (texts.Length == dialogNumber)
+                {
+                    isDialogEnd = true;
+                    texts = null;
+                    tmpSave = null;
+                    dialogNumber = 0;
+                }
                 yield break;
             }
             

@@ -26,6 +26,10 @@ public class TutorialCutscene : ITalkingEvent
     private Vector2 _eyeBlackStart;
     private Vector2 _eyeBlackEnd;
 
+    private GameObject _player;
+    private Rigidbody2D _playerRigid;
+    private PlayerAnimationController _playerAnim;
+
     private float _imageScrollSpeed = 5.0f;
 
     private Volume _eyeVolume;
@@ -41,8 +45,14 @@ public class TutorialCutscene : ITalkingEvent
     protected string _scriptPath = "EventTextScript/";
     protected  List<string> _comments;
     protected int _textCount;
-    public new async UniTask OnEventBefore()
+    private string[] contents;
+    public async UniTask OnEventBefore()
     {
+        _player = GameObject.FindGameObjectWithTag("Player");
+        
+        _playerAnim = _player.GetComponent<PlayerAnimationController>();
+        _playerRigid = _player.GetComponent<Rigidbody2D>();
+        
         _nonTargetPanel = GameObject.Find("Facing CutScene").GetComponent<TalkingPanelInfo>();
         _blurPanel = GameObject.Find("BlurPanel").GetComponent<TalkingPanelInfo>();
         _scriptPath += "TutorialText";
@@ -111,7 +121,7 @@ public class TutorialCutscene : ITalkingEvent
     {
         string target;
         await UniTask.Delay(TimeSpan.FromSeconds(3.0f));
-        string[] contents = _comments.ToArray();
+        contents = _comments.ToArray();
         InputAction action = InputManager.GetTalkEventAction("NextText");
 
         notTalking = true; 
@@ -199,7 +209,7 @@ public class TutorialCutscene : ITalkingEvent
 
         await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
         
-        while (_textCount != _comments.Count )
+        while (_textCount != 29 )
         {
             target = _eventTexts[_textCount][EventTextType.Target.ToString()].ToString();
             
@@ -243,13 +253,39 @@ public class TutorialCutscene : ITalkingEvent
                 }
             }
         }
-
         
+        GameObject endPosition = GameObject.Find("CutScene EndPosition");
+        _playerAnim.SetState(new PAniState()
+        {
+            Restart = false,
+            Rotation = Quaternion.Euler(0,180,0),
+            State = EPCAniState.Run
+        });
+        
+        while (Mathf.Abs(_player.transform.position.x - endPosition.transform.position.x) >= 0.4f)
+        {
+            _playerRigid.position += new Vector2(15 * Time.unscaledDeltaTime, 0);
+            await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
+        }
+        EventFadeChanger.Instance.FadeIn(0.3f);
+        _playerAnim.SetState(new PAniState()
+        {
+            Restart = false,
+            Rotation = Quaternion.identity,
+            State = EPCAniState.Idle
+        });
     }
 
     public async UniTask OnEventEnd()
     {
+        
+        
         EventFadeChanger.Instance.FadeOut(0.7f);
+
+        TextMeshProUGUI description = GameObject.Find("DescriptionMonitor 1").transform.Find("Description Canvas").transform
+            .GetChild(0).GetComponent<TextMeshProUGUI>();
+        
+        TypingSystem.Instance.Typing(contents,description);
         
         InputManager.Instance.InitMainGameAction();
         InputManager.Instance.DisableTalkEventAction();
@@ -260,14 +296,15 @@ public class TutorialCutscene : ITalkingEvent
     public bool IsInvalid()
     {
         if (SceneManager.GetActiveScene().name == "Tutorial")
+        {
             return true;
+        }
         return false;
     }
 
     void Talk(string[] contents, string target)
     {
         _textCount++;
-        Debug.Log(target);
         switch (target)
         {
             case "None" :
