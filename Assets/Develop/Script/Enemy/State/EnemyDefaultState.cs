@@ -877,7 +877,7 @@ public class EnemyAttackState : BaseState
     {
         blackboard.GetProperty<EnemyData>("out_enemyData", out var data);
         blackboard.GetProperty<Transform>("out_transform", out var transform);
-        var playerCollider = EnemyDetectionState.GetPlayerOrNull(transform.position, Mathf.Infinity);
+        var playerCollider = EnemyDetectionState.GetPlayerOrNull(transform.position, data.AttackDistance);
         
         if (!playerCollider) return;
 
