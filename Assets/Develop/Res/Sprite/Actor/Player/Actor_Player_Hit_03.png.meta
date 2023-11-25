@@ -1,0 +1,303 @@
+fileFormatVersion: 2
+guid: 72db0e4d5ea002b4195ec2cf7e612915
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 8192
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 300
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Actor_Player_Hit_03_0
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 5141
+        width: 1190
+        height: 1089
+      alignment: 9
+      pivot: {x: 0.7404249, y: 0.057519443}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e4ff1bb4c7d3394caeea9097fbb7a58
+      internalID: 663793787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Hit_03_1
+      rect:
+        serializedVersion: 2
+        x: 3069
+        y: 5131
+        width: 779
+        height: 1079
+      alignment: 9
+      pivot: {x: 0.7416275, y: 0.053418603}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa8d10bf815971f4796a7a1c577f8e17
+      internalID: -963067820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Hit_03_2
+      rect:
+        serializedVersion: 2
+        x: 5273
+        y: 5133
+        width: 779
+        height: 1014
+      alignment: 9
+      pivot: {x: 0.7416275, y: 0.0534186}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fda594f2fcd4a474e87ef943c314a53a
+      internalID: 1952286022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Hit_03_3
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 2949
+        width: 1463
+        height: 1298
+      alignment: 9
+      pivot: {x: 0.577195, y: 0.041758392}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 768b24921624c66448501c1aee01c53a
+      internalID: 1287530096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Hit_03_4
+      rect:
+        serializedVersion: 2
+        x: 2552
+        y: 2948
+        width: 1417
+        height: 855
+      alignment: 9
+      pivot: {x: 0.60626817, y: 0.059702806}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f0b97376edbe464c9943245faf77af0
+      internalID: 1703469712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Hit_03_5
+      rect:
+        serializedVersion: 2
+        x: 5154
+        y: 2920
+        width: 1028
+        height: 665
+      alignment: 9
+      pivot: {x: 0.6538048, y: 0.0810892}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74de358c926945b408d8ed5391a74097
+      internalID: 754917531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Hit_03_6
+      rect:
+        serializedVersion: 2
+        x: 928
+        y: 739
+        width: 786
+        height: 592
+      alignment: 9
+      pivot: {x: 0.33715728, y: 0.029432142}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2040bfa90df8c2c4ba90526e94f4209c
+      internalID: -1446416868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Hit_03_7
+      rect:
+        serializedVersion: 2
+        x: 3067
+        y: 722
+        width: 847
+        height: 801
+      alignment: 9
+      pivot: {x: 0.2599942, y: 0.039419033}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46a8864c75f88594a8d7567d379929a6
+      internalID: 1674935418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Actor_Player_Hit_03_0: 663793787
+      Actor_Player_Hit_03_1: -963067820
+      Actor_Player_Hit_03_2: 1952286022
+      Actor_Player_Hit_03_3: 1287530096
+      Actor_Player_Hit_03_4: 1703469712
+      Actor_Player_Hit_03_5: 754917531
+      Actor_Player_Hit_03_6: -1446416868
+      Actor_Player_Hit_03_7: 1674935418
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

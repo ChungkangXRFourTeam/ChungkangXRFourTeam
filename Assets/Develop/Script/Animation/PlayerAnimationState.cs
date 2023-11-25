@@ -18,6 +18,7 @@ public class PlayerAnimationState : MonoBehaviour
     private InputAction _jumpAction;
     private InputAction _grabAction;
     private InputAction _swingAction;
+    private InputAction _attackAction;
 
     private Rigidbody2D _rigid;
     private PlayerController _playerController;
@@ -30,7 +31,11 @@ public class PlayerAnimationState : MonoBehaviour
 
     public bool IsJump => _foot.IsGrounded == false && _jumpAction.IsPressed();
     public bool IsGrab { get; set; }
+    public bool IsAttack => _attackAction.IsPressed() && _foot.IsGrounded;
     private bool _lateGrabState = false;
+
+    private int _attackIndex;
+    public static bool AniIsAttacking { get; private set; }
     private void Start()
     {
         _moveAction = InputManager.GetMainGameAction("Move");
@@ -38,6 +43,7 @@ public class PlayerAnimationState : MonoBehaviour
         _jumpAction = InputManager.GetMainGameAction("Jump");
         _grabAction = InputManager.GetMainGameAction("Grab");
         _swingAction = InputManager.GetMainGameAction("Swing");
+        _attackAction = InputManager.GetMainGameAction("Attack");
 
         _rigid = _interaction.GetComponent<Rigidbody2D>();
         _playerController = _interaction.GetComponent<PlayerController>();
@@ -48,12 +54,29 @@ public class PlayerAnimationState : MonoBehaviour
         SetState(Idle);
     }
 
+
+    public void OnHitEnd(int i)
+    {
+        _isAttacking = false;
+        _attackIndex = i;
+    }
+
+    private bool _isAttacking;
+    public void OnHitStart()
+    {
+        _isAttacking = true;
+    }
     private void LateUpdate()
     {
         if (_lateGrabState)
         {
             _lateGrabState = false;
             IsGrab = _playerController.GrabState;
+        }
+
+        if (_moveAction.IsPressed())
+        {
+            beforeRunAngle = _moveAction.ReadValue<Vector2>().x > 0f ? 0f : 180f;
         }
     }
 
@@ -75,6 +98,106 @@ public class PlayerAnimationState : MonoBehaviour
         StartCoroutine(state());
     }
 
+    private IEnumerator Attack()
+    {
+        yield return null;
+        float cameraX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+        var rotation = Quaternion.Euler(0f, beforeRunAngle = cameraX > _rigid.transform.position.x ? 180f : 0f, 0f);
+        beforeRunAngle = cameraX > _rigid.transform.position.x ? 180f : 0f;
+
+        AniIsAttacking = true;
+        
+        _ani.SetState(new PAniState()
+        {
+            State = EPCAniState.Hit_1,
+            Rotation = rotation
+        });
+
+        _attackIndex = 1;
+
+        yield return null;
+        while (true)
+        {
+            if (IsBouncing)
+            {
+                SetState(Bouncing);
+                AniIsAttacking = false;
+                _isAttacking = false;
+                yield break;
+            }
+            
+            if (_isAttacking == false && IsAttack == false)
+            {
+                _attackIndex = -1;
+            }
+
+
+            if (IsAttack && _attackIndex == -1)
+            {
+                cameraX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+                rotation = Quaternion.Euler(0f, beforeRunAngle = cameraX > _rigid.transform.position.x ? 180f : 0f, 0f);
+                beforeRunAngle = cameraX > _rigid.transform.position.x ? 180f : 0f;
+                _ani.SetState(new PAniState()
+                {
+                    State = EPCAniState.Hit_1,
+                    Rotation = rotation
+                });
+                _attackIndex = 1;
+            }
+            
+            if (_attackIndex == -1)
+            {
+                if (IsGrab)
+                {
+                    SetState(Throw);
+                }
+                else if (IsBouncing)
+                {
+                    SetState(Bouncing);
+                }
+                else if (IsFall)
+                {
+                    SetState(Fall);
+                }
+                else if (IsJump)
+                {
+                    SetState(Jump);
+                }
+                else if (_moveAction.IsPressed())
+                {
+                    SetState(Run);
+                }
+                else
+                {
+                    SetState(Idle);
+                }
+                AniIsAttacking = false;
+                _isAttacking = false;
+                yield break;
+            }
+        
+            if(_attackIndex == 2)
+            {
+                _ani.SetState(new PAniState()
+                {
+                    State = EPCAniState.Hit_2,
+                    Rotation = rotation
+                });
+            }
+            else if(_attackIndex == 3)
+            {
+                _ani.SetState(new PAniState()
+                {
+                    State = EPCAniState.Hit_3,
+                    Rotation = rotation
+                });
+            }
+            
+            yield return null;
+        }
+        
+
+    }
     private IEnumerator Bouncing()
     {
         yield return null;
@@ -202,19 +325,25 @@ B:
         SetState(Idle);
     }
 
+    private float beforeRunAngle;
     private IEnumerator Run()
     {
         yield return null;
         
         while (true)
         {
+            float temp = _moveAction.ReadValue<Vector2>().x > 0f ? 180f : 0f;
             _ani.SetState(new PAniState()
             {
                 State = EPCAniState.Run,
-                Rotation = Quaternion.Euler(0f, _moveAction.ReadValue<Vector2>().x > 0f ? 180f : 0f, 0f),
+                Rotation = Quaternion.Euler(0f, temp, 0f),
             });
-            
-            if (IsGrab)
+
+            if (IsAttack)
+            {
+                SetState(Attack);
+            }
+            else if (IsGrab)
             {
                 SetState(Throw);
             }
@@ -222,10 +351,6 @@ B:
             {
                 SetState(Bouncing);
             }
-            //if (_fallAction.IsPressed())
-            //
-            //   SetState(Fall);
-            //
             else if (IsJump)
             {
                 SetState(Jump);
@@ -234,7 +359,6 @@ B:
             {
                 SetState(Idle);
             }
-            
             yield return new WaitForEndOfFrame();
         }
     }
@@ -322,13 +446,18 @@ B:
     {
         yield return null;
         
-        _ani.SetState(new PAniState()
-        {
-            State = EPCAniState.Idle
-        });
-        
         while (true)
         {
+            _ani.SetState(new PAniState()
+            {
+                State = EPCAniState.Idle,
+                Rotation = Quaternion.Euler(0f, beforeRunAngle, 0f),
+            });
+
+            if (IsAttack)
+            {
+                SetState(Attack);
+            }
             if (IsGrab)
             {
                 SetState(Throw);

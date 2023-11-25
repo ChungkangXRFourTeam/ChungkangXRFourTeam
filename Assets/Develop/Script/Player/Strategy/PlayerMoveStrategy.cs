@@ -17,8 +17,8 @@ public class PlayerMoveStrategy : IStrategy
     private Vector2 upDir;
     private bool _inputLock;
     private Rigidbody2D _rigid;
-    
-    
+    private InputAction _attackAction;
+
     private Vector2 GetMovingVector()
     {
         if (_inputLock) return Vector2.zero;
@@ -38,6 +38,7 @@ public class PlayerMoveStrategy : IStrategy
         InputManager.RegisterActionToMainGame("Move",OnMove,ActionType.Performed);
         InputManager.RegisterActionToMainGame("Jump",OnJump,ActionType.Started);
         InputManager.RegisterActionToMainGame("Fall",OnFall,ActionType.Started);
+        _attackAction = InputManager.GetMainGameAction("Attack");
 
         _data = blackboard.GetProperty<PlayerMoveData>("out_moveData");
         _rigid = blackboard.GetProperty<Rigidbody2D>("out_rigidbody");
@@ -47,6 +48,7 @@ public class PlayerMoveStrategy : IStrategy
     private Sequence _inputLockSequence;
     public void Update(Blackboard blackboard)
     {
+        
         blackboard.GetUnWrappedProperty("out_isGrounded", out bool isGrounded);
         if (_inputLock)
         {
@@ -76,6 +78,9 @@ public class PlayerMoveStrategy : IStrategy
         var jumpingVector = upDir * _data.JumpForce;
         var fallingVector = downDir * _data.DownForce;
 
+        Debug.Log(PlayerAnimationState.AniIsAttacking);
+        if ((_attackAction.IsPressed() || PlayerAnimationState.AniIsAttacking) && isGrounded == true) return;
+        
         if (!isGrounded)
             jumpingVector = Vector2.zero;
 

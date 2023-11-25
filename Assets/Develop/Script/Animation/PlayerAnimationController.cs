@@ -18,6 +18,9 @@ public enum EPCAniState : int
     Landing_Dash,
     Throw_1,
     Throw_2,
+    Hit_1,
+    Hit_2,
+    Hit_3,
 }
 public class PlayerAnimationController : MonoBehaviour
 {
@@ -29,7 +32,7 @@ public class PlayerAnimationController : MonoBehaviour
     private string[] _triggerFieldTable;
     private PAniState _pendingState;
 
-    private const int ENUM_SIZE = 12;
+    private const int ENUM_SIZE = 15;
 
     private void Awake()
     {

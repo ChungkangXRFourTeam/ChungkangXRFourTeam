@@ -88,6 +88,8 @@ public class PlayerMeleeAttackStrategy : IStrategy
     private int _attackCount = 0;
 
     private Blackboard _blackboard;
+
+    public int CurrentAttackCount => _attackCount;
     
     public void Update(Blackboard blackboard)
     {
@@ -97,6 +99,18 @@ public class PlayerMeleeAttackStrategy : IStrategy
             OnAttack(blackboard);
 
         _isAttackPressed = false;
+    }
+
+    private bool CalcHitTime(ref float targetTime, float desTime)
+    {
+        targetTime += Time.deltaTime;
+
+        if (targetTime >= desTime)
+        {
+            return true;
+        }
+        
+        return false;
     }
 
     public void Reset()
