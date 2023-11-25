@@ -67,6 +67,17 @@ public class EnemyDefaultState : BaseState, IBEnemyState
         _actionExecutor.Execute();
         _movingObserverExecutor.Execute();
 
+        if (_interaction.TryGetContractInfo(out ActorContractInfo info) &&
+            info.TryGetBehaviour(out IBActorPhysics physics) &&
+            physics.IsSwingState)
+        {
+            if (enemyType == EEnemyType.Hedgehog)
+            {
+                blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
+                bodyChanger.Change("move").GetBodyGetComponentOrNull<Animator>("move")?.SetTrigger("grab");
+            } 
+        }
+        
         if (isCaught && enemyType == EEnemyType.Hedgehog)
         {
             blackboard.GetProperty("out_bodyChanger", out AnimationBodyChanger bodyChanger);
@@ -735,6 +746,21 @@ public class EnemyAttackState : BaseState
     {
         blackboard.GetUnWrappedProperty("out_isSpineHitEvent", out bool isSpineHitEvent);
         blackboard.GetUnWrappedProperty<bool>("out_isCaught", out var isCaught);
+        blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
+        
+        if (interaction.TryGetContractInfo(out ActorContractInfo info) &&
+            info.TryGetBehaviour(out IBActorPhysics physics) &&
+            physics.IsSwingState)
+        {
+            var cf = GetCurrentHedgehogEffect(blackboard);
+            if (cf)
+            {
+                cf.transform.position = Vector2.one * 99999f;
+            }
+            _isAttackEnded = true;
+            return false;
+        }
+
         if (isSpineHitEvent)
         {
             var cf = GetCurrentHedgehogEffect(blackboard);
