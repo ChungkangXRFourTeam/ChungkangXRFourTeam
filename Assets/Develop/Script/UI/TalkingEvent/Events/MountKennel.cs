@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Cinemachine;
+using Unity.Mathematics;
 using UnityEngine.SceneManagement;
 
 public class MountKennelEvent : ITalkingEvent
@@ -43,7 +44,7 @@ public class MountKennelEvent : ITalkingEvent
         {
             if (paths[i].y > 35f)
             {
-                paths[i] = new Vector2(paths[i].x,70);
+                paths[i] = new Vector2(paths[i].x,120);
             }
         }
         _confiner.SetPath(0,paths);
@@ -63,6 +64,8 @@ public class MountKennelEvent : ITalkingEvent
 
     public async UniTask OnEventStart()
     {
+        await UniTask.Delay(TimeSpan.FromSeconds(Time.deltaTime));
+        
         await MoveToPosition(_player, _kennelPos, 0.1F);
     }
 
@@ -72,36 +75,47 @@ public class MountKennelEvent : ITalkingEvent
         
         //_virtualCamera.Follow = null;
         _kennelRigid.bodyType = RigidbodyType2D.Kinematic;
+        _playerRigid.bodyType = RigidbodyType2D.Kinematic;
+        
+        _virtualCameraConfiner.m_ConfineScreenEdges = false;
+        _playerAnimationController.SetState(new PAniState()
+        {
+            State = EPCAniState.Falling_Dash,
+            Rotation = Quaternion.Euler(0,0,-180),
+            Restart = false
+        });
         
         while (Mathf.Abs(_kennelEnd.y - _kennel.transform.position.y) >= 5f)
         {
-            _kennelRigid.velocity = Vector2.zero;
-            _playerRigid.velocity = Vector2.zero;
             _kennelRigid.position += Vector2.up * 5f;
             _playerRigid.position += Vector2.up * 5f;
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
         
-        _virtualCameraConfiner.m_ConfineScreenEdges = false;
-
-        await UniTask.Delay(TimeSpan.FromSeconds(1.0f));
-
-        AsyncOperation result =  SceneManager.LoadSceneAsync(_sceneName);
-
-        while (!result.isDone)
+        float dt = 0f;
+        while (_player.transform.rotation.eulerAngles.z >= 2)
         {
+            dt += Time.unscaledDeltaTime;
+            _player.transform.Rotate(0,0,-2);
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
         
+        AsyncOperation result =  SceneManager.LoadSceneAsync(_sceneName);
         
+        TalkingEventManager.Instance._isEventEnd = true;
+        while (!result.isDone)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(Time.fixedTime));
+            
+        }
+
         await UniTask.Yield();
-        
+
     }
     
     public async UniTask OnEventEnd()
     {
-        InputManager.Instance.DisableTalkEventAction();
-        InputManager.Instance.InitMainGameAction();
+        
     }
 
     public async UniTask MoveToPosition(GameObject target, Vector2 posistion, float speed)
