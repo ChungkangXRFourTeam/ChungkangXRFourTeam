@@ -240,8 +240,17 @@ public class TutorialCutscene : ITalkingEvent
                         Time.unscaledDeltaTime * _imageScrollSpeed);
                     await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
                 }
-            
-                await UniTask.WaitUntil(() => action.WasPressedThisFrame());
+                
+                for (int i = 0; i < 3; i++)
+                {
+                    Talk(contents,"None");
+                    await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
+                    _nonTargetPanel._endButton.SetActive(true);
+                    await UniTask.WaitUntil(() => action.WasPressedThisFrame());
+                    _nonTargetPanel._panel.SetActive(false);
+                }
+
+                await UniTask.Delay(TimeSpan.FromSeconds(1.0f));
             
                 while (Mathf.Abs(_image2.transform.position.y - _image2Start.y) >= 0.5f)
                 {
@@ -251,6 +260,7 @@ public class TutorialCutscene : ITalkingEvent
                         Time.unscaledDeltaTime * _imageScrollSpeed);
                     await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
                 }
+                
             }
         }
         
