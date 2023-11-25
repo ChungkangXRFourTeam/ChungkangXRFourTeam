@@ -89,6 +89,15 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MountKennel"",
+                    ""type"": ""Button"",
+                    ""id"": ""7543c49f-8c88-4965-a977-eee149d85849"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -160,6 +169,17 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""c0192136-9e0d-4838-bec3-fd9c948ffd8f"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""d1b32849-3386-4e4d-a0ba-ec4a94f61e76"",
                     ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
@@ -188,6 +208,17 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Swing"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1e2c8dc8-cb19-432a-b8a2-93bd23e64eb3"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MountKennel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -244,6 +275,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         m_MainGame_BoundMode = m_MainGame.FindAction("BoundMode", throwIfNotFound: true);
         m_MainGame_Fall = m_MainGame.FindAction("Fall", throwIfNotFound: true);
         m_MainGame_Swing = m_MainGame.FindAction("Swing", throwIfNotFound: true);
+        m_MainGame_MountKennel = m_MainGame.FindAction("MountKennel", throwIfNotFound: true);
         // TalkEvent
         m_TalkEvent = asset.FindActionMap("TalkEvent", throwIfNotFound: true);
         m_TalkEvent_NextText = m_TalkEvent.FindAction("NextText", throwIfNotFound: true);
@@ -315,6 +347,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
     private readonly InputAction m_MainGame_BoundMode;
     private readonly InputAction m_MainGame_Fall;
     private readonly InputAction m_MainGame_Swing;
+    private readonly InputAction m_MainGame_MountKennel;
     public struct MainGameActions
     {
         private @InputActionListener m_Wrapper;
@@ -326,6 +359,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         public InputAction @BoundMode => m_Wrapper.m_MainGame_BoundMode;
         public InputAction @Fall => m_Wrapper.m_MainGame_Fall;
         public InputAction @Swing => m_Wrapper.m_MainGame_Swing;
+        public InputAction @MountKennel => m_Wrapper.m_MainGame_MountKennel;
         public InputActionMap Get() { return m_Wrapper.m_MainGame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -356,6 +390,9 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
             @Swing.started += instance.OnSwing;
             @Swing.performed += instance.OnSwing;
             @Swing.canceled += instance.OnSwing;
+            @MountKennel.started += instance.OnMountKennel;
+            @MountKennel.performed += instance.OnMountKennel;
+            @MountKennel.canceled += instance.OnMountKennel;
         }
 
         private void UnregisterCallbacks(IMainGameActions instance)
@@ -381,6 +418,9 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
             @Swing.started -= instance.OnSwing;
             @Swing.performed -= instance.OnSwing;
             @Swing.canceled -= instance.OnSwing;
+            @MountKennel.started -= instance.OnMountKennel;
+            @MountKennel.performed -= instance.OnMountKennel;
+            @MountKennel.canceled -= instance.OnMountKennel;
         }
 
         public void RemoveCallbacks(IMainGameActions instance)
@@ -453,6 +493,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         void OnBoundMode(InputAction.CallbackContext context);
         void OnFall(InputAction.CallbackContext context);
         void OnSwing(InputAction.CallbackContext context);
+        void OnMountKennel(InputAction.CallbackContext context);
     }
     public interface ITalkEventActions
     {

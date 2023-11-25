@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MountKennel",
+                    "type": "Button",
+                    "id": "7543c49f-8c88-4965-a977-eee149d85849",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -138,6 +147,17 @@
                 },
                 {
                     "name": "",
+                    "id": "c0192136-9e0d-4838-bec3-fd9c948ffd8f",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "d1b32849-3386-4e4d-a0ba-ec4a94f61e76",
                     "path": "<Keyboard>/leftShift",
                     "interactions": "",
@@ -166,6 +186,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Swing",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1e2c8dc8-cb19-432a-b8a2-93bd23e64eb3",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MountKennel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
