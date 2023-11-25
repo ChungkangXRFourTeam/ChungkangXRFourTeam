@@ -13,8 +13,15 @@ MonoBehaviour:
   m_Name: SampleMeleeAttack
   m_EditorClassIdentifier: 
   _distanceFromBodyforHand: 2
-  _slashEffectDistanceFromThis: 1.3
-  _slashEffectOffset: {x: 0, y: -1.5}
-  _slashEffectScale: {x: 0.3, y: 0.3}
+  _slashEffectOffsetHit1: {x: 0.88, y: -0.34}
+  _slashEffectOffsetHit2: {x: 2.3, y: 0.44}
+  _slashEffectOffsetHit3: {x: 2.3, y: 0.44}
+  _slashHitOffsetHit1: {x: 2.85, y: 1.46}
+  _slashHitOffsetHit2: {x: 2.85, y: 0.45}
+  _slashHitOffsetHit3: {x: 2.85, y: 2.11}
+  _slashEffectScale: {x: 0.5, y: 0.5}
   _attackDelay: 0.3
   _attackMaxCount: 3
+  slashHitRadiusHit1: 1.5
+  slashHitRadiusHit2: 1.7
+  slashHitRadiusHit3: 2.77

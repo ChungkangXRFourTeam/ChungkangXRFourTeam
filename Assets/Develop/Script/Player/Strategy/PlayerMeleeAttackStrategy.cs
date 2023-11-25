@@ -22,39 +22,7 @@ public class PlayerMeleeAttackStrategy : IStrategy
         InputManager.RegisterActionToMainGame("Attack",OnKeyCallback,ActionType.Started);
         _data = blackboard.GetProperty<PlayerMeleeAttackData>("out_meleeAttackData");
     }
-    private void Effect(Blackboard blackboard)
-    {
-        var mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        var pos = _transform.position;
-        pos.z = mp.z = 0f;
-            
-        var dir = mp - pos;
-        bool flipX = dir.x > 0f ? true : false;
-
-        var scale = _data.SlashEffectScale;
-        scale.x *= flipX ? -1f : 1f;
-
-        var farFromBody = dir.normalized;
-        farFromBody.y = 0f;
-        farFromBody.z = 0f;
-        farFromBody.x *= _data.SlashEffectDistanceFromThis;
-            
-        EffectManager.ImmediateCommand(new EffectCommand()
-        {
-            EffectKey = "player/swordSlash",
-            Position = _transform.position + (Vector3)_data.SlashEffectOffset + farFromBody,
-            Scale = scale,
-            OnContractActor = (x, y)=> OnEffectHit(x, blackboard, y),
-            OnBeginCallback = x =>
-            {
-                DOTween.Sequence()
-                    .SetDelay(Time.deltaTime * 10f)
-                    .SetId(_sKey)
-                    .OnComplete(() => x.Interaction.IsEnabled = false);
-            }
-        });
-    }
-
+    
     private void OnEffectHit(EffectItem item, Blackboard blackboard, ActorContractInfo info)
     {
         if (info.Transform.gameObject.CompareTag("Player")) return;
@@ -132,7 +100,6 @@ public class PlayerMeleeAttackStrategy : IStrategy
         {
             _attackCount++;
 
-            Effect(_blackboard);
             
             if (_attackCount >= _data.AttackMaxCount)
             {

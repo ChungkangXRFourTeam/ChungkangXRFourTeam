@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     private EActorPropertiesType _properties = EActorPropertiesType.None;
     
     /* properties */
+    public PlayerMeleeAttackData MeleeAttackData => _meleeAttackData;
     public InteractionController Interaction => _interaction;
     public EActorPropertiesType Properties => _properties;
     public bool AniKnockback { get; set; }

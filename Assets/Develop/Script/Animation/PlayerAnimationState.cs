@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -61,6 +62,40 @@ public class PlayerAnimationState : MonoBehaviour
         _attackIndex = i;
     }
 
+    public void OnHitTimingBegin(int i)
+    {
+        var data = _playerController.MeleeAttackData;
+        
+        if (i == 1)
+        {
+            Hit(data.SlashEffectOffsetHit1, data.SlashHitRadiusHit1);
+        }
+        else if (i == 2)
+        {
+            Hit(data.SlashEffectOffsetHit2, data.SlashHitRadiusHit2);
+            Effect(data.SlashEffectOffsetHit2);
+        }
+        else if (i == 3)
+        {
+            Hit(data.SlashEffectOffsetHit3, data.SlashHitRadiusHit3);
+            Effect(data.SlashEffectOffsetHit3);
+        }
+    }
+
+    private void Hit(Vector2 offset, float radius)
+    {
+        offset.x *= -1f;
+        var hit = Physics2D.OverlapCircle(
+            transform.position + (transform.rotation * offset),
+            radius,
+            LayerMask.GetMask("Enemy")
+        );
+
+        if (hit == false) return;
+            
+        hit.gameObject.GetComponent<Enemy>()?.DoHit(_interaction.ContractInfo,1f);
+    }
+
     private bool _isAttacking;
     public void OnHitStart()
     {
@@ -98,6 +133,37 @@ public class PlayerAnimationState : MonoBehaviour
         StartCoroutine(state());
     }
 
+    private void Effect(Vector2 offset)
+    {
+        var data = _playerController.MeleeAttackData;
+        var mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var pos = transform.position;
+        pos.z = mp.z = 0f;
+            
+        var dir = mp - pos;
+        bool flipX = dir.x > 0f;
+
+        var scale = data.SlashEffectScale;
+        scale.x *= flipX ? -1f : 1f;
+
+        offset.x *= -1f;
+        pos += (transform.rotation * offset);
+        
+        EffectManager.ImmediateCommand(new EffectCommand()
+        {
+            EffectKey = "player/swordSlash",
+            Position = pos,
+            Scale = scale,
+            OnContractActor = (item, info) =>
+            {
+                if (info.TryGetBehaviour(out IBActorHit hit) &&
+                    info.Transform.GetComponent<Enemy>())
+                {
+                    hit.DoHit(_interaction.ContractInfo,1f);
+                }
+            }
+        });
+    }
     private IEnumerator Attack()
     {
         yield return null;
