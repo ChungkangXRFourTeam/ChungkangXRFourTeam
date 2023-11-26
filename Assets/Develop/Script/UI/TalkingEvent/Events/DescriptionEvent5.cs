@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -33,7 +34,8 @@ public class DescriptionEvent5 : ITalkingEvent
         _playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         _playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _observer = GameObject.FindGameObjectWithTag("Observer");
-        _scriptPath += "DescriptionText5";
+        _scriptPath += "Opning/DescriptionText5";
+        
         _eventTexts = CSVReader.Read(_scriptPath);
         _comments = new List<string>();
         for (int i = 0; i < _eventTexts.Count; i++)
@@ -55,7 +57,8 @@ public class DescriptionEvent5 : ITalkingEvent
         InputManager.Instance.InitTalkEventAction();
         
         Rigidbody2D playerRigid = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
-        await UniTask.WaitUntil(() => playerRigid.velocity.y == 0);
+        playerRigid.velocity = new Vector2(0,-5);
+        GameObject.FindGameObjectWithTag("Player").transform.rotation = quaternion.Euler(0, 0, 0);
         
         EventFadeChanger.Instance.FadeIn(0.3f);
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1.0f);
