@@ -32,7 +32,7 @@ public class DescriptionEvent3 : ITalkingEvent
         _playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         _playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _observer = GameObject.FindGameObjectWithTag("Observer");
-        _scriptPath += "DescriptionText3";
+        _scriptPath += "Opning/DescriptionText3";
         _eventTexts = CSVReader.Read(_scriptPath);
         _comments = new List<string>();
         for (int i = 0; i < _eventTexts.Count; i++)

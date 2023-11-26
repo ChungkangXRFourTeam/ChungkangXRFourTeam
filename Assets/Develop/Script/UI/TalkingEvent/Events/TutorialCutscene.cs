@@ -55,7 +55,7 @@ public class TutorialCutscene : ITalkingEvent
         
         _nonTargetPanel = GameObject.Find("Facing CutScene").GetComponent<TalkingPanelInfo>();
         _blurPanel = GameObject.Find("BlurPanel").GetComponent<TalkingPanelInfo>();
-        _scriptPath += "TutorialText";
+        _scriptPath += "Opning/TutorialText";
         _eventTexts = CSVReader.Read(_scriptPath);
         _comments = new List<string>();
         
