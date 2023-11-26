@@ -67,6 +67,7 @@ public class PlayerAnimationState : MonoBehaviour
         var data = _playerController.MeleeAttackData;
 
         string properties = _playerController.Properties == EActorPropertiesType.Flame ? "flame" : "water";
+        bool isShowingEffect = _playerController.Properties != EActorPropertiesType.None;
         
         if (i == 1)
         {
@@ -76,12 +77,16 @@ public class PlayerAnimationState : MonoBehaviour
         else if (i == 2)
         {
             Hit(data.SlashEffectOffsetHit2, data.SlashHitRadiusHit2);
-            Effect(data.SlashEffectOffsetHit2, data.SlashEffectScale2, $"player/attack2_{properties}");
+            
+            if(isShowingEffect)
+                Effect(data.SlashEffectOffsetHit2, data.SlashEffectScale2, $"player/attack2_{properties}");
         }
         else if (i == 3)
         {
             Hit(data.SlashEffectOffsetHit3, data.SlashHitRadiusHit3);
-            Effect(data.SlashEffectOffsetHit3, data.SlashEffectScale3, $"player/attack3_{properties}");
+            
+            if(isShowingEffect)
+                Effect(data.SlashEffectOffsetHit3, data.SlashEffectScale3, $"player/attack3_{properties}");
         }
     }
 
