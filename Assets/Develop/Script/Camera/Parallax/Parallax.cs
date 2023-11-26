@@ -48,6 +48,7 @@ public class Parallax : MonoBehaviour
 
     void Move(float deltaX, float deltaY)
     {
+        if(_parallaxLayers.Count!= 0)
         for (int i = 0; i < _parallaxLayers.Count; i++)
         {
             _parallaxLayers[i].MoveX(deltaX);
@@ -63,7 +64,8 @@ public class Parallax : MonoBehaviour
         {
             for (int i = 0; i < _parallaxLayerObjects.Length; i++)
             {
-                _parallaxLayers.Add( _parallaxLayerObjects[i].GetComponent<ParallaxLayer>());
+                if(_parallaxLayerObjects[i].TryGetComponent(out ParallaxLayer component))
+                _parallaxLayers.Add( component);
             }
         }
     }
