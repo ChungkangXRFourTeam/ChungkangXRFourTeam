@@ -29,6 +29,11 @@ public interface IBObjectInteractive : IObjectBehaviour
 {
     public bool IsSelectiveObject {get; }
 }
+public interface IBObjectDiaryItem : IObjectBehaviour
+{
+    public void Collect();
+    public int PageID { get; }
+}
 
 public interface IBObjectKnockback : IObjectBehaviour
 {

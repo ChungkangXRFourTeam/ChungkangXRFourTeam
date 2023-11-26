@@ -262,6 +262,34 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""e0ae08e3-f2fb-4993-a5a2-71143236b7c7"",
+            ""actions"": [
+                {
+                    ""name"": ""Settings"",
+                    ""type"": ""Button"",
+                    ""id"": ""41b53341-871e-4c29-a149-b051b5becabe"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""026db76b-0278-4adf-95e4-6cb304f9836d"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Settings"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -279,6 +307,9 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         // TalkEvent
         m_TalkEvent = asset.FindActionMap("TalkEvent", throwIfNotFound: true);
         m_TalkEvent_NextText = m_TalkEvent.FindAction("NextText", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_Settings = m_UI.FindAction("Settings", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -484,6 +515,52 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         }
     }
     public TalkEventActions @TalkEvent => new TalkEventActions(this);
+
+    // UI
+    private readonly InputActionMap m_UI;
+    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
+    private readonly InputAction m_UI_Settings;
+    public struct UIActions
+    {
+        private @InputActionListener m_Wrapper;
+        public UIActions(@InputActionListener wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Settings => m_Wrapper.m_UI_Settings;
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public void AddCallbacks(IUIActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+            @Settings.started += instance.OnSettings;
+            @Settings.performed += instance.OnSettings;
+            @Settings.canceled += instance.OnSettings;
+        }
+
+        private void UnregisterCallbacks(IUIActions instance)
+        {
+            @Settings.started -= instance.OnSettings;
+            @Settings.performed -= instance.OnSettings;
+            @Settings.canceled -= instance.OnSettings;
+        }
+
+        public void RemoveCallbacks(IUIActions instance)
+        {
+            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IUIActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public UIActions @UI => new UIActions(this);
     public interface IMainGameActions
     {
         void OnMove(InputAction.CallbackContext context);
@@ -498,5 +575,9 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
     public interface ITalkEventActions
     {
         void OnNextText(InputAction.CallbackContext context);
+    }
+    public interface IUIActions
+    {
+        void OnSettings(InputAction.CallbackContext context);
     }
 }

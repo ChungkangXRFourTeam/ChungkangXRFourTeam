@@ -18,6 +18,7 @@ public class InputManager : MonoBehaviour
     private static InputActionListener actionListener = null;
     private static InputActionMap _mainGameActionMap = null;
     private static InputActionMap _eventTalkMap = null;
+    private static InputActionMap _uiMap = null;
     
     
     void Awake()
@@ -28,6 +29,10 @@ public class InputManager : MonoBehaviour
             actionListener = new InputActionListener();
             _mainGameActionMap = actionListener.asset.FindActionMap("MainGame");
             _eventTalkMap = actionListener.asset.FindActionMap("TalkEvent");
+            _uiMap = actionListener.asset.FindActionMap("UI");
+            
+            
+            InitUIAction();
         }
         else
         {
@@ -47,7 +52,6 @@ public class InputManager : MonoBehaviour
         while (actions.MoveNext())
         {
                 actions.Current.Enable();
-            
         }
             
     }
@@ -76,6 +80,27 @@ public class InputManager : MonoBehaviour
     public void DisableTalkEventAction()
     {
         IEnumerator<InputAction> actions = _eventTalkMap.GetEnumerator();
+        while (actions.MoveNext())
+        {
+            actions.Current.Disable();
+            
+        }
+    }
+    
+    public void InitUIAction()
+    {
+        IEnumerator<InputAction> actions = _uiMap.GetEnumerator();
+        while (actions.MoveNext())
+        {
+            actions.Current.Enable();
+            
+        }
+            
+    }
+    
+    public void DisableUIAction()
+    {
+        IEnumerator<InputAction> actions = _uiMap.GetEnumerator();
         while (actions.MoveNext())
         {
             actions.Current.Disable();
@@ -122,6 +147,18 @@ public class InputManager : MonoBehaviour
     public static InputAction GetTalkEventAction(string action)
     { 
         InputAction foundAction = _eventTalkMap.FindAction(action);
+        if (Application.isPlaying && foundAction != null)
+            return foundAction;
+        else
+        {
+            return null;
+        }
+    }
+
+    [CanBeNull]
+    public static InputAction GetUIAction(string action)
+    { 
+        InputAction foundAction = _uiMap.FindAction(action);
         if (Application.isPlaying && foundAction != null)
             return foundAction;
         else
@@ -200,6 +237,41 @@ public class InputManager : MonoBehaviour
                 foundAction.canceled -= callback;
                 break;
         }
+    }
+    
+    public static void RegisterActionToUI(string actionName,Action<InputAction.CallbackContext> callback, ActionType actionType)
+    {
+        InputAction foundAction = GetUIAction(actionName);
+        
+        switch (actionType)
+        {
+            case ActionType.Started:
+                foundAction.started += callback;
+                break;
+            case ActionType.Performed:
+                foundAction.performed += callback;
+                break;
+            case ActionType.Canceled:
+                foundAction.canceled += callback;
+                break;
+        }
 
+    }
+    public static void UnRegisterActionToUI(string actionName, Action<InputAction.CallbackContext> callback, ActionType actionType)
+    {
+        InputAction foundAction = GetUIAction(actionName);
+        
+        switch (actionType)
+        {
+            case ActionType.Started:
+                foundAction.started -= callback;
+                break;
+            case ActionType.Performed:
+                foundAction.performed -= callback;
+                break;
+            case ActionType.Canceled:
+                foundAction.canceled -= callback;
+                break;
+        }
     }
 }
