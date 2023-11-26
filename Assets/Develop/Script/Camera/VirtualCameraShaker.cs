@@ -34,11 +34,11 @@ public class VirtualCameraShaker : MonoBehaviour
         }
     }
 
-    private void Awake()
+    private void Start()
     {
-        _cinemachineVirtualCamera = GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineVirtualCamera>();
+        _cinemachineVirtualCamera = GameObject.FindWithTag("VirtualCamera")?.GetComponent<CinemachineVirtualCamera>();
         cinemachineBasicMultiChannelPerlin =
-            _cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            _cinemachineVirtualCamera?.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
     public void CameraShake(float duration, float intensity = 1f, float frequency = 1f)
@@ -57,17 +57,20 @@ public class VirtualCameraShaker : MonoBehaviour
 
     private void Update()
     {
-        if (shakeTimer > 0)
+        if (_cinemachineVirtualCamera)
         {
-            shakeTimer -= Time.deltaTime;
-            startingIntensity -= Time.deltaTime;
-            cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 
-                Mathf.Lerp(startingIntensity,0f,shakeTimer/shakeTimerTotal);
-        }
-        else if (cinemachineBasicMultiChannelPerlin.m_AmplitudeGain != 0)
-        {
-            cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0;
-            cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
+            if (shakeTimer > 0)
+            {
+                shakeTimer -= Time.deltaTime;
+                startingIntensity -= Time.deltaTime;
+                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 
+                    Mathf.Lerp(startingIntensity,0f,shakeTimer/shakeTimerTotal);
+            }
+            else if (cinemachineBasicMultiChannelPerlin.m_AmplitudeGain != 0)
+            {
+                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0;
+                cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
+            }
         }
     }
 }
