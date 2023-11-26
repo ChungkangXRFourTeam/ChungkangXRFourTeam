@@ -18,6 +18,7 @@ public class LandingKennelEvent : ITalkingEvent
     private SpriteRenderer _kennelRenderer;
     private CinemachineVirtualCamera _virtualCamera;
     private CinemachineFramingTransposer _cinemachineFramingTransposer;
+    private CinemachineConfiner _cinemachineConfiner;
     
     private Vector2 _kennelPos;
     private Vector2 _kennelEnd;
@@ -38,7 +39,8 @@ public class LandingKennelEvent : ITalkingEvent
     
     public async UniTask OnEventBefore()
     {
-        if (SceneManager.GetActiveScene().name == "ThemeA_1" || SceneManager.GetActiveScene().name == "ThemeB_1")
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName == "ThemeA_1" || sceneName == "ThemeB_1")
             _scriptPath += "Other/FirstMapEntry";
         _eventTexts = CSVReader.Read(_scriptPath);
         _comments = new List<string>();
@@ -51,9 +53,12 @@ public class LandingKennelEvent : ITalkingEvent
         await UniTask.Delay(TimeSpan.FromSeconds(Time.deltaTime));
         _virtualCamera = GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineVirtualCamera>();
         _cinemachineFramingTransposer = _virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+        _cinemachineConfiner = GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineConfiner>();
         _confiner = GameObject.Find("Confiner").GetComponent<PolygonCollider2D>();
+        _cinemachineConfiner.m_BoundingShape2D = null;
+        _cinemachineFramingTransposer.m_YDamping = 0;
+        
         _upWall = GameObject.Find("UpWall");
-        _upWall.GetComponent<BoxCollider2D>().enabled = false;
         InputManager.Instance.DisableMainGameAction();
         InputManager.Instance.InitTalkEventAction();
 
@@ -100,9 +105,10 @@ public class LandingKennelEvent : ITalkingEvent
         _player.transform.rotation = quaternion.Euler(0, 0, 0);
         
         _playerRigid.bodyType = RigidbodyType2D.Dynamic;
-        _kennelRigid.bodyType = RigidbodyType2D.Dynamic; 
-        
+        _kennelRigid.bodyType = RigidbodyType2D.Dynamic;
         await UniTask.WaitUntil(() => _player.transform.position.y < startPos.position.y + 5f);
+        _cinemachineFramingTransposer.m_YDamping = 1;
+        _cinemachineConfiner.m_BoundingShape2D = _confiner;
         _playerRigid.excludeLayers = 0;
         _kennelRigid.excludeLayers = 0;
         
@@ -123,17 +129,6 @@ public class LandingKennelEvent : ITalkingEvent
     
     public async UniTask OnEventEnd()
     {
-        Vector2[] paths = _confiner.points;
-        for (int i = 0; i < paths.Length; i++)
-        {
-            if (paths[i].y > 35f)
-            {
-                paths[i] = new Vector2(paths[i].x,_upWall.transform.position.y);
-            }
-        }
-        _confiner.SetPath(0,paths);
-
-        
         Color kennelColor = _kennelRenderer.color;
         
         
@@ -181,7 +176,7 @@ public class LandingKennelEvent : ITalkingEvent
         {
             State = EPCAniState.Run,
             Rotation = Quaternion.Euler(0,fliped,0),
-            Restart = false
+            Restart = true
         });
         while (Mathf.Abs(target.transform.position.x - posistion.x) >= 0.1f)
         {

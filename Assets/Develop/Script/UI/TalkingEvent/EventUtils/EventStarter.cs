@@ -19,6 +19,7 @@ public class EventStarter : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         EventFadeChanger.Instance.ChangeFadeObject(_fade);
+        if(TalkingEventManager.Instance._isEventEnd)
         switch (_eventName)
         {
             case "TutorialCutScene":
@@ -38,6 +39,21 @@ public class EventStarter : MonoBehaviour
                 break;
             case "Description 5":
                 TalkingEventManager.Instance.InvokeCurrentEvent(new DescriptionEvent5()).Forget();
+                break;
+            case "ThemeA_1": 
+            case "ThemeA_2":
+            case "ThemeA_3":
+            case "ThemeB_1":
+            case "ThemeB_2":
+            case "ThemeB_3":
+            case "Boss":
+                TalkingEventManager.Instance.InvokeCurrentEvent(new MountKennelEvent(_eventName)).Forget();
+                break;
+            case "BossLanding":
+                TalkingEventManager.Instance.InvokeCurrentEvent(new LandingKennelBossEvent()).Forget();
+                break;
+            case "Landing":
+                TalkingEventManager.Instance.InvokeCurrentEvent(new LandingKennelEvent()).Forget();
                 break;
         }
 
