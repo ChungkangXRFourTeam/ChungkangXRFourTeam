@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8e9bd1dc37ead7f429cc5ae07a6f17b9
+guid: 938bfa9f90e2a5d4baafa3cda6d2c66c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -46,8 +46,8 @@ TextureImporter:
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 9
-  spritePivot: {x: 0.7370907, y: 0.33508235}
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 300
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -94,47 +94,8 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Windows Store Apps
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
     buildTarget: Server
     maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Android
-    maxTextureSize: 8192
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 8192
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -149,22 +110,190 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Actor_Player_Editor_Idle
+      name: Actor_Player_Idle_0
       rect:
         serializedVersion: 2
-        x: 35
-        y: 0
-        width: 845
-        height: 800
+        x: 866
+        y: 5120
+        width: 853
+        height: 809
       alignment: 9
-      pivot: {x: 0.7449875, y: 0.048538007}
+      pivot: {x: 0.21253057, y: 0.03786564}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cebf3f9ff4a312443a034166aef38014
-      internalID: -1057994674
+      spriteID: 39bfb8b06ecd7224380159a49936e280
+      internalID: -821474337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Idle_1
+      rect:
+        serializedVersion: 2
+        x: 3069
+        y: 5120
+        width: 850
+        height: 801
+      alignment: 9
+      pivot: {x: 0.20851706, y: 0.03786564}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 258b7d731b4a73440811872d3ea93eee
+      internalID: -496030416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Idle_2
+      rect:
+        serializedVersion: 2
+        x: 5279
+        y: 5121
+        width: 861
+        height: 782
+      alignment: 9
+      pivot: {x: 0.19481401, y: 0.03786564}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54af0e3841ca43b4d809468703854ac1
+      internalID: -1232728996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Idle_3
+      rect:
+        serializedVersion: 2
+        x: 908
+        y: 2914
+        width: 915
+        height: 737
+      alignment: 9
+      pivot: {x: 0.14624704, y: 0.05277181}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20f8ec90304edbe409bc124b82dd1af5
+      internalID: 93581305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Idle_4
+      rect:
+        serializedVersion: 2
+        x: 3133
+        y: 2915
+        width: 984
+        height: 741
+      alignment: 9
+      pivot: {x: 0.110806845, y: 0.05277181}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6de41b4c1f32044c95ff7040c03bd90
+      internalID: -2098082958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Idle_5
+      rect:
+        serializedVersion: 2
+        x: 5332
+        y: 2916
+        width: 1017
+        height: 739
+      alignment: 9
+      pivot: {x: 0.111967646, y: 0.05277181}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78220c7113e389546a99258f192671f6
+      internalID: -822417051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Idle_6
+      rect:
+        serializedVersion: 2
+        x: 907
+        y: 714
+        width: 968
+        height: 734
+      alignment: 9
+      pivot: {x: 0.13941123, y: 0.05277181}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01aa1b49f79895e40a5a2a19a2281016
+      internalID: 335206221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Idle_7
+      rect:
+        serializedVersion: 2
+        x: 3077
+        y: 717
+        width: 886
+        height: 791
+      alignment: 9
+      pivot: {x: 0.19245473, y: 0.04388165}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19e6a34f36ccb36448bfb381051cbe58
+      internalID: 878082794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Idle_8
+      rect:
+        serializedVersion: 2
+        x: 5269
+        y: 722
+        width: 860
+        height: 807
+      alignment: 9
+      pivot: {x: 0.204453, y: 0.03786564}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d41dfbeb500b48c4eb69d013066d1cab
+      internalID: 1531667386
       vertices: []
       indices: 
       edges: []
@@ -173,14 +302,22 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Actor_Player_Editor_Idle: -1057994674
+      Actor_Player_Idle_0: -821474337
+      Actor_Player_Idle_1: -496030416
+      Actor_Player_Idle_2: -1232728996
+      Actor_Player_Idle_3: 93581305
+      Actor_Player_Idle_4: -2098082958
+      Actor_Player_Idle_5: -822417051
+      Actor_Player_Idle_6: 335206221
+      Actor_Player_Idle_7: 878082794
+      Actor_Player_Idle_8: 1531667386
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
