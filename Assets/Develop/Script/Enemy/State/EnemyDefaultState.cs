@@ -427,7 +427,7 @@ public class EnemyPropagatingState : BaseState
             Vector3 v = (info.Transform.position - transform.position).normalized;
             v = Vector3.Project(v, Vector3.right).normalized;
 
-            if (myState.CheckCurrentState<EnemySwingState>() || myState.CheckCurrentState<EnemyPatrollState>())
+            if (myState.CheckCurrentState<EnemySwingState>() || myState.CheckCurrentState<EnemyPatrollState>() || myState.CheckCurrentState<EnemyAttackState>())
             {
                 _propagationInfo.Count = propagation.Count;
                 _propagationInfo.Propagate(interaction.ContractInfo, -v);
@@ -744,9 +744,27 @@ public class EnemyAttackState : BaseState
     private bool dirty = false;
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {
+        bool gotoPropagation = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
         blackboard.GetUnWrappedProperty("out_isSpineHitEvent", out bool isSpineHitEvent);
         blackboard.GetUnWrappedProperty<bool>("out_isCaught", out var isCaught);
         blackboard.GetProperty<InteractionController>("out_interaction", out var interaction);
+        
+        bool gotoSwing = EnemySwingState.ReadyGotoSwing(blackboard);
+        
+        if (gotoSwing)
+        {
+            _isAttackEnded = true;
+            executor.SetNextState<EnemySwingState>();
+            Debug.Log("pro");
+            return false;
+        }
+        if (gotoPropagation)
+        {
+            _isAttackEnded = true;
+            executor.SetNextState<EnemyPropagatingState>();
+            Debug.Log("pro");
+            return false;
+        }
         
         if (interaction.TryGetContractInfo(out ActorContractInfo info) &&
             info.TryGetBehaviour(out IBActorPhysics physics) &&
@@ -822,21 +840,10 @@ public class EnemyAttackState : BaseState
             
             return false;
         }
-        
-        bool gotoSwing = EnemySwingState.ReadyGotoSwing(blackboard);
-        bool gotoPropagation = EnemyPropagatingState.ReadyGotoPropagating(blackboard);
         bool gotoDetection = EnemyDetectionState.GotoDetection(blackboard);
         bool gotoPatroll = EnemyPatrollState.ReadyGotoPatroll(blackboard);
 
-        if (gotoPropagation)
-        {
-            executor.SetNextState<EnemyPropagatingState>();
-        }
-        else if (gotoSwing)
-        {
-            executor.SetNextState<EnemySwingState>();
-        }
-        else if (gotoDetection)
+        if (gotoDetection)
         {
             executor.SetNextState<EnemyDetectionState>();
         }

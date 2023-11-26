@@ -119,7 +119,7 @@ public class PlayerAnimationState : MonoBehaviour
 
         if (_moveAction.IsPressed())
         {
-            beforeRunAngle = _moveAction.ReadValue<Vector2>().x > 0f ? 0f : 180f;
+            beforeRunAngle = _moveAction.ReadValue<Vector2>().x > 0f ? 180f : 0f;
         }
     }
 
