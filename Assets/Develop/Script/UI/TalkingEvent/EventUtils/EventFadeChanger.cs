@@ -13,26 +13,36 @@ public class EventFadeChanger : MonoBehaviour
     
     public static EventFadeChanger Instance {
         get {
-            return instance;
+            return _instance;
         }
     }
-    private static EventFadeChanger instance;
+    private static EventFadeChanger _instance;
 
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneChanged;
     }
+    
 
-    void Start () {
-        if (instance != null) {
-            DestroyImmediate(this.gameObject);
-            return;
+    public static void Init()
+    {
+        if (_instance)
+        {
+            Destroy(_instance.gameObject);
+            _instance = null;
         }
-        instance = this;
- 
-        DontDestroyOnLoad(gameObject);
+
+        _instance = new GameObject("[EventFadeChanger]").AddComponent<EventFadeChanger>();
+        DontDestroyOnLoad(_instance.gameObject);
+        
+        GameObject fadeObj = Resources.Load<GameObject>("Prefab/FadeObject");
+        GameObject fade = Instantiate(fadeObj);
+        fade.transform.GetComponentInChildren<CanvasGroup>().alpha = 0;
+        DontDestroyOnLoad(fade);
+
     }
     
+
     public void FadeIn(float duration,float value = 1.0f, string sceneName = null){
         Fade_img.DOFade(value, duration)
             .OnStart(()=>{

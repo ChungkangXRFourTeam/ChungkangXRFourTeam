@@ -147,9 +147,9 @@ public class LandingKennelEvent : ITalkingEvent
             _playerPanel._panel.SetActive(true);
             _playerPanel._endButton.SetActive(false);
             if(_playerPanel._eventText.TryGetComponent(out TextMeshProUGUI playerComponent)) 
-                TypingSystem.instance.Typing(contents,playerComponent);
+                TypingSystem.Instance.Typing(contents,playerComponent);
         
-            await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
+            await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
             _playerPanel._endButton.SetActive(true);
         }
         

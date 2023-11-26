@@ -123,13 +123,13 @@ public class SceneChangeEvent : ITalkingEvent
                     _playerPanel._panel.SetActive(true);
                 _playerPanel._endButton.SetActive(false);
                 if(_playerPanel._eventText.TryGetComponent(out TextMeshProUGUI playerComponent)) 
-                    TypingSystem.instance.Typing(contents,playerComponent);
+                    TypingSystem.Instance.Typing(contents,playerComponent);
                 break;
             case "Observer" : 
                 _targetPanel._panel.SetActive(true);
                 _targetPanel._endButton.SetActive(false);
                 if(_targetPanel._eventText.TryGetComponent(out TextMeshProUGUI observerComponent)) 
-                    TypingSystem.instance.Typing(contents,observerComponent);
+                    TypingSystem.Instance.Typing(contents,observerComponent);
                 break;
                 
         }

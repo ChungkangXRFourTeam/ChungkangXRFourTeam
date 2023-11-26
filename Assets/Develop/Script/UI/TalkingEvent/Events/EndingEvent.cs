@@ -143,7 +143,7 @@ public class EndingEvent : ITalkingEvent
             {
                 string target = _eventTexts[_textCount][EventTextType.Target.ToString()].ToString();
                 Talk(contents,target);
-                await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
+                await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
                 SetEndbutton(target);
                 await UniTask.WaitUntil(() => action.WasPressedThisFrame());
                 ClosePanel(target);
@@ -234,13 +234,13 @@ public class EndingEvent : ITalkingEvent
                 _playerPanel._panel.SetActive(true);
                 _playerPanel._endButton.SetActive(false);
                 if(_playerPanel._eventText.TryGetComponent(out TextMeshProUGUI playerComponent)) 
-                    TypingSystem.instance.Typing(contents,playerComponent);
+                    TypingSystem.Instance.Typing(contents,playerComponent);
                 break;
             case "Observer" : 
                 _targetPanel._panel.SetActive(true);
                 _targetPanel._endButton.SetActive(false);
                 if(_targetPanel._eventText.TryGetComponent(out TextMeshProUGUI observerComponent)) 
-                    TypingSystem.instance.Typing(contents,observerComponent);
+                    TypingSystem.Instance.Typing(contents,observerComponent);
                 break;
                 
         }

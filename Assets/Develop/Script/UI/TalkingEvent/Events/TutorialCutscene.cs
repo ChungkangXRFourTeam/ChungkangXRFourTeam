@@ -133,7 +133,7 @@ public class TutorialCutscene : ITalkingEvent
                 {
                     _nonTargetPanel._panel.SetActive(true);
                     Talk(contents,"None");
-                    await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
+                    await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
                     _nonTargetPanel._endButton.SetActive(true);
                     await UniTask.WaitUntil(() => action.WasPressedThisFrame());
                 }
@@ -148,7 +148,7 @@ public class TutorialCutscene : ITalkingEvent
                     } 
                     _nonTargetPanel._panel.SetActive(true);
                     Talk(contents,"None");
-                    await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
+                    await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
                     _nonTargetPanel._endButton.SetActive(true);
                     await UniTask.WaitUntil(() => action.WasPressedThisFrame());
                     _nonTargetPanel._panel.SetActive(false);
@@ -185,7 +185,7 @@ public class TutorialCutscene : ITalkingEvent
                 {
                     _nonTargetPanel._panel.SetActive(true);
                     Talk(contents,"None");
-                    await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
+                    await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
                     _nonTargetPanel._endButton.SetActive(true);
                     await UniTask.WaitUntil(() => action.WasPressedThisFrame());
                     _nonTargetPanel._panel.SetActive(false);
@@ -214,7 +214,7 @@ public class TutorialCutscene : ITalkingEvent
             target = _eventTexts[_textCount][EventTextType.Target.ToString()].ToString();
             
             Talk(contents,target);
-            await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
+            await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
             _playerPanel._endButton.SetActive(true);
             _targetPanel._endButton.SetActive(true);
             await UniTask.WaitUntil(() => action.WasPressedThisFrame());
@@ -244,7 +244,7 @@ public class TutorialCutscene : ITalkingEvent
                 for (int i = 0; i < 3; i++)
                 {
                     Talk(contents,"None");
-                    await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
+                    await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
                     _nonTargetPanel._endButton.SetActive(true);
                     await UniTask.WaitUntil(() => action.WasPressedThisFrame());
                     _nonTargetPanel._panel.SetActive(false);
@@ -322,19 +322,19 @@ public class TutorialCutscene : ITalkingEvent
                 _nonTargetPanel._panel.SetActive(true);
                 _nonTargetPanel._endButton.SetActive(false);
                 if(_nonTargetPanel._eventText.TryGetComponent(out TextMeshProUGUI nonPanelComponent)) 
-                    TypingSystem.instance.Typing(contents,nonPanelComponent);
+                    TypingSystem.Instance.Typing(contents,nonPanelComponent);
                 break;
             case "Player" : 
                 _playerPanel._panel.SetActive(true);
                 _playerPanel._endButton.SetActive(false);
                 if(_playerPanel._eventText.TryGetComponent(out TextMeshProUGUI playerComponent)) 
-                    TypingSystem.instance.Typing(contents,playerComponent);
+                    TypingSystem.Instance.Typing(contents,playerComponent);
                 break;
             case "Observer" : 
                 _targetPanel._panel.SetActive(true);
                 _targetPanel._endButton.SetActive(false);
                 if(_targetPanel._eventText.TryGetComponent(out TextMeshProUGUI observerComponent)) 
-                    TypingSystem.instance.Typing(contents,observerComponent);
+                    TypingSystem.Instance.Typing(contents,observerComponent);
                 break;
                 
         }

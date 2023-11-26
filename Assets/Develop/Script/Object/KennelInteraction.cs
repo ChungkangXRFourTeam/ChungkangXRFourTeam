@@ -17,7 +17,7 @@ public class KennelInteraction : MonoBehaviour
     private void OnTriggerStay2D(Collider2D other)
     {
         if (_interactionAction.WasPressedThisFrame() && other.CompareTag("Player")
-            && TalkingEventManager.Instance._isEventEnd)
+            && TalkingEventManager._isEventEnd)
         {
             TalkingEventManager.Instance.InvokeCurrentEvent(new MountKennelEvent("ThemeA_1")).Forget();
             

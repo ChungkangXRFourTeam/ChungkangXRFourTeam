@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 
 public class TypingSystem : MonoBehaviour
 {
-    public static TypingSystem instance;
+    public static TypingSystem _instance;
     
     [SerializeField]
     private float typingTimer = 0.08f;
@@ -24,16 +24,6 @@ public class TypingSystem : MonoBehaviour
 
     void Awake()
     {
-        if (null == instance)
-        {
-            instance = this;
-            DontDestroyOnLoad(this.gameObject);
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
-
         timer = typingTimer;
         typingTime = typingTimer;
     }
@@ -42,12 +32,23 @@ public class TypingSystem : MonoBehaviour
     {
         get
         {
-            if (instance == null)
+            if (_instance == null)
                 return null;
 
-            return instance;
+            return _instance;
         }
         
+    }
+
+    public static void Init()
+    {
+        if (_instance)
+        {
+            Destroy(_instance.gameObject);
+            _instance = null;
+        }
+        _instance = new GameObject("[TypingSystem]").AddComponent<TypingSystem>();
+        DontDestroyOnLoad(_instance.gameObject);
     }
 
     public void Typing(string[] dialogs, TextMeshProUGUI textObj, bool isClear = true)

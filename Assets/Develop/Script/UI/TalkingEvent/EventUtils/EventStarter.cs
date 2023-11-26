@@ -19,7 +19,7 @@ public class EventStarter : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         EventFadeChanger.Instance.ChangeFadeObject(_fade);
-        if(TalkingEventManager.Instance._isEventEnd)
+        if(TalkingEventManager._isEventEnd)
         switch (_eventName)
         {
             case "TutorialCutScene":

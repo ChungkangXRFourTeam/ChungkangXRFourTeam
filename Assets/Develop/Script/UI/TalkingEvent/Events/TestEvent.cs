@@ -67,15 +67,15 @@ public class TalkingEvent : ITalkingEvent
                         {
                             _playerPanel._talkingImage.SetActive(true);
                             _playerPanel._endButton.SetActive(false);
-                            TypingSystem.instance.Typing(contents,playerComponent);
+                            TypingSystem.Instance.Typing(contents,playerComponent);
                         }
                         else if (target == "Enemy")
                         {
                             _targetPanel._talkingImage.SetActive(true);
                             _targetPanel._endButton.SetActive(false);
-                            TypingSystem.instance.Typing(contents,targetComponent);
+                            TypingSystem.Instance.Typing(contents,targetComponent);
                         }
-                        await UniTask.WaitUntil(() => TypingSystem.instance.isTypingEnd);
+                        await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
                         if (target == "Player")
                         {
                             _playerPanel._endButton.SetActive(true);
@@ -89,7 +89,7 @@ public class TalkingEvent : ITalkingEvent
                         _targetPanel._talkingImage.SetActive(false);
                         if (_textCount == _comments.Count)
                         {
-                            TypingSystem.instance.Typing(contents,playerComponent);
+                            TypingSystem.Instance.Typing(contents,playerComponent);
                         }
                         if (TypingSystem.isDialogEnd)
                         {

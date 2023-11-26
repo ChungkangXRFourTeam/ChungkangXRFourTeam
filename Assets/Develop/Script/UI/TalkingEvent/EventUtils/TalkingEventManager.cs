@@ -7,40 +7,33 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 public class TalkingEventManager : MonoBehaviour
 {
-    public bool _isEventEnd;
-    private static TalkingEventManager instance = null;
-    private Dictionary<string, ITalkingEvent> _sceneEvents;
-    public UnityEvent _sceneEvent;
-    
-    private void Awake()
-    {
-        if (null == instance)
-        {
-            instance = this;
-                
-            DontDestroyOnLoad(this.gameObject);
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+    public static bool _isEventEnd;
+    private static TalkingEventManager _instance = null;
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        _sceneEvents = new Dictionary<string, ITalkingEvent>();
-        _isEventEnd = true;
-    }
     
-
     public static TalkingEventManager Instance
     {
         get
         {
-            if (null == instance)
+            if (null == _instance)
             {
                 return null;
             }
-            return instance;
+            return _instance;
         }
+    }
+
+   public static void Init()
+    {
+        if (_instance)
+        {
+            Destroy(_instance.gameObject);
+            _instance = null;
+        }
+
+        _instance = new GameObject("[FadeEventChanger]").AddComponent<TalkingEventManager>();
+        DontDestroyOnLoad(_instance.gameObject);
+        _isEventEnd = true;
     }
     
     public async UniTask InvokeCurrentEvent(ITalkingEvent sceneEvent)
@@ -59,15 +52,6 @@ public class TalkingEventManager : MonoBehaviour
     }
     
     
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        switch (scene.name)
-        {
-            case "Tutorial":
-                _sceneEvents.TryAdd("StartTutorial", new TutorialCutscene());
-                break;
-        }
-    }
 
     
 }

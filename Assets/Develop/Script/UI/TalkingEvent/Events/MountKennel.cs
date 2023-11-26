@@ -102,7 +102,7 @@ public class MountKennelEvent : ITalkingEvent
         
         AsyncOperation result =  SceneManager.LoadSceneAsync(_sceneName);
         
-        TalkingEventManager.Instance._isEventEnd = true;
+        TalkingEventManager._isEventEnd = true;
         while (!result.isDone)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(Time.fixedTime));

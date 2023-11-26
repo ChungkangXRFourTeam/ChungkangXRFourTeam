@@ -5,15 +5,11 @@ using Cinemachine;
 public class VirtualCameraShaker : MonoBehaviour
 {
     private static VirtualCameraShaker _instance;
-    private static CinemachineVirtualCamera _cinemachineVirtualCamera;
-    private static CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin;
+    private CinemachineVirtualCamera _cinemachineVirtualCamera;
+    private CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin;
     private float shakeTimer;
     private float startingIntensity;
     private float shakeTimerTotal;
-    private void Awake()
-    {
-
-    }
 
     public static void Init()
     {
@@ -25,9 +21,6 @@ public class VirtualCameraShaker : MonoBehaviour
 
         _instance = new GameObject("[VirtualCameraShaker]").AddComponent<VirtualCameraShaker>();
         DontDestroyOnLoad(_instance.gameObject);
-        _cinemachineVirtualCamera = GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineVirtualCamera>();
-        cinemachineBasicMultiChannelPerlin =
-            _cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
     public static VirtualCameraShaker Instance
@@ -41,9 +34,11 @@ public class VirtualCameraShaker : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
-        CameraShake(1f,1f,10f);
+        _cinemachineVirtualCamera = GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineVirtualCamera>();
+        cinemachineBasicMultiChannelPerlin =
+            _cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
     public void CameraShake(float duration, float intensity = 1f, float frequency = 1f)

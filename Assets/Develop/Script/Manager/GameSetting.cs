@@ -14,6 +14,9 @@ public class GameSetting : MonoBehaviour
         EffectManager.Init();
         SoundManager.Init();
         VirtualCameraShaker.Init();
+        EventFadeChanger.Init();
+        TalkingEventManager.Init();
+        TypingSystem.Init();
 
 #if UNITY_EDITOR
         Application.targetFrameRate = 60;
