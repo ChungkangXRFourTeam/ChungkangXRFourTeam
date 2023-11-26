@@ -11,6 +11,8 @@ internal class SoundScheduler : MonoBehaviour
     private LinkedList<SoundScheduleItem> _scheduledList = new();
     private LinkedList<SoundScheduleItem> _pendingList = new();
 
+    private bool _isReleased = false;
+
     internal void Init(int defaultPoolSize = 5)
     {
         for (int i = 0; i < defaultPoolSize; i++)
@@ -37,6 +39,8 @@ internal class SoundScheduler : MonoBehaviour
         _unusedPool = null;
         _scheduledList = null;
         _pendingList = null;
+
+        _isReleased = true;
     }
     private void TryReAllocPool()
     {
@@ -83,9 +87,9 @@ internal class SoundScheduler : MonoBehaviour
 
     private void LateUpdate()
     {
-        LinkedListNode<SoundScheduleItem> currentNode = null;
+        if (_isReleased) return;
         
-
+        LinkedListNode<SoundScheduleItem> currentNode = null;
         currentNode = _pendingList.First;
 
         while (currentNode != null)

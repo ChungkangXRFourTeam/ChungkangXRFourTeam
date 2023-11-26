@@ -34,6 +34,7 @@ public class SoundManager : MonoBehaviour
         if (_inst)
         {
             Destroy(_inst.gameObject);
+            Destroy(_inst._scheduler.gameObject);
             _inst = null;
         }
 
@@ -110,7 +111,7 @@ public class SoundManager : MonoBehaviour
     #region private
     private void OnDestroy()
     {
-        _inst._scheduler.Release();
+        _inst?._scheduler?.Release();
         _tableDict = null;
         _volumeDict = null;
         _tables = null;
