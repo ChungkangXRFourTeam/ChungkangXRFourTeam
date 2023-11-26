@@ -15,7 +15,9 @@ public class PlayerMeleeAttackData : ScriptableObject
     [SerializeField] private Vector2 _slashHitOffsetHit2;
     [SerializeField] private Vector2 _slashHitOffsetHit3;
     
-    [SerializeField] private Vector2 _slashEffectScale;
+    [SerializeField] private Vector2 _slashEffectScale1;
+    [SerializeField] private Vector2 _slashEffectScale2;
+    [SerializeField] private Vector2 _slashEffectScale3;
     [SerializeField] private float _attackDelay = 0.5f;
     [SerializeField] private int _attackMaxCount = 3;
     [SerializeField] private float slashHitRadiusHit1;
@@ -31,7 +33,9 @@ public class PlayerMeleeAttackData : ScriptableObject
     public Vector2 SlashHitOffsetHit2 => _slashHitOffsetHit2;
     public Vector2 SlashHitOffsetHit3 => _slashHitOffsetHit3;
 
-    public Vector2 SlashEffectScale => _slashEffectScale;
+    public Vector2 SlashEffectScale1 => _slashEffectScale1;
+    public Vector2 SlashEffectScale2 => _slashEffectScale2;
+    public Vector2 SlashEffectScale3 => _slashEffectScale3;
 
     public float AttackDelay => _attackDelay;
     public float SlashHitRadiusHit1 => slashHitRadiusHit1;

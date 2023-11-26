@@ -78,7 +78,6 @@ public class PlayerMoveStrategy : IStrategy
         var jumpingVector = upDir * _data.JumpForce;
         var fallingVector = downDir * _data.DownForce;
 
-        Debug.Log(PlayerAnimationState.AniIsAttacking);
         if ((_attackAction.IsPressed() || PlayerAnimationState.AniIsAttacking) && isGrounded == true) return;
         
         if (!isGrounded)

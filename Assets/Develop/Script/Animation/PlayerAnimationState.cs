@@ -65,20 +65,23 @@ public class PlayerAnimationState : MonoBehaviour
     public void OnHitTimingBegin(int i)
     {
         var data = _playerController.MeleeAttackData;
+
+        string properties = _playerController.Properties == EActorPropertiesType.Flame ? "flame" : "water";
         
         if (i == 1)
         {
             Hit(data.SlashEffectOffsetHit1, data.SlashHitRadiusHit1);
+            //Effect(data.SlashEffectOffsetHit1, data.SlashEffectScale1, "player/");
         }
         else if (i == 2)
         {
             Hit(data.SlashEffectOffsetHit2, data.SlashHitRadiusHit2);
-            Effect(data.SlashEffectOffsetHit2);
+            Effect(data.SlashEffectOffsetHit2, data.SlashEffectScale2, $"player/attack2_{properties}");
         }
         else if (i == 3)
         {
             Hit(data.SlashEffectOffsetHit3, data.SlashHitRadiusHit3);
-            Effect(data.SlashEffectOffsetHit3);
+            Effect(data.SlashEffectOffsetHit3, data.SlashEffectScale3, $"player/attack3_{properties}");
         }
     }
 
@@ -133,7 +136,7 @@ public class PlayerAnimationState : MonoBehaviour
         StartCoroutine(state());
     }
 
-    private void Effect(Vector2 offset)
+    private void Effect(Vector2 offset, Vector2 scale, string key)
     {
         var data = _playerController.MeleeAttackData;
         var mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -141,18 +144,17 @@ public class PlayerAnimationState : MonoBehaviour
         pos.z = mp.z = 0f;
             
         var dir = mp - pos;
-        bool flipX = dir.x > 0f;
 
-        var scale = data.SlashEffectScale;
-        scale.x *= flipX ? -1f : 1f;
+        var rotation = transform.rotation;
 
         offset.x *= -1f;
         pos += (transform.rotation * offset);
         
         EffectManager.ImmediateCommand(new EffectCommand()
         {
-            EffectKey = "player/swordSlash",
+            EffectKey = key,
             Position = pos,
+            Rotation = rotation,
             Scale = scale,
             OnContractActor = (item, info) =>
             {
