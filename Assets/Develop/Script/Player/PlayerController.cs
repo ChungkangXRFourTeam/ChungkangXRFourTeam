@@ -171,6 +171,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
         fsmBlackboard
             .AddProperty("out_strategyExecutor", strategyExecutor)
             .AddProperty("out_aniController", _aniController)
+            .AddProperty("out_interaction", _interaction)
             ;
 
         _stateExecutor = StateExecutor.Create(stateContainer, fsmBlackboard);

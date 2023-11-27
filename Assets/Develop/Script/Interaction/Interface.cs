@@ -108,6 +108,7 @@ public interface IBEnemyState : IActorBehaviour
 public interface IBActorThrowable : IActorBehaviour
 {
     public bool IsThrowable { get; }
+    public void Throw(ActorContractInfo info);
 }
 #endregion
 

@@ -67,6 +67,11 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
     }
 
     public bool IsThrowable => _isThrowable;
+    public void Throw(ActorContractInfo info)
+    {
+        
+    }
+
     public void SetThrowable(bool value) => _isThrowable = value;
 
     public EActorPropertiesType Properties

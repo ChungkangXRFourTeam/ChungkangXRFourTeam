@@ -46,6 +46,13 @@ public class PlayerShootState : BaseState
             {
                 attackable.IsAttackable = true;
             }
+            
+            if (currentActorPhysics.Interaction.TryGetContractInfo(out ActorContractInfo actorContractInfo2) &&
+                actorContractInfo2.TryGetBehaviour(out IBActorThrowable throwable))
+            {
+                blackboard.GetProperty("out_interaction", out InteractionController inter);
+                throwable.Throw(inter.ContractInfo as ActorContractInfo);
+            }
 
         }
         

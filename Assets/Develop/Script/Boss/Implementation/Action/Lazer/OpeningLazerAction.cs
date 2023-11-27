@@ -26,16 +26,6 @@ namespace XRProject.Boss
             targetPos = (Vector2)playerTransform.position + Vector2.up * 5f;
             points1 = GetAcrossPoints(targetPos + Vector2.one * BaseData.Distance);
             points2 = GetAcrossPoints(targetPos + -Vector2.one * BaseData.Distance);
-
-            
-            lazer.SetLinePosition(0, points1.Item1.Item1, points1.Item1.Item2);
-            lazer.SetLinePosition(1, points1.Item2.Item1, points1.Item2.Item2);
-            lazer.SetLinePosition(2, points2.Item1.Item1, points2.Item1.Item2);
-            lazer.SetLinePosition(3, points2.Item2.Item1, points2.Item2.Item2);
-
-            yield return DoCoAttackColoring(0, 4);
-            yield return DoAttackColoring(0, 4);
-            yield return DoClearColoring(0, 4);
         }
 
     }

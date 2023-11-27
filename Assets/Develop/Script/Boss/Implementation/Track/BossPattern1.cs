@@ -11,36 +11,27 @@ namespace XRProject.Boss
             var cTrack = new Track();
 
             cTrack
-                .AddAction(new OpeningBossAction(transform, ingredients.BaseLazerData))
+                .AddAction(new MeleePositionAction(ingredients))
+                
+                .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
+                .AddAction(new DelayAction(1f))
+                .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
+                .AddAction(new DelayAction(1f))
+                .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
+                .AddAction(new DelayAction(1f))
+                .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
                 .AddAction(new DelayAction(1f))
                 
-                .AddAction(new RandomBossAction(transform, ingredients.BaseLazerData))
-                .AddAction(new DelayAction(2f))
-                .AddAction(new RandomBossAction(transform, ingredients.BaseLazerData))
-                .AddAction(new DelayAction(2f))
-                .AddAction(new RandomBossAction(transform, ingredients.BaseLazerData))
-                .AddAction(new DelayAction(2f))
-                .AddAction(new RandomBossAction(transform, ingredients.BaseLazerData))
-                .AddAction(new DelayAction(2f))
-                .AddAction(new RandomBossAction(transform, ingredients.BaseLazerData))
-                .AddAction(new DelayAction(2f))
-                
-                
-                .AddAction(new MeleePositionAction(ingredients))
                 .AddAction(new MeleeAction(transform, ingredients, 0))
-                .AddAction(new MeleeAction(transform, ingredients, 1))
-                .AddAction(new DelayAction(0.5f))
+                .AddAction(new DropBoltBossAction(transform, ingredients))
+                .AddAction(new DelayAction(0.15f))
                 
-                .AddAction(new MeleeAction(transform, ingredients, 0))
                 .AddAction(new MeleeAction(transform, ingredients, 1))
-                .AddAction(new DelayAction(0.5f))
-                
-                .AddAction(new MeleeAction(transform, ingredients, 0))
-                .AddAction(new MeleeAction(transform, ingredients, 1))
-                .AddAction(new DelayAction(0.5f))
+                .AddAction(new DropBoltBossAction(transform, ingredients))
+                .AddAction(new DelayAction(0.15f))
                 ;
 
-            cTrack.Predicate = new RepeatPredicate() { Index = 2};
+            cTrack.Predicate = new RepeatPredicate() { Index = 1 };
             
             return cTrack;
         }

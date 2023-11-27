@@ -34,16 +34,16 @@ namespace XRProject.Boss
             var rightMidPoint = GetInPointFromDelta(right.Item1, right.Item2, 0.5f);
             
             
-            lazer.SetLinePosition(0, topPoint, leftBottomPoint);
-            lazer.SetLinePosition(1, topPoint, rightBottomPoint);
-            lazer.SetLinePosition(2, leftMidPoint, rightBottomPoint);
-            lazer.SetLinePosition(3, leftMidPoint, rightMidPoint);
-            lazer.SetLinePosition(4, leftBottomPoint, rightMidPoint);
+            //lazer.SetLinePosition(0, topPoint, leftBottomPoint);
+            //lazer.SetLinePosition(1, topPoint, rightBottomPoint);
+            //lazer.SetLinePosition(2, leftMidPoint, rightBottomPoint);
+            //lazer.SetLinePosition(3, leftMidPoint, rightMidPoint);
+            //lazer.SetLinePosition(4, leftBottomPoint, rightMidPoint);
             
             
-            yield return DoCoAttackColoring(0, iter - 1);
-            yield return DoAttackColoring(0, iter - 1);
-            yield return DoClearColoring(0, iter - 1);
+            //yield return DoCoAttackColoring(0, iter - 1);
+            //yield return DoAttackColoring(0, iter - 1);
+            //yield return DoClearColoring(0, iter - 1);
             
             
             yield break;
