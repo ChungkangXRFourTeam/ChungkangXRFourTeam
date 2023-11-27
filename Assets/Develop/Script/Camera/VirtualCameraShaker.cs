@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Cinemachine;
 
@@ -9,6 +10,7 @@ public class VirtualCameraShaker : MonoBehaviour
     private CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin;
     private float shakeTimer;
     private float startingIntensity;
+    private float startingFrequency;
     private float shakeTimerTotal;
 
     public static void Init()
@@ -39,38 +41,42 @@ public class VirtualCameraShaker : MonoBehaviour
         _cinemachineVirtualCamera = GameObject.FindWithTag("VirtualCamera")?.GetComponent<CinemachineVirtualCamera>();
         cinemachineBasicMultiChannelPerlin =
             _cinemachineVirtualCamera?.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        
+
     }
 
     public void CameraShake(float duration, float intensity = 1f, float frequency = 1f)
     {
-
+        StopCoroutine("ShakeCamera");
         cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = intensity;
         cinemachineBasicMultiChannelPerlin.m_FrequencyGain = frequency;
-        
+
         startingIntensity = intensity;
+        startingFrequency = frequency;
+        
         shakeTimer = duration;
         shakeTimerTotal = duration;
-        
 
+        StartCoroutine("ShakeCamera");
 
     }
-
-    private void Update()
+    IEnumerator ShakeCamera()
     {
         if (_cinemachineVirtualCamera)
         {
-            if (shakeTimer > 0)
+            while (shakeTimer > 0)
             {
-                shakeTimer -= Time.deltaTime;
-                startingIntensity -= Time.deltaTime;
+                shakeTimer -= Time.unscaledDeltaTime;
                 cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 
-                    Mathf.Lerp(startingIntensity,0f,shakeTimer/shakeTimerTotal);
+                    Mathf.Lerp( 0f,startingIntensity,shakeTimer/shakeTimerTotal);
+                cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 
+                    Mathf.Lerp(0f ,startingFrequency,shakeTimer/shakeTimerTotal);
+                
+                yield return new WaitForSeconds(Time.unscaledDeltaTime);
             }
-            else if (cinemachineBasicMultiChannelPerlin.m_AmplitudeGain != 0)
-            {
-                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0;
-                cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
-            }
+
+            cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0;
+            cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
         }
     }
 }

@@ -55,10 +55,15 @@ public class EventStarter : MonoBehaviour
             case "Landing":
                 TalkingEventManager.Instance.InvokeCurrentEvent(new LandingKennelEvent()).Forget();
                 break;
+            case "Ending":
+                TalkingEventManager.Instance.InvokeCurrentEvent(new EndingEvent()).Forget();
+                break;
         }
 
         _collider.enabled = false;
     }
+    
+    
     
     
 }
