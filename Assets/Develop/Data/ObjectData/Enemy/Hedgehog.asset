@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: Hedgehog
   m_EditorClassIdentifier: 
   _hp: 5
-  _movementSpeed: 5
+  _movementSpeed: 2.5
   _SleepDecisionTime: 0.01
-  _propagationForce: 50
-  _propagationCount: 5
+  _propagationForce: 40
+  _propagationCount: 3
   _flameColor: {r: 0, g: 0, b: 0, a: 0}
   _waterColor: {r: 0, g: 0, b: 0, a: 0}
-  _detectionDistance: 12.95
-  _attackDistance: 6
-  _damage: 1
+  _detectionDistance: 10.3
+  _attackDistance: 3.5
+  _damage: 0.5
   _sheepAttackSpeed: 0
   _hedgehogAttackDuration: 2
   _hedgehogAttackTick: 0.5

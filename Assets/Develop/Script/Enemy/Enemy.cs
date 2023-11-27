@@ -45,6 +45,8 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
         set => _isCaught.Value = !value;
     }
 
+    public EEnemyType EnemyType => _enemyType;
+
     
     public event System.Action<IBActorLife, float, float> ChangedHp;
     public float MaxHp => _data.Hp;

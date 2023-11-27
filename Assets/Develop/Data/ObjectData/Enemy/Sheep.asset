@@ -12,15 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dca92d2f0daa89469d4e3adf2c27c1f, type: 3}
   m_Name: Sheep
   m_EditorClassIdentifier: 
-  _hp: 5
-  _movementSpeed: 5
+  _hp: 9
+  _movementSpeed: 3
   _SleepDecisionTime: 0.01
-  _propagationForce: 50
-  _propagationCount: 5
+  _propagationForce: 30
+  _propagationCount: 1
   _flameColor: {r: 0, g: 0, b: 0, a: 0}
   _waterColor: {r: 0, g: 0, b: 0, a: 0}
-  _detectionDistance: 12.95
+  _detectionDistance: 9.9
   _attackDistance: 2.65
   _damage: 1
-  _attackSpeed: 1
+  _sheepAttackSpeed: 0
   _hedgehogAttackDuration: 1
+  _hedgehogAttackTick: 0
+  _hedgehogAttackOffset: {x: 0, y: 0}
