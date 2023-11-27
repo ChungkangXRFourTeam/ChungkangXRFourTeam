@@ -13,12 +13,10 @@ public class EventStarter : MonoBehaviour
     private void Awake()
     {
         _collider = GetComponent<BoxCollider2D>();
-        _fade = GameObject.FindWithTag("Fade").GetComponent<CanvasGroup>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        EventFadeChanger.Instance.ChangeFadeObject(_fade);
         if(TalkingEventManager._isEventEnd)
         switch (_eventName)
         {
