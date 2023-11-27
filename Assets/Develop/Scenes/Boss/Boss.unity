@@ -2265,6 +2265,10 @@ PrefabInstance:
       value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: baseLazerActionData.Ani
+      value: 
+      objectReference: {fileID: 1710828834}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
       propertyPath: _topBottomLazerData.OffsetTop
       value: 7
       objectReference: {fileID: 0}
@@ -8318,6 +8322,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1945940185075164737, guid: bf833a78beeceba40937e9f7850f813d, type: 3}
   m_PrefabInstance: {fileID: 459580407}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1710828834 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7739876753430436977, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+  m_PrefabInstance: {fileID: 485716673}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1716723355 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1945940185075164737, guid: bf833a78beeceba40937e9f7850f813d, type: 3}

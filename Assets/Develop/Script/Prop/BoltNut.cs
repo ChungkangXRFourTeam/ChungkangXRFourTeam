@@ -34,7 +34,7 @@ public class BoltNut : MonoBehaviour, IBActorThrowable
         _strategyExecutor = StrategyExecutor.Create(container, blackboard);
         
         Interaction.SetContractInfo(
-            ActorContractInfo.Create(transform, ()=>transform == false)
+            ActorContractInfo.Create(transform, ()=>_isdestry)
                 .AddBehaivour<IBActorPhysics>(_physicsStrategy)
                 .AddBehaivour<IBActorThrowable>(this)
         );
@@ -51,6 +51,7 @@ public class BoltNut : MonoBehaviour, IBActorThrowable
         _gravity = _rigid.gravityScale;
     }
 
+    private bool _isdestry;
     private bool fsad;
     private void Update()
     {
@@ -58,7 +59,11 @@ public class BoltNut : MonoBehaviour, IBActorThrowable
         {
             fsad = true;
             GetComponent<SpriteRenderer>().DOColor(Color.gray, 0.2f).SetLoops(10, LoopType.Yoyo).SetEase(Ease.InOutSine)
-                .OnComplete(() => Destroy(gameObject));
+                .OnComplete(() =>
+                {
+                    _isdestry = true;
+                    Destroy(gameObject);
+                });
         }
         else
         {

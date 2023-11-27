@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Spine.Unity;
 using UnityEngine;
 
 namespace XRProject.Boss
@@ -21,6 +22,7 @@ namespace XRProject.Boss
         public float AttackDuration;
         public float AttackClearDuration;
         public BossLazerController LazerController;
+        public SkeletonAnimation Ani;
     }
 
     public abstract class BaseBossAction : IAction

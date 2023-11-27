@@ -19,7 +19,10 @@ namespace XRProject.Boss
             if (playerTransform == false) yield break;
             
             Vector2 targetPos = (Vector2)playerTransform.position + Vector2.one * 0.5f;
-            
+
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Start", false);
+            yield return new WaitForSeconds(1.533f);
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Ing", true);
             
             yield return PlayMerge(
                 HorizontalPlay(0, targetPos, LazerType.Danger),
@@ -30,6 +33,9 @@ namespace XRProject.Boss
                 HorizontalPlay(0, targetPos, LazerType.Lazer),
                 VerticalPlay(0, targetPos,LazerType.Lazer)
             );
+
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_end", false);
+            yield return new WaitForSeconds(2.667f);
         }
 
     }

@@ -33,6 +33,9 @@ namespace XRProject.Boss
             var lazer = BaseData.LazerController;
             if (playerTransform == false) yield break;
 
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Start", false);
+            yield return new WaitForSeconds(1.533f);
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Ing", true);
             
             Vector2 targetPos = playerTransform.position;
 
@@ -58,6 +61,8 @@ namespace XRProject.Boss
                 arr.Add(lazer.Play(i, start, DirectionType.Vertical, LazerType.Lazer));
             }
             yield return PlayMerge(arr.ToArray());
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_end", false);
+            yield return new WaitForSeconds(2.667f);
         }
 
     }

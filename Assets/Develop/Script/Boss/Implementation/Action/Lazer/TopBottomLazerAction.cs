@@ -37,6 +37,10 @@ namespace XRProject.Boss
             var top = GetSidePoint(Vector2.up, BaseData.BoxSize.y);
             var bottom = GetSidePoint(Vector2.down, BaseData.BoxSize.y);
 
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Start", false);
+            yield return new WaitForSeconds(1.533f);
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Ing", true);
+            
             yield return PlayMerge(
                 HorizontalPlay(0, top + Vector2.down * _data.OffsetTop, LazerType.Danger),
                 HorizontalPlay(1, bottom + Vector2.up * _data.OffsetBottom , LazerType.Danger)
@@ -45,6 +49,8 @@ namespace XRProject.Boss
                 HorizontalPlay(0, top + Vector2.down * _data.OffsetTop, LazerType.Lazer),
                 HorizontalPlay(1, bottom + Vector2.up * _data.OffsetBottom, LazerType.Lazer)
             );
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_end", false);
+            yield return new WaitForSeconds(2.667f);
         }
 
     }
