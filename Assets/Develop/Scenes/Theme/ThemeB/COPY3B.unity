@@ -1683,11 +1683,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2678008514149274747, guid: 39a10733db6f2e34e89b5893ebf17e62, type: 3}
   m_PrefabInstance: {fileID: 323441892}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &391179297 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-  m_PrefabInstance: {fileID: 1208449826}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &402241222
 GameObject:
   m_ObjectHideFlags: 0
@@ -2624,7 +2619,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.84
+      value: 12.1
       objectReference: {fileID: 0}
     - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6404,67 +6399,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39a10733db6f2e34e89b5893ebf17e62, type: 3}
---- !u!1001 &1208449826
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1821903456}
-    m_Modifications:
-    - target: {fileID: 62076409948526310, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: m_Name
-      value: Hedgehog (3)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1175697455308161934, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: _properties
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 13.69
-      objectReference: {fileID: 0}
-    - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2923560511360184219, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 35a7f43dfb8468a48a0a96ea2a9e8664, type: 3}
 --- !u!4 &1211930643 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3394837069186604783, guid: 5322cb376e889234d963758e381aa9e2, type: 3}
@@ -9600,7 +9534,6 @@ Transform:
   - {fileID: 844095084}
   - {fileID: 572674376}
   - {fileID: 838298911}
-  - {fileID: 391179297}
   - {fileID: 1535036711}
   - {fileID: 1449073774}
   - {fileID: 412369971}
