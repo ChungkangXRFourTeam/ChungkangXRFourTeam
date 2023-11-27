@@ -73,6 +73,11 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive, IBObjectKnock
 
     public void OnContractActor(ActorContractInfo info)
     {
+        if(info.Transform.TryGetComponent<Enemy>(out var e))
+        {
+            if (e.EnemyType == EEnemyType.Sheep) return;
+        }
+
         DoKnockback(info);
 
         if (info.Transform.TryGetComponent(out PlayerController pc) &&
