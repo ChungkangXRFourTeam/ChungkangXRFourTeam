@@ -35,6 +35,11 @@ public interface IBObjectDiaryItem : IObjectBehaviour
     public int PageID { get; }
 }
 
+public interface IBObjectHealStation : IObjectBehaviour
+{
+    public void Heal(ActorContractInfo target);
+}  
+
 public interface IBObjectKnockback : IObjectBehaviour
 {
     public EActorPropertiesType Properties { get; }
@@ -76,7 +81,7 @@ public interface IBActorProperties : IActorBehaviour
 public interface IBActorLife : IActorBehaviour
 {
     public float MaxHp { get; }
-    public float CurrentHP { get; }
+    public float CurrentHP { get; set; }
     public event System.Action<IBActorLife, float, float> ChangedHp;
     public void Die();
 }
