@@ -5,8 +5,11 @@ using Cinemachine;
 using Unity.Mathematics;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System.Threading;
 using TMPro;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
+using Range = UnityEngine.SocialPlatforms.Range;
 
 public class EndingEvent : ITalkingEvent
 {
@@ -43,98 +46,24 @@ public class EndingEvent : ITalkingEvent
     protected int _textCount;
     
     public async UniTask OnEventBefore()
-    { 
-        _scriptPath += "Ending/OpenEnd1";
-        _eventTexts = CSVReader.Read(_scriptPath);
-        _comments = new List<string>();
-        
-        for (int i = 0; i < _eventTexts.Count; i++)
-        {
-            _comments.Add(_eventTexts[i][EventTextType.Content.ToString()].ToString());
-        }
-        
-        await UniTask.Delay(TimeSpan.FromSeconds(Time.deltaTime));
-        _virtualCamera = GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineVirtualCamera>();
-        _cinemachineFramingTransposer = _virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-        _cinemachineConfiner = GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineConfiner>();
-        _confiner = GameObject.Find("Confiner").GetComponent<PolygonCollider2D>();
-        _cinemachineConfiner.m_BoundingShape2D = null;
-        _cinemachineFramingTransposer.m_YDamping = 0;
-        
-        _sceneChangeImage = GameObject.Find("SceneChangeImage");
-        _upWall = GameObject.Find("UpWall");
-        _boss = GameObject.FindWithTag("Boss");
-        _boss.SetActive(false);
-        InputManager.Instance.DisableMainGameAction();
-        InputManager.Instance.InitTalkEventAction();
+    {
 
-        startPos = GameObject.FindWithTag("ThemeStart").transform;
+        _player = GameObject.FindGameObjectWithTag("Player");
+        _observer = GameObject.FindGameObjectWithTag("Boss");
         
-        _player = GameObject.FindWithTag("Player");
-        _observer = GameObject.FindWithTag("Observer");
-        
-        _observerBezier = _observer.GetComponent<BezierTransform>();
-        _playerBezier = _player.GetComponent<BezierTransform>();
-        
-        _playerPanel = GameObject.FindGameObjectWithTag("Player").GetComponent<TalkingPanelInfo>();
-        _targetPanel = GameObject.FindWithTag("Observer").GetComponent<TalkingPanelInfo>();
-        _kennel = GameObject.FindWithTag("Kennel");
-        _kennelRenderer = _kennel.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
-        _kennelPos = _kennel.transform.position;
-
-        _playerAnimationController = _player.GetComponent<PlayerAnimationController>();
-
-        _playerBezier.simulated = true;
-        _playerBezier.enabled = false;
-        _observerBezier.simulated = true;
-        _observerBezier.enabled = false;
-        
-
         await UniTask.Yield();
     }
 
     public async UniTask OnEventStart()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(Time.deltaTime));
-        
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Falling_Dash,
-            Rotation = Quaternion.Euler(0,0,0),
-            Restart = true
-        });
-        
-
+ 
+        await UniTask.Yield();
     }
 
     public async UniTask OnEvent()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
-        _player.transform.rotation = quaternion.Euler(0, 0, 0);
-        await UniTask.WaitUntil(() => _player.transform.position.y < startPos.position.y + 5f);
-        _cinemachineFramingTransposer.m_YDamping = 1;
-        _cinemachineConfiner.m_BoundingShape2D = _confiner;
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Landing_Dash,
-            Rotation = Quaternion.Euler(0,180,0),
-            Restart = true
-        });
-
-        await UniTask.Delay(TimeSpan.FromSeconds(0.7f));
-
-        await MoveToPosition(_player, new Vector2(_player.transform.position.x + 5, 0),0.1f);
+        ShakeCamera().Forget();
         
-        Color kennelColor = _kennelRenderer.color;
-        
-        
-        while (_kennelRenderer.color.a >= 0)
-        {
-            _kennelRenderer.color = new Color(kennelColor.r, kennelColor.g, kennelColor.b, _kennelRenderer.color.a - 0.05f);
-            await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
-        }
-        _kennel.SetActive(false);
-
         InputAction action = InputManager.GetTalkEventAction("NextText");
         if (action != null)
         {
@@ -147,16 +76,6 @@ public class EndingEvent : ITalkingEvent
                 SetEndbutton(target);
                 await UniTask.WaitUntil(() => action.WasPressedThisFrame());
                 ClosePanel(target);
-
-                if (_textCount == 2)
-                {
-                    _observerBezier.enabled = true;
-                    _playerBezier.enabled = true;
-                    _observerBezier.startAnimation();
-                    await UniTask.Delay(TimeSpan.FromSeconds(0.23f));
-                    _playerBezier.startAnimation();
-                    await UniTask.Delay(TimeSpan.FromSeconds(1.0f));
-                }
             }
             
             EventFadeChanger.Instance.FadeIn(2.0f);
@@ -171,23 +90,12 @@ public class EndingEvent : ITalkingEvent
             await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha <= 0f);
             
         }
-        
         await UniTask.Yield();
         
     }
     
     public async UniTask OnEventEnd()
     {
-        
-        _playerPanel._panel.SetActive(false);
-        
-        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
-        
-        _cinemachineFramingTransposer.m_YDamping = 1;
-        
-        startPos.gameObject.SetActive(false);
-        
-        _boss.SendMessage("EngaugeBoss",SendMessageOptions.DontRequireReceiver);
         
         InputManager.Instance.DisableTalkEventAction();
         InputManager.Instance.InitMainGameAction();
@@ -271,6 +179,23 @@ public class EndingEvent : ITalkingEvent
                 _targetPanel._panel.SetActive(false);
                 break;
                 
+        }
+    }
+
+    async UniTaskVoid ShakeCamera()
+    {
+        while (!TalkingEventManager._isEventEnd)
+        {
+            float NextShakeTime = Random.Range(3f, 5f);
+
+            await UniTask.Delay(TimeSpan.FromSeconds(NextShakeTime));
+
+            float shakeDuration = Random.Range(1f, 3f);
+            float shakeIntensity = 5f;
+            float shakeFrequency = 1f;
+            VirtualCameraShaker.Instance.CameraShake(shakeDuration,shakeIntensity,shakeFrequency);
+            
+            await UniTask.Delay(TimeSpan.FromSeconds(shakeDuration));
         }
     }
 }
