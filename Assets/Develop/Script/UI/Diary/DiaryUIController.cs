@@ -44,9 +44,29 @@ public class DiaryUIController : MonoBehaviour, IUIController
     public void AddPage(int index)
     {
         if (_collectedPages.Contains(index)) return;
-        _collectedPages.AddLast(index);
 
-        _currentNode = _collectedPages.Last;
+        var node = _collectedPages.Last;
+        if (node == null)
+        {
+            _collectedPages.AddLast(index);
+            _currentNode = _collectedPages.Last;
+        }
+        else
+        {
+            bool find = false;
+            while (node != null)
+            {
+                if (index < node.Value)
+                {
+                    find = true;
+                    _currentNode = _collectedPages.AddAfter(node, index);
+                    break;
+                }
+                node = node.Next;
+            }
+
+            if (!find) _currentNode = _collectedPages.AddLast(index);
+        }
     }
     public void Activate()
     {

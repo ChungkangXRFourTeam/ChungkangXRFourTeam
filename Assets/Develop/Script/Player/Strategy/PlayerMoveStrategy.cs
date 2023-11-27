@@ -25,7 +25,7 @@ public class PlayerMoveStrategy : IStrategy
 
         if (TalkingEventManager.Instance && !TalkingEventManager._isEventEnd)
             dir = Vector2.zero;
-
+        
         return dir * _data.MovementSpeed;
     }
     
@@ -48,6 +48,8 @@ public class PlayerMoveStrategy : IStrategy
     private Sequence _inputLockSequence;
     public void Update(Blackboard blackboard)
     {
+        var uiMgr = GameObject.Find("UIManager")?.GetComponent<UIManager>();
+        if (uiMgr && uiMgr.Empty() == false) return;
         
         blackboard.GetUnWrappedProperty("out_isGrounded", out bool isGrounded);
         if (_inputLock)

@@ -19,7 +19,7 @@ public class UIManager : MonoBehaviour
 
     private Dictionary<string, IUIController> _viewTable;
     private Stack<IUIController> _stack;
-
+    
     private void Start()
     {
         _viewTable = new();
@@ -87,23 +87,27 @@ public class UIManager : MonoBehaviour
         if(Empty() == false)
             _stack.Peek().DeActivate();
         
+        InputManager.Instance?.DisableMainGameAction();
+        
         _stack.Push(controller);
         controller.Activate();
     }
 
     private IUIController Pop()
     {
-        
         var com = _stack.Pop();
-        
-        if(Empty() == false)
+
+        if (Empty() == false)
+        {
             _stack.Peek().Activate();
+            InputManager.Instance?.InitMainGameAction();
+        }
         
         com.DeActivate();
         return com;
     }
 
-    private bool Empty() => _stack.Count == 0;
+    public bool Empty() => _stack.Count == 0;
 
 
 }

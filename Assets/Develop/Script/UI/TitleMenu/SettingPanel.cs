@@ -31,13 +31,11 @@ public class SettingPanel : MonoBehaviour, IUIController
     public void Activate()
     {
         gameObject.SetActive(true);
-        InputManager.Instance?.DisableMainGameAction();
     }
 
     public void DeActivate()
     {
         gameObject.SetActive(false);
-        InputManager.Instance?.InitMainGameAction();
     }
     
     // Unity Events Functions
