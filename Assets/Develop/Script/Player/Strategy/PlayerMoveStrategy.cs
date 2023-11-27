@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -49,7 +50,11 @@ public class PlayerMoveStrategy : IStrategy
     public void Update(Blackboard blackboard)
     {
         var uiMgr = GameObject.Find("UIManager")?.GetComponent<UIManager>();
-        if (uiMgr && uiMgr.Empty() == false) return;
+        if (uiMgr && uiMgr.Empty() == false)
+        {
+            dir = Vector2.zero;
+            return;
+        }
         
         blackboard.GetUnWrappedProperty("out_isGrounded", out bool isGrounded);
         if (_inputLock)

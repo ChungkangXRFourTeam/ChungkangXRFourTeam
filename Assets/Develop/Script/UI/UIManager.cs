@@ -89,6 +89,7 @@ public class UIManager : MonoBehaviour
         
         InputManager.Instance?.DisableMainGameAction();
         
+        
         _stack.Push(controller);
         controller.Activate();
     }
@@ -100,6 +101,9 @@ public class UIManager : MonoBehaviour
         if (Empty() == false)
         {
             _stack.Peek().Activate();
+        }
+        else
+        {
             InputManager.Instance?.InitMainGameAction();
         }
         

@@ -70,6 +70,8 @@ public class TitleMenuManger : MonoBehaviour
         PlayerPrefs.Save();
         if(_settingPanel.activeSelf)
             _settingPanel.SetActive(false);
+        
+        GameObject.Find("UIManager")?.GetComponent<UIManager>()?.Clear();
     }
 
     public void OpenSettingPanel()
