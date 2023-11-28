@@ -18,9 +18,8 @@ public class DeathEvent : ITalkingEvent
     private CanvasGroup _testCaseText;
     public async UniTask OnEventBefore()
     {
-        GameObject.FindWithTag("Fade").transform.parent.GetChild(1).gameObject.SetActive(true);
-        _testCaseText = GameObject.FindWithTag("Fade").transform.parent.GetChild(1).GetComponent<CanvasGroup>();
-        GameObject.FindWithTag("Fade").transform.parent.GetChild(1).GetComponent<TextMeshProUGUI>().text =
+        _testCaseText = GameObject.FindWithTag("Fade").GetComponentInChildren<CanvasGroup>();
+        GameObject.FindWithTag("Fade").GetComponentInChildren<TextMeshProUGUI>().text =
             "TestCase : ";
         _testCaseText.alpha = 0;
         await UniTask.Yield();
