@@ -133,6 +133,7 @@ public class PlayerAnimationState : MonoBehaviour
 
         _playerController.SetPropertiesCount(_playerController.Interaction.ContractInfo,_playerController.RemainingPropertie - 1);
         enemy.DoHit(_interaction.ContractInfo,damage);
+        VirtualCameraShaker.Instance.CameraShake(0.25f, 3f, 1f);
     }
 
     private bool _isAttacking;
