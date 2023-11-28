@@ -12,6 +12,13 @@ using UnityEngine.UI;
 
 public class TutorialCutscene : ITalkingEvent
 {
+
+    private List<Transform> _cartoons;
+
+    private Transform _cartoon00_Pos;
+    private Transform _cartoon01_Pos;
+    private Transform _cartoon03_Pos;
+
     
     private GameObject _image1; 
     private GameObject _image2; 
@@ -28,7 +35,7 @@ public class TutorialCutscene : ITalkingEvent
 
     private GameObject _player;
     private Rigidbody2D _playerRigid;
-    private PlayerAnimationController _playerAnim;
+    private PlayerEventAnimationController _eventAnimationController;
 
     private float _imageScrollSpeed = 5.0f;
 
@@ -48,10 +55,23 @@ public class TutorialCutscene : ITalkingEvent
     private string[] contents;
     public async UniTask OnEventBefore()
     {
-        _player = GameObject.FindGameObjectWithTag("Player");
         
-        _playerAnim = _player.GetComponent<PlayerAnimationController>();
+        _player = GameObject.FindGameObjectWithTag("Player");
+        EventFadeChanger.Instance.FadeOut(1);
+        _eventAnimationController = _player.GetComponent<PlayerEventAnimationController>();
+        _eventAnimationController.EnableEventAnimatorController();
         _playerRigid = _player.GetComponent<Rigidbody2D>();
+        
+        Transform cartoonCanvas = GameObject.Find("Cartoon").transform;
+        _cartoons = new();
+        for (int i = 0; i < 9; i++)
+        {
+            _cartoons.Add(cartoonCanvas.GetChild(i));
+        }
+
+        _cartoon00_Pos = GameObject.Find("CartoonPos").transform.GetChild(0);
+        _cartoon01_Pos = GameObject.Find("CartoonPos").transform.GetChild(1);
+        _cartoon03_Pos = GameObject.Find("CartoonPos").transform.GetChild(2);
         
         _nonTargetPanel = GameObject.Find("Facing CutScene").GetComponent<TalkingPanelInfo>();
         _blurPanel = GameObject.Find("BlurPanel").GetComponent<TalkingPanelInfo>();
@@ -64,8 +84,7 @@ public class TutorialCutscene : ITalkingEvent
             _comments.Add(_eventTexts[i][EventTextType.Content.ToString()].ToString());
         }
         
-        _fade = GameObject.FindWithTag("Fade"); 
-        EventFadeChanger.Instance.Fade_img = _fade.GetComponent<CanvasGroup>();
+        _fade = GameObject.FindWithTag("Fade");
         _cutscene = GameObject.FindGameObjectWithTag("CutScene");
         _image1 = _cutscene.transform.Find("Image 1").gameObject;
         _image2 = _cutscene.transform.Find("Image 2").gameObject;
@@ -73,8 +92,8 @@ public class TutorialCutscene : ITalkingEvent
 
         _image1Dest = _image1.transform.position;
         _image2Dest = _image2.transform.position;
-        _image1Start = GameObject.Find("Image1Start").transform.position;
-        _image2Start = GameObject.Find("Image2Start").transform.position;
+        _image1Start = _cutscene.transform.Find("Image1Start").transform.position;
+        _image2Start = _cutscene.transform.Find("Image2Start").transform.position;
 
         _eyeVolume = GameObject.Find("CutsceneVolume").GetComponent<Volume>();
         _eyeVolumeProfile = _eyeVolume.sharedProfile;
@@ -113,16 +132,97 @@ public class TutorialCutscene : ITalkingEvent
         InputManager.Instance.InitTalkEventAction();
         
         await UniTask.Yield();
-        //EventFadeChanger.Instance.FadeIn(0.5f,0.7f);
-        //await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 0.7f);
     }
 
     public async UniTask OnEvent()
     {
         string target;
-        await UniTask.Delay(TimeSpan.FromSeconds(3.0f));
-        contents = _comments.ToArray();
+        
         InputAction action = InputManager.GetTalkEventAction("NextText");
+        
+        await UniTask.Delay(TimeSpan.FromSeconds(1.0f));
+
+            for (int i = 0; i < _cartoons.Count; i++)
+            {
+                float total = 1f;
+                float time = 1f;
+
+                while (time > 0)
+                {
+                    time -= Time.unscaledDeltaTime;
+
+                    switch(i)
+                    {
+                        case 0:
+                            _cartoons[i].position = Vector2.Lerp(_cartoon00_Pos.position, _cartoons[i].position, time / total);
+                            break;
+                        case 1:
+                            _cartoons[i].gameObject.SetActive(true);
+                            CanvasGroup cartoonFade_0 = _cartoons[0].gameObject.GetComponent<CanvasGroup>();
+                            CanvasGroup cartoonFade_1 = _cartoons[1].gameObject.GetComponent<CanvasGroup>();
+                            while (cartoonFade_0.alpha > 0)
+                            {
+                                cartoonFade_0.alpha -= Time.unscaledDeltaTime;
+                                cartoonFade_1.alpha += Time.unscaledDeltaTime;
+                                await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
+                            }
+                            time = 0;
+                            break;
+                        case 2:
+                            _cartoons[i].position = Vector2.Lerp(_cartoon01_Pos.position, _cartoons[i].position, time / total);
+                            break;
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                            _cartoons[i].gameObject.SetActive(true);
+                            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+                            if (i != 6) 
+                                _cartoons[i].gameObject.SetActive(false);
+                            time = 0;
+                            break;
+                        case 7:
+                            _cartoons[i].position = Vector2.Lerp(_cartoon03_Pos.position, _cartoons[i].position, time / total);
+                            break;
+                        case 8:
+                            _cartoons[i].gameObject.SetActive(true);
+                            CanvasGroup cartoonFade_8 = _cartoons[8].gameObject.GetComponent<CanvasGroup>();
+                            while (cartoonFade_8.alpha < 1)
+                            {
+                                cartoonFade_8.alpha += Time.unscaledDeltaTime;
+                                await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
+                            }
+                            time = 0;
+                            break;
+                    }
+
+                    await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
+                }
+                switch (i)
+                {
+                    case 0: 
+                    case 1:
+                    case 2:
+                    case 6: 
+                    case 7: 
+                        await UniTask.WaitUntil(() => action.WasPressedThisFrame()); 
+                        break;
+                }
+            } 
+            await UniTask.WaitUntil(() => action.WasPressedThisFrame()); 
+        EventFadeChanger.Instance.FadeIn(2.0f);
+
+        await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1);
+
+        for (int i = 0; i < _cartoons.Count; i++)
+        {
+            _cartoons[i].gameObject.SetActive(false);
+        }
+        
+        EventFadeChanger.Instance.FadeOut(2.0f);
+        await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha <= 0);
+        
+        contents = _comments.ToArray();
 
         notTalking = true; 
         if (action != null && _nonTargetPanel._eventText.TryGetComponent(out TextMeshProUGUI component)) 
@@ -265,12 +365,7 @@ public class TutorialCutscene : ITalkingEvent
         }
         
         GameObject endPosition = GameObject.Find("CutScene EndPosition");
-        _playerAnim.SetState(new PAniState()
-        {
-            Restart = false,
-            Rotation = Quaternion.Euler(0,180,0),
-            State = EPCAniState.Run
-        });
+        _eventAnimationController.PlayEventAnim(EventAnimationName.RUN);
         
         while (Mathf.Abs(_player.transform.position.x - endPosition.transform.position.x) >= 0.4f)
         {
@@ -278,17 +373,12 @@ public class TutorialCutscene : ITalkingEvent
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
         EventFadeChanger.Instance.FadeIn(0.3f);
-        _playerAnim.SetState(new PAniState()
-        {
-            Restart = false,
-            Rotation = Quaternion.identity,
-            State = EPCAniState.Idle
-        });
+        _eventAnimationController.PlayEventAnim(EventAnimationName.IDLE);
     }
 
     public async UniTask OnEventEnd()
     {
-        
+        _eventAnimationController.DisableEventAnimatorController();
         
         EventFadeChanger.Instance.FadeOut(0.7f);
 

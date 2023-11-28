@@ -29,7 +29,7 @@ public class LandingKennelEvent : ITalkingEvent
     private Rigidbody2D _playerRigid;
     private Rigidbody2D _kennelRigid;
 
-    private PlayerAnimationController _playerAnimationController;
+    private PlayerEventAnimationController _eventAnimationController;
     
     protected List<Dictionary<string, object>> _eventTexts;
     protected TalkingPanelInfo _playerPanel;
@@ -72,7 +72,8 @@ public class LandingKennelEvent : ITalkingEvent
         _playerRigid = _player.GetComponent<Rigidbody2D>();
         _kennelRigid = _kennel.GetComponent<Rigidbody2D>();
 
-        _playerAnimationController = _player.GetComponent<PlayerAnimationController>();
+        _eventAnimationController = _player.GetComponent<PlayerEventAnimationController>();
+        _eventAnimationController.EnableEventAnimatorController();
 
         await UniTask.Yield();
     }
@@ -81,12 +82,7 @@ public class LandingKennelEvent : ITalkingEvent
     {
         await UniTask.Delay(TimeSpan.FromSeconds(Time.deltaTime));
         
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Falling_Dash,
-            Rotation = Quaternion.Euler(0,0,0),
-            Restart = true
-        });
+        _eventAnimationController.PlayEventAnim(EventAnimationName.FALLING_DASH);
         
         _playerRigid.excludeLayers = Physics2D.AllLayers - (1 << 6 | 1 << 17);
         _kennelRigid.excludeLayers = Physics2D.AllLayers - (1 << 6 | 1 << 17);
@@ -112,12 +108,7 @@ public class LandingKennelEvent : ITalkingEvent
         _playerRigid.excludeLayers = 0;
         _kennelRigid.excludeLayers = 0;
         
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Landing_Dash,
-            Rotation = Quaternion.Euler(0,180,0),
-            Restart = true
-        });
+        _eventAnimationController.PlayEventAnim(EventAnimationName.FALLING_LAND);
 
         await UniTask.Delay(TimeSpan.FromSeconds(0.7f));
 
@@ -163,6 +154,7 @@ public class LandingKennelEvent : ITalkingEvent
         startPos.gameObject.SetActive(false);
         _kennel.SetActive(false);
         
+        _eventAnimationController.DisableEventAnimatorController();
         InputManager.Instance.DisableTalkEventAction();
         InputManager.Instance.InitMainGameAction();
         
@@ -172,12 +164,7 @@ public class LandingKennelEvent : ITalkingEvent
     {
         Vector2 dir = target.transform.position.x - posistion.x > 0 ? Vector2.left : Vector2.right;
         float fliped = dir.x > 0 ? 180 : 0;
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Run,
-            Rotation = Quaternion.Euler(0,fliped,0),
-            Restart = true
-        });
+        _eventAnimationController.PlayEventAnim(EventAnimationName.RUN);
         while (Mathf.Abs(target.transform.position.x - posistion.x) >= 0.1f)
         {
             if (target.CompareTag("Player"))
@@ -186,12 +173,7 @@ public class LandingKennelEvent : ITalkingEvent
         }
         
         target.transform.Rotate(0,0,0);
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Idle,
-            Rotation = Quaternion.identity,
-            Restart = false
-        });
+        _eventAnimationController.PlayEventAnim(EventAnimationName.IDLE);
     }
 
     public bool IsInvalid()
