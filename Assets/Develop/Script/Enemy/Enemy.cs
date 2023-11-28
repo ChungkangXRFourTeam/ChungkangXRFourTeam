@@ -316,11 +316,11 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
         {
             if (Properties == properties.Properties)
             {
-                damage = 1f;
+                damage = 2f;
             }
             else
             {
-                damage = 2f;
+                damage = 4f;
             }
         }
         
