@@ -10,17 +10,27 @@ namespace XRProject.Boss
         {
             var cTrack = new Track();
 
+            float speed = 0.05f;
             cTrack
                 .AddAction(new MeleePositionAction(ingredients))
                 
+                
                 .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
-                .AddAction(new DelayAction(1f))
+                .AddAction(new DelayAction(speed))
                 .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
-                .AddAction(new DelayAction(1f))
+                .AddAction(new DelayAction(speed))
                 .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
-                .AddAction(new DelayAction(1f))
+                .AddAction(new DelayAction(speed))
                 .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
-                .AddAction(new DelayAction(1f))
+                .AddAction(new DelayAction(speed))
+                .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
+                .AddAction(new DelayAction(speed))
+                .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
+                .AddAction(new DelayAction(speed))
+                .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
+                .AddAction(new DelayAction(speed))
+                .AddAction(new CrossBossAction(transform, ingredients.BaseLazerData))
+                .AddAction(new DelayAction(speed))
                 
                 .AddAction(new MeleeAction(transform, ingredients, 0))
                 .AddAction(new DropBoltBossAction(transform, ingredients))

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -14,6 +15,8 @@ namespace XRProject.Boss
     [System.Serializable]
     public class MovementActionData
     {
+        public float TraceMiniumDistance;
+        public float TraceDuration;
         public float FloatingDuration;
         public Vector2 UpOffset;
         public Vector2 DownOffset;
@@ -40,17 +43,57 @@ namespace XRProject.Boss
         {
         }
 
-        private Vector2 UpPoint => (Vector2)_transform.position + _data.UpOffset;
-        private Vector2 DownPoint => (Vector2)_transform.position + _data.DownOffset;
+        private Vector2 UpPoint => (Vector2)_data.BodyRender.position + _data.UpOffset;
+        private Vector2 DownPoint => (Vector2)_data.BodyRender.position + _data.DownOffset;
 
         public IEnumerator EValuate()
         {
             // goto up
             while (true)
             {
-                yield return _data.BodyRender.transform.DOMove(UpPoint, _data.FloatingDuration).SetEase(_data.Ease).WaitForCompletion();
-                yield return _data.BodyRender.transform.DOMove(DownPoint, _data.FloatingDuration).SetEase(_data.Ease).WaitForCompletion();
+                //if (IsFarPlayer(out var x))
+                //{
+                //    var ani = _data.BodyRender.GetComponentInChildren<SkeletonAnimation>();
+//
+                //    if (ani == false)
+                //    {
+                //        yield return null;
+                //        continue;
+                //    }
+//
+                //    if(x < 0f)
+                //        ani.AnimationState.SetAnimation(0, "Boss_Wlaking_Left", false);
+                //    else
+                //        ani.AnimationState.SetAnimation(0, "Boss_Wlaking_Right", false);
+                //    
+                //    x = Mathf.MoveTowards(_data.BodyRender.position.x, x, _data.TraceDuration);
+                //    var pos = _data.BodyRender.position;
+                //    pos.x = x;
+                //    _data.BodyRender.position = pos;
+                //    yield return new WaitForEndOfFrame();
+                //}
+                //else
+                //{
+                    yield return _data.BodyRender.transform.DOMove(UpPoint, _data.FloatingDuration).SetEase(_data.Ease).WaitForCompletion();
+                    yield return _data.BodyRender.transform.DOMove(DownPoint, _data.FloatingDuration).SetEase(_data.Ease).WaitForCompletion();
+                //}
+                
             }
+        }
+
+        private bool IsFarPlayer(out float x)
+        {
+            x = 0f;
+            var p = GameObject.FindWithTag("Player");
+            if (p == false) return false;
+
+            if (Mathf.Abs(p.transform.position.x - _data.BodyRender.position.x) > _data.TraceMiniumDistance)
+            {
+                x = p.transform.position.x;
+                return true;
+            }
+
+            return false;
         }
 
         public ITrackPredicate Predicate { get; set; }

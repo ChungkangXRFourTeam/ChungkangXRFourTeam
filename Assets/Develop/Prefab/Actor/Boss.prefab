@@ -1121,6 +1121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d87cf4eb2c28bf4caa66f502ba8c2c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _mapDoor: {fileID: 0}
   _hp: 10
   baseLazerActionData:
     CenterOffset: {x: 0, y: -1.94}
@@ -1155,6 +1156,8 @@ MonoBehaviour:
     OffsetTop: 7
     OffsetBottom: 2
   _movementData:
+    TraceMiniumDistance: 10
+    TraceDuration: 0.1
     FloatingDuration: 1.25
     UpOffset: {x: 0, y: 1}
     DownOffset: {x: 0, y: -1}
