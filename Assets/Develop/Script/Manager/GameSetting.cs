@@ -17,10 +17,8 @@ public class GameSetting : MonoBehaviour
         EventFadeChanger.Init();
         TalkingEventManager.Init();
         TypingSystem.Init();
-
-#if UNITY_EDITOR
+        
         Application.targetFrameRate = 60;
-#endif
     }
 
     private void Update()
