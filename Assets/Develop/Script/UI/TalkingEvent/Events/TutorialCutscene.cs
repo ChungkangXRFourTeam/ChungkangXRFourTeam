@@ -19,6 +19,7 @@ public class TutorialCutscene : ITalkingEvent
     private Transform _cartoon01_Pos;
     private Transform _cartoon03_Pos;
 
+    private CanvasGroup _hudCanvasGroup;
     
     private GameObject _image1; 
     private GameObject _image2; 
@@ -55,7 +56,7 @@ public class TutorialCutscene : ITalkingEvent
     private string[] contents;
     public async UniTask OnEventBefore()
     {
-        
+        _hudCanvasGroup = GameObject.Find("HUD Canvas").GetComponent<CanvasGroup>();
         _player = GameObject.FindGameObjectWithTag("Player");
         EventFadeChanger.Instance.FadeOut(1);
         _eventAnimationController = _player.GetComponent<PlayerEventAnimationController>();
@@ -386,6 +387,12 @@ public class TutorialCutscene : ITalkingEvent
             .GetChild(0).GetComponent<TextMeshProUGUI>();
         
         TypingSystem.Instance.Typing(contents,description);
+
+        while (_hudCanvasGroup.alpha < 1)
+        {
+            _hudCanvasGroup.alpha += Time.unscaledDeltaTime;
+            await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
+        }
         
         InputManager.Instance.InitMainGameAction();
         InputManager.Instance.DisableTalkEventAction();

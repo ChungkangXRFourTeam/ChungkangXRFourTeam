@@ -14,14 +14,16 @@ using UnityEngine.UI;
 
 public class DescriptionEvent5 : ITalkingEvent
 {
-    
-    private List<Dictionary<string, object>> _eventTexts;
+    private GameObject _kennel;
+    private Rigidbody2D _kennelRigid;
     private PlayerController _playerController;
+    private GameObject _player;
+    private List<Dictionary<string, object>> _eventTexts;
     private TalkingPanelInfo _playerPanel;
     private TalkingPanelInfo _targetPanel;
     private GameObject _observer;
     private GameObject _upWall;
-    private Animator _playerAnim;
+    private PlayerEventAnimationController _playerEventAnimation;
     private string _scriptPath = "EventTextScript/";
     private  List<string> _comments;
     private int _textCount;
@@ -31,8 +33,16 @@ public class DescriptionEvent5 : ITalkingEvent
     
     public async UniTask OnEventBefore()
     {
-        _playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-        _playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
+        
+        _player = GameObject.FindWithTag("Player");
+        _playerController = _player.GetComponent<PlayerController>();
+        _playerEventAnimation = _player.GetComponent<PlayerEventAnimationController>();
+        _playerEventAnimation.EnableEventAnimatorController();
+        _kennel = GameObject.FindWithTag("Kennel");
+        _kennelRigid = _kennel.GetComponent<Rigidbody2D>();
+
+        _kennelRigid.bodyType = RigidbodyType2D.Static;
+        _playerController.CurrentHP /= 2;
         _observer = GameObject.FindGameObjectWithTag("Observer");
         _scriptPath += "Opning/DescriptionText5";
         
@@ -53,12 +63,12 @@ public class DescriptionEvent5 : ITalkingEvent
 
     public async UniTask OnEventStart()
     {
+        
         InputManager.Instance.DisableMainGameAction();
         InputManager.Instance.InitTalkEventAction();
         
         Rigidbody2D playerRigid = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
-        playerRigid.velocity = new Vector2(0,-5);
-        GameObject.FindGameObjectWithTag("Player").transform.rotation = quaternion.Euler(0, 0, 0);
+        playerRigid.velocity = new Vector2(0,-10);
         
         EventFadeChanger.Instance.FadeIn(0.3f);
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1.0f);
@@ -70,6 +80,8 @@ public class DescriptionEvent5 : ITalkingEvent
 
     public async UniTask OnEvent()
     {
+        _player.transform.rotation = quaternion.identity;
+        _player.transform.rotation = Quaternion.Euler(0,180,0);
         Vector2 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
         _observer.transform.position = new Vector2(playerPos.x + 9f, playerPos.y + 7.5f);
         EventFadeChanger.Instance.FadeOut(0.7f);
@@ -104,6 +116,8 @@ public class DescriptionEvent5 : ITalkingEvent
         
         await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
         
+        
+        _playerEventAnimation.DisableEventAnimatorController();
         InputManager.Instance.InitMainGameAction();
         InputManager.Instance.DisableTalkEventAction();
         
