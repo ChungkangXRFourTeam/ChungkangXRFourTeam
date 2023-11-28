@@ -92,8 +92,8 @@ public class TutorialCutscene : ITalkingEvent
 
         _image1Dest = _image1.transform.position;
         _image2Dest = _image2.transform.position;
-        _image1Start = GameObject.Find("Image1Start").transform.position;
-        _image2Start = GameObject.Find("Image2Start").transform.position;
+        _image1Start = _cutscene.transform.Find("Image1Start").transform.position;
+        _image2Start = _cutscene.transform.Find("Image2Start").transform.position;
 
         _eyeVolume = GameObject.Find("CutsceneVolume").GetComponent<Volume>();
         _eyeVolumeProfile = _eyeVolume.sharedProfile;
@@ -201,7 +201,9 @@ public class TutorialCutscene : ITalkingEvent
                 switch (i)
                 {
                     case 0: 
+                    case 1:
                     case 2:
+                    case 6: 
                     case 7: 
                         await UniTask.WaitUntil(() => action.WasPressedThisFrame()); 
                         break;

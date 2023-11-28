@@ -1,17 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 
 public class TypingSystem : MonoBehaviour
 {
     public static TypingSystem _instance;
     
     [SerializeField]
-    private float typingTimer = 0.08f;
-    private float typingTimer_fast = 0.03f;
-    
+    private float typingTimer = 0.05f;
+    [SerializeField]
+    private float typingTimer_fast = 0.02f;
+    [SerializeField]
     private float typingTime;
     private string[] texts;
     private TextMeshProUGUI tmpSave;
@@ -74,30 +77,17 @@ public class TypingSystem : MonoBehaviour
         }
     }
 
-    public void GetInputDown()
+
+    private void Update()
     {
-        if (texts != null)
+        if (!isTypingEnd)
         {
-            if (isTypingEnd)
-            {
-                tmpSave.text = "";
-                Typing(texts,tmpSave);
-                timer = typingTime;
-            }
-            else
+            InputAction action = InputManager.GetTalkEventAction("NextText");
+            if (action != null && action.WasPressedThisFrame())
             {
                 typingTime = typingTimer_fast;
             }
-            
         }
-        
-    }
-    
-    public bool GetInputUp()
-    { 
-        typingTime = typingTimer;
-
-        return true;
     }
     
     IEnumerator Typer(char[] chars, TextMeshProUGUI textObj)
@@ -143,6 +133,7 @@ public class TypingSystem : MonoBehaviour
             if (currentChar >= charLength)
             {
                 isTypingEnd = true;
+                typingTime = typingTimer;
                 dialogNumber++;
                 if (texts.Length == dialogNumber)
                 {

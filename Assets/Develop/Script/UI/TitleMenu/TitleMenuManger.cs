@@ -98,8 +98,10 @@ public class TitleMenuManger : MonoBehaviour
     public async UniTaskVoid LoadIntroScene()
     {
         EventFadeChanger.Instance.FadeIn(2f);
-
+        
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1.0f);
+        
+        GameObject.Find("Title").SetActive(false);
 
         AsyncOperation sceneLoad = SceneManager.LoadSceneAsync("Tutorial");
 

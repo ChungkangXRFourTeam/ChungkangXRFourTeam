@@ -146,7 +146,7 @@ public class InputManager : MonoBehaviour
     [CanBeNull]
     public static InputAction GetTalkEventAction(string action)
     { 
-        InputAction foundAction = _eventTalkMap.FindAction(action);
+        InputAction foundAction = _eventTalkMap?.FindAction(action,false);
         if (Application.isPlaying && foundAction != null)
             return foundAction;
         else

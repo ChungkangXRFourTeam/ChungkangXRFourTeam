@@ -6,17 +6,6 @@ using UnityEngine.UI;
 
 public class UIHitBox : MonoBehaviour, IPointerEnterHandler,IPointerExitHandler
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
