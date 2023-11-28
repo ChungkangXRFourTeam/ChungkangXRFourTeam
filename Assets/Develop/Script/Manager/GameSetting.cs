@@ -28,10 +28,10 @@ public class GameSetting : MonoBehaviour
         {
             SceneManager.LoadScene(0);
         }
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+        //if (Input.GetKeyUp(KeyCode.Escape))
+        //{
+        //    Application.Quit();
+        //}
     }
 
     private void OnDestroy()
