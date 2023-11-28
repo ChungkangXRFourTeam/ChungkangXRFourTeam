@@ -98,6 +98,15 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interaction"",
+                    ""type"": ""Button"",
+                    ""id"": ""315eb814-45c6-44c6-b8e3-3f87ac7f7d81"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -221,6 +230,17 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
                     ""action"": ""MountKennel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8672e666-b783-4d63-bbf3-61ca44103051"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interaction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -304,6 +324,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         m_MainGame_Fall = m_MainGame.FindAction("Fall", throwIfNotFound: true);
         m_MainGame_Swing = m_MainGame.FindAction("Swing", throwIfNotFound: true);
         m_MainGame_MountKennel = m_MainGame.FindAction("MountKennel", throwIfNotFound: true);
+        m_MainGame_Interaction = m_MainGame.FindAction("Interaction", throwIfNotFound: true);
         // TalkEvent
         m_TalkEvent = asset.FindActionMap("TalkEvent", throwIfNotFound: true);
         m_TalkEvent_NextText = m_TalkEvent.FindAction("NextText", throwIfNotFound: true);
@@ -379,6 +400,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
     private readonly InputAction m_MainGame_Fall;
     private readonly InputAction m_MainGame_Swing;
     private readonly InputAction m_MainGame_MountKennel;
+    private readonly InputAction m_MainGame_Interaction;
     public struct MainGameActions
     {
         private @InputActionListener m_Wrapper;
@@ -391,6 +413,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         public InputAction @Fall => m_Wrapper.m_MainGame_Fall;
         public InputAction @Swing => m_Wrapper.m_MainGame_Swing;
         public InputAction @MountKennel => m_Wrapper.m_MainGame_MountKennel;
+        public InputAction @Interaction => m_Wrapper.m_MainGame_Interaction;
         public InputActionMap Get() { return m_Wrapper.m_MainGame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -424,6 +447,9 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
             @MountKennel.started += instance.OnMountKennel;
             @MountKennel.performed += instance.OnMountKennel;
             @MountKennel.canceled += instance.OnMountKennel;
+            @Interaction.started += instance.OnInteraction;
+            @Interaction.performed += instance.OnInteraction;
+            @Interaction.canceled += instance.OnInteraction;
         }
 
         private void UnregisterCallbacks(IMainGameActions instance)
@@ -452,6 +478,9 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
             @MountKennel.started -= instance.OnMountKennel;
             @MountKennel.performed -= instance.OnMountKennel;
             @MountKennel.canceled -= instance.OnMountKennel;
+            @Interaction.started -= instance.OnInteraction;
+            @Interaction.performed -= instance.OnInteraction;
+            @Interaction.canceled -= instance.OnInteraction;
         }
 
         public void RemoveCallbacks(IMainGameActions instance)
@@ -571,6 +600,7 @@ public partial class @InputActionListener: IInputActionCollection2, IDisposable
         void OnFall(InputAction.CallbackContext context);
         void OnSwing(InputAction.CallbackContext context);
         void OnMountKennel(InputAction.CallbackContext context);
+        void OnInteraction(InputAction.CallbackContext context);
     }
     public interface ITalkEventActions
     {
