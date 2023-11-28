@@ -252,11 +252,11 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     {
         CurrentHP -= damage;
         
-        EffectManager.ImmediateCommand(new EffectCommand
-        {
-            EffectKey = "actor/knockbackHit",
-            Position = transform.position
-        });
+        //EffectManager.ImmediateCommand(new EffectCommand
+        //{
+        //    EffectKey = "actor/knockbackHit",
+        //    Position = transform.position
+        //});
 
         DOTween.Kill(_hitKey);
         GetComponent<SpriteRenderer>()?.DOColor(Color.gray, 0.125f).SetLoops(8, LoopType.Yoyo).SetEase(Ease.InOutSine).SetId(_hitKey);

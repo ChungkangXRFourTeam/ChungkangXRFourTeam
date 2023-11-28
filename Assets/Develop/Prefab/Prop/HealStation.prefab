@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3441288566792773157}
   - component: {fileID: 4189457334380968234}
   - component: {fileID: 1856058738627531901}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HealStation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,3 +157,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _offset: {x: 0, y: 3}
+  _detectionRadius: 1
+  _coolTime: 20

@@ -10,7 +10,15 @@ public class PlayerShootState : BaseState
     {
         blackboard.GetWrappedProperty<float>("in_coolTime", out var coolTime);
         blackboard.GetProperty<PlayerSwingAttackData>("out_data", out var data);
-        coolTime.Value = data.CoolTime;
+
+        if (GameObject.FindWithTag("Boss"))
+        {
+            coolTime.Value = data.CoolTimeBoss;
+        }
+        else
+        {
+            coolTime.Value = data.CoolTime;
+        }
     }
     public override bool Update(Blackboard blackboard, StateExecutor executor)
     {

@@ -1463,7 +1463,7 @@ GameObject:
   - component: {fileID: 6894921079174365786}
   - component: {fileID: 3000809003230465712}
   - component: {fileID: 85016885004522722}
-  m_Layer: 2
+  m_Layer: 0
   m_Name: Body
   m_TagString: Boss
   m_Icon: {fileID: 0}
@@ -1499,7 +1499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mapDoor: {fileID: 0}
-  _hp: 50
+  _hp: 30
   baseLazerActionData:
     CenterOffset: {x: 0, y: -0.61}
     BoxSize: {x: 46.9, y: 25.2}
@@ -1526,7 +1526,7 @@ MonoBehaviour:
     HandAttackEase: 1
     HandWarningEase: 21
     WarningPointOffset: {x: 0, y: 12}
-    AttackOffset: {x: 0, y: 10}
+    AttackOffset: {x: 0, y: 14}
     EffectAttackOffset: {x: 0, y: 0}
     angle: 19.68
   _verticalLazerData:

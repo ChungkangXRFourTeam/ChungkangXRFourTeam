@@ -66,7 +66,18 @@ public static class PlayerCalculation
         {
             currentIter++;
             var hits = Physics2D.BoxCastAll(currentPos, size, angleZ, currentDir, Mathf.Infinity,
-                ~LayerMask.GetMask("Player", "Enemy", "Confiner", "Ignore Raycast", "EnemyBody"));
+                ~LayerMask.GetMask(
+                    "Player",
+                    "Enemy",
+                    "Confiner",
+                    "Ignore Raycast",
+                    "EnemyBody",
+                    "Object1",
+                    "Object2",
+                    "Background",
+                    "Foreground",
+                    "Effect"
+                    ));
             if (hits.Length == 0) break;
 
             RaycastHit2D hit = new RaycastHit2D();
