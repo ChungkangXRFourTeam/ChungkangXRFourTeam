@@ -383,11 +383,6 @@ public class TutorialCutscene : ITalkingEvent
         
         EventFadeChanger.Instance.FadeOut(0.7f);
 
-        TextMeshProUGUI description = GameObject.Find("DescriptionMonitor 1").transform.Find("Description Canvas").transform
-            .GetChild(0).GetComponent<TextMeshProUGUI>();
-        
-        TypingSystem.Instance.Typing(contents,description);
-
         while (_hudCanvasGroup.alpha < 1)
         {
             _hudCanvasGroup.alpha += Time.unscaledDeltaTime;

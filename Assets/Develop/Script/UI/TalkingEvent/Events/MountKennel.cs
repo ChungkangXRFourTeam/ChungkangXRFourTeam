@@ -118,14 +118,13 @@ public class MountKennelEvent : ITalkingEvent
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
         
-        AsyncOperation result =  SceneManager.LoadSceneAsync(_sceneName);
-        
-        TalkingEventManager._isEventEnd = true;
+        AsyncOperation result = SceneManager.LoadSceneAsync(_sceneName);
         while (!result.isDone)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(Time.fixedTime));
             
         }
+        TalkingEventManager._isEventEnd = true;
 
         await UniTask.Yield();
 

@@ -10,6 +10,8 @@ public class MonsterCountManager : MonoBehaviour
     [SerializeField]
     private GameObject _kennelPrefab;
 
+    private GameObject _kennel;
+
     [SerializeField] private Transform _spawnPoint; 
 
     [SerializeField] private GameObject _player;
@@ -17,6 +19,9 @@ public class MonsterCountManager : MonoBehaviour
     private void Awake()
     {
         ChangeMonsterCount();
+        _kennel = GameObject.FindWithTag("Kennel");
+        
+        _kennel.SetActive(false);
     }
 
     private void ChangeMonsterCount()
@@ -25,8 +30,8 @@ public class MonsterCountManager : MonoBehaviour
         Debug.Log(_monsterCount);
         if (_monsterCount == 0)
         {
-            GameObject kennel = Instantiate(_kennelPrefab, _spawnPoint.position ,quaternion.identity);
-            Debug.Log(kennel.name);
+            _kennel.SetActive(true);
+            //GameObject kennel = Instantiate(_kennelPrefab, _spawnPoint.position ,quaternion.identity);
         }
         
     }

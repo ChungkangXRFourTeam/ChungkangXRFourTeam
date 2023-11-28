@@ -69,7 +69,7 @@ public class DescriptionEvent : ITalkingEvent
         InputAction action = InputManager.GetTalkEventAction("NextText");
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha <= 0f);
         if(action != null)
-            while (_textCount < contents.Length-1)
+            while (_textCount < contents.Length)
             { 
                 target = _eventTexts[_textCount++][EventTextType.Target.ToString()].ToString();
                 Talk(contents,target);
@@ -87,13 +87,6 @@ public class DescriptionEvent : ITalkingEvent
 
     public async UniTask OnEventEnd()
     {
-        TextMeshProUGUI description = GameObject.Find("DescriptionMonitor 2").transform.Find("Description Canvas").transform
-            .GetChild(0).GetComponent<TextMeshProUGUI>();
-        
-        TypingSystem.Instance.Typing(contents,description);
-        
-        await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
-        
         InputManager.Instance.InitMainGameAction();
         InputManager.Instance.DisableTalkEventAction();
         await UniTask.Yield();
