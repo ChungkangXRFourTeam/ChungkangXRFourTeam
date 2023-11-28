@@ -28,6 +28,7 @@ namespace XRProject.Boss
         private void Awake()
         {
             CurrentHP = MaxHp;
+            
             _battleTrack = BossPatternFactory.CompletionPatternPhase1(transform, this);
             //_battleTrack = BossPatternFactory.MeleeTestTrack(transform, this);
             //_battleTrack = BossPatternFactory.LazerTestTrack(transform, this);
@@ -46,7 +47,18 @@ namespace XRProject.Boss
             Interaction.SetContractInfo(ActorContractInfo.Create(transform, ()=>transform).AddBehaivour<IBActorHit>(this));
 
             StartCoroutine(CoUpdate());
+
+
+            ChangedHp += (life, prev, current) =>
+            {
+                float value = current / (MaxHp <= 0f ? 1f : MaxHp);
+                if (value < 0.5f)
+                {
+                    BaseLazerData.NextTrigger.TriggerNextPhase();
+                }
+            };
         }
+
         private IEnumerator CoUpdate()
         {
             while (true)

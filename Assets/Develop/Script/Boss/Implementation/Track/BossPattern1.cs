@@ -31,7 +31,7 @@ namespace XRProject.Boss
                 .AddAction(new DelayAction(0.15f))
                 ;
 
-            cTrack.Predicate = new RepeatPredicate() { Index = 1 };
+            cTrack.Predicate = ingredients.BaseLazerData.NextTrigger;
             
             return cTrack;
         }

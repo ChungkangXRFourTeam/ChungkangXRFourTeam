@@ -6,17 +6,31 @@ namespace XRProject.Boss
 {
     public class NextPattern : ITrackPredicate
     {
-        private Boss _boss;
-        public NextPattern(Boss boss)
+        private bool _goNext;
+        
+        public NextPattern()
         {
-            _boss = boss;
+            _goNext = false;
         }
+
+        public void TriggerNextPhase()
+        {
+            _goNext = true;
+        }
+        
         public void Process(ActionList actionList)
         {
-            float percentage = _boss.CurrentHP / _boss.MaxHp;
-            if (percentage < 0.5f)
+            if (_goNext == false)
+            {
+                if (actionList.IsActionEndedCurrentTrack)
+                {
+                    actionList.GotoCursorOnBasedCurrentTrack(0);
+                }
+            }
+            else
             {
                 actionList.NextTrack();
+                _goNext = false;
             }
         }
     }

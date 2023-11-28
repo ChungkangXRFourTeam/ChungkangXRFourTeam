@@ -13,26 +13,26 @@ namespace XRProject.Boss
             List<IAction> actionList = new List<IAction>()
             {
                 new TopBottomBossAction(transform, ingredients),
-                //new TopBottomBossAction(transform, ingredients),
-                //new TopBottomBossAction(transform, ingredients),
-                //new TopBottomBossAction(transform, ingredients),
-                //new TopBottomBossAction(transform, ingredients),
-                //new VerticalBossAction(transform, ingredients, true),
+                new VerticalBossAction(transform, ingredients, true),
+                new TopBottomBossAction(transform, ingredients),
                 new VerticalBossAction(transform, ingredients, false),
-                //new VerticalBossAction(transform, ingredients, true),
-                //new VerticalBossAction(transform, ingredients, false),
-                //new VerticalBossAction(transform, ingredients, true),
+                new TopBottomBossAction(transform, ingredients),
+                new VerticalBossAction(transform, ingredients, true),
+                new TopBottomBossAction(transform, ingredients),
+                new VerticalBossAction(transform, ingredients, true),
+                new TopBottomBossAction(transform, ingredients),
+                new VerticalBossAction(transform, ingredients, false),
             };
             
             cTrack
                 .AddAction(new MeleePositionAction(ingredients))
                 
-                //.AddAction(actionList[Random.Range(0, actionList.Count)])
-                //.AddAction(new DelayAction(0.5f))
-                //.AddAction(actionList[Random.Range(0, actionList.Count)])
-                //.AddAction(new DelayAction(0.5f))
-                //.AddAction(actionList[Random.Range(0, actionList.Count)])
-                //.AddAction(new DelayAction(0.5f))
+                .AddAction(actionList[Random.Range(0, actionList.Count)])
+                .AddAction(new DelayAction(0.5f))
+                .AddAction(actionList[Random.Range(0, actionList.Count)])
+                .AddAction(new DelayAction(0.5f))
+                .AddAction(actionList[Random.Range(0, actionList.Count)])
+                .AddAction(new DelayAction(0.5f))
                 .AddAction(actionList[Random.Range(0, actionList.Count)])
                 .AddAction(new DelayAction(0.5f))
                 
@@ -45,7 +45,7 @@ namespace XRProject.Boss
                 .AddAction(new DelayAction(0.1f))
                 ;
 
-            cTrack.Predicate = new RepeatPredicate() { Index = 1 };
+            cTrack.Predicate = ingredients.BaseLazerData.NextTrigger;
             
             return cTrack;
         }

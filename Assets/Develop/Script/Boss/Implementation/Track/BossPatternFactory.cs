@@ -91,7 +91,7 @@ namespace XRProject.Boss
             Track parentTrack = new Track();
 
             parentTrack
-                //.AddAction(Pattern1(transform, ingredient))
+                .AddAction(Pattern1(transform, ingredient))
                 .AddAction(Pattern2(transform, ingredient))
                 ;
             

@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Spine.Unity;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace XRProject.Boss
 {
@@ -24,6 +26,8 @@ namespace XRProject.Boss
         public BossLazerController LazerController;
         public SkeletonAnimation Ani;
         public float angle = 38.06f;
+
+        [NonSerialized] public NextPattern NextTrigger = new ();
     }
 
     public abstract class BaseBossAction : IAction
