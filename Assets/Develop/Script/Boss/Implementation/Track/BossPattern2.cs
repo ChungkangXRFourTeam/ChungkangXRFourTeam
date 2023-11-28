@@ -13,15 +13,15 @@ namespace XRProject.Boss
             List<IAction> actionList = new List<IAction>()
             {
                 new TopBottomBossAction(transform, ingredients),
-                new VerticalBossAction(transform, ingredients, true),
+                new CrossBossAction(transform, ingredients),
                 new TopBottomBossAction(transform, ingredients),
-                new VerticalBossAction(transform, ingredients, false),
+                new CrossBossAction(transform, ingredients),
                 new TopBottomBossAction(transform, ingredients),
-                new VerticalBossAction(transform, ingredients, true),
+                new CrossBossAction(transform, ingredients),
                 new TopBottomBossAction(transform, ingredients),
-                new VerticalBossAction(transform, ingredients, true),
+                new CrossBossAction(transform, ingredients),
                 new TopBottomBossAction(transform, ingredients),
-                new VerticalBossAction(transform, ingredients, false),
+                new CrossBossAction(transform, ingredients),
             };
             
             cTrack

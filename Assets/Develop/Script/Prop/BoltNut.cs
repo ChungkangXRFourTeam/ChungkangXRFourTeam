@@ -6,11 +6,13 @@ using UnityEngine;
 using XRProject.Boss;
 using XRProject.Helper;
 
-[RequireComponent(typeof(InteractionController),typeof(Rigidbody2D), typeof(BoxCollider2D))]
+[RequireComponent(typeof(InteractionController),typeof(Rigidbody2D))]
 public class BoltNut : MonoBehaviour, IBActorThrowable
 {
     [Range(1, 10)]
     [SerializeField] private int _maxKnockbackCount;
+
+    [SerializeField] private Vector2 _offset;
     
     private Rigidbody2D _rigid;
     private ActorPhysicsStrategy _physicsStrategy;
@@ -46,6 +48,11 @@ public class BoltNut : MonoBehaviour, IBActorThrowable
             {
                 if(_swingDirty)
                     _knockbackCount++;
+                EffectManager.ImmediateCommand(new EffectCommand()
+                {
+                    EffectKey = "boss/spark",
+                    Position = transform.position + (Vector3)_offset
+                });
             }
         };
         Interaction.OnContractActor += info =>
@@ -66,11 +73,6 @@ public class BoltNut : MonoBehaviour, IBActorThrowable
     {
         _isdestry = true;
         Destroy(gameObject);
-        EffectManager.ImmediateCommand(new EffectCommand()
-        {
-            EffectKey = "actor/knockbackHitOrange",
-            Position = transform.position
-        });
         DOTween.Kill(this);
     }
 
