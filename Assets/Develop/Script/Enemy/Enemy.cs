@@ -251,6 +251,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
     {
         _executor.Release();
         _isDestroyed = true;
+        _isThrowable = false;
         DOTween.Kill(this);
 
         if (_effectTweener != null)
