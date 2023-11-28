@@ -101,7 +101,35 @@ public class PlayerAnimationState : MonoBehaviour
 
         if (hit == false) return;
             
-        hit.gameObject.GetComponent<Enemy>()?.DoHit(_interaction.ContractInfo,1f);
+        var enemy =  hit.gameObject.GetComponent<Enemy>();
+        if(enemy == false) return;
+        if (enemy.CurrentHP <= 0f) return;
+
+        float damage = 0f;
+
+        if (_playerController.Properties == EActorPropertiesType.None)
+        {
+            damage = _playerController.MeleeAttackData.NoPropertiesDamage;
+        }
+        else
+        {
+
+            if (enemy.Properties == EActorPropertiesType.None)
+            {
+                damage = _playerController.MeleeAttackData.NotEqualPropertiesDamage;
+            }
+            else if (_playerController.Properties == enemy.Properties)
+            {
+                damage = _playerController.MeleeAttackData.NotEqualPropertiesDamage;
+            }
+            else
+            {
+                damage = _playerController.MeleeAttackData.EqualPropertiesDamage;
+            }
+        }
+
+        _playerController.SetPropertiesCount(_playerController.Interaction.ContractInfo,_playerController.RemainingPropertie - 1);
+        enemy.DoHit(_interaction.ContractInfo,damage);
     }
 
     private bool _isAttacking;

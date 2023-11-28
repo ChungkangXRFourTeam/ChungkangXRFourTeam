@@ -240,13 +240,17 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
         });
     }
 
+    public void SetPropertiesCount(BaseContractInfo caller, int count)
+    {
+        _propertiesCount.Value = count;
+        ChangedProperties?.Invoke(Properties);
+    }
     public void SetProperties(BaseContractInfo caller, EActorPropertiesType type)
     {
         if (type != EActorPropertiesType.None)
             _propertiesCount.Value = 10;
 
-        if(type != _properties)
-            ChangedProperties?.Invoke(type);
+        ChangedProperties?.Invoke(type);
         
         _properties = type;
 

@@ -24,6 +24,10 @@ public class PlayerMeleeAttackData : ScriptableObject
     [SerializeField] private float slashHitRadiusHit2;
     [SerializeField] private float slashHitRadiusHit3;
 
+    [SerializeField] private float _noPropertiesDamage;
+    [SerializeField] private float _equalPropertiesDamage;
+    [SerializeField] private float _notEqualPropertiesDamage;
+
     public float DistanceFromBodyforHand => _distanceFromBodyforHand;
 
     public Vector2 SlashEffectOffsetHit1 => _slashEffectOffsetHit1;
@@ -43,4 +47,7 @@ public class PlayerMeleeAttackData : ScriptableObject
     public float SlashHitRadiusHit3 => slashHitRadiusHit3;
 
     public int AttackMaxCount => _attackMaxCount;
+    public float NoPropertiesDamage => _noPropertiesDamage;
+    public float EqualPropertiesDamage => _equalPropertiesDamage;
+    public float NotEqualPropertiesDamage => _notEqualPropertiesDamage;
 }

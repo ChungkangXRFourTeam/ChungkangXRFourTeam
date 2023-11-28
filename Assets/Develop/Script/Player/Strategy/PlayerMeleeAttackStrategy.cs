@@ -42,11 +42,11 @@ public class PlayerMeleeAttackStrategy : IStrategy
             {
                 propertiesCount.Value -= 1;
                 float damage = 1f * (properties.Properties == myProperties.Properties ? 1f : 2f) + addingDamage;
-                hit.DoHit(myInteraction.ContractInfo, damage);
+                //hit.DoHit(myInteraction.ContractInfo, damage);
             }
             else
             {
-                hit.DoHit(myInteraction.ContractInfo, 0.5f + addingDamage);
+                //hit.DoHit(myInteraction.ContractInfo, 0.5f + addingDamage);
             }
         }
     }
