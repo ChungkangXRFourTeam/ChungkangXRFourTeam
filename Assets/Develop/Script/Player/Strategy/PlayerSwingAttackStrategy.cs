@@ -30,6 +30,7 @@ public class PlayerSwingAttackStrategy : IStrategy
             .SetInitialState<DefaultPlayerState>();
 
         blackboard
+            .AddProperty("out_interaction", sendedBlackboard.GetProperty<InteractionController>("out_interaction"))
             .AddProperty("out_transform", sendedBlackboard.GetProperty<Transform>("out_transform"))
             .AddProperty("out_grabDistance",new WrappedValue<float>(_data.GrabDistance))
             .AddProperty("out_timeScale", new WrappedValue<float>(_data.TimeScale))

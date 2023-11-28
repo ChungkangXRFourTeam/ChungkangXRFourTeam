@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace XRProject.Boss
@@ -18,10 +19,12 @@ namespace XRProject.Boss
     public class VerticalBossAction : BaseBossAction
     {
         private VerticalLazerData _data;
+        private bool _dirty;
         
-        public VerticalBossAction(Transform transform, IPatternFactoryIngredient ingredient) : base(transform, ingredient.BaseLazerData)
+        public VerticalBossAction(Transform transform, IPatternFactoryIngredient ingredient, bool dirty) : base(transform, ingredient.BaseLazerData)
         {
             _data = ingredient.VerticalLazerData;
+            _dirty = dirty;
         }
 
         public override IEnumerator EValuate()
@@ -30,29 +33,36 @@ namespace XRProject.Boss
             var lazer = BaseData.LazerController;
             if (playerTransform == false) yield break;
 
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Start", false);
+            yield return new WaitForSeconds(1.533f);
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Ing", true);
             
             Vector2 targetPos = playerTransform.position;
 
             var top = GetTwoPoint(GetSidePoint(Vector2.up, BaseData.BoxSize.y), Vector2.up, BaseData.BoxSize.x);
-            var bottom = GetTwoPoint(GetSidePoint(Vector2.down, BaseData.BoxSize.y), Vector2.down, BaseData.BoxSize.x);
 
             int iter = _data.Interation;
+            List<float> arr = new();
 
+            Vector2 d = _dirty ? Vector2.right * 4f : Vector2.zero;
+            
             for (int i = 0; i < iter; i++)
             {
                 float t = (float)(i + 1) / (float)iter;
-                Vector2 start = Vector2.Lerp(top.Item1, top.Item2, t);
-                Vector2 end = Vector2.Lerp(bottom.Item2, bottom.Item1, t);
-                
-                lazer.SetLinePosition(i, start, end);
+                Vector2 start = Vector2.Lerp(top.Item1, top.Item2, t) + d;
+                arr.Add(lazer.Play(i, start, DirectionType.Vertical, LazerType.Danger));
             }
-            
-            yield return DoCoAttackColoring(0, iter - 1);
-            yield return DoAttackColoring(0, iter- 1);
-            yield return DoClearColoring(0, iter- 1);
-            
-            
-            yield break;
+            yield return PlayMerge(arr.ToArray());
+            arr.Clear();
+            for (int i = 0; i < iter; i++)
+            {
+                float t = (float)(i + 1) / (float)iter;
+                Vector2 start = Vector2.Lerp(top.Item1, top.Item2, t) + d;
+                arr.Add(lazer.Play(i, start, DirectionType.Vertical, LazerType.Lazer));
+            }
+            yield return PlayMerge(arr.ToArray());
+            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_end", false);
+            yield return new WaitForSeconds(2.667f);
         }
 
     }

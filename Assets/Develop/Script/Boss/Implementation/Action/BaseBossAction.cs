@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
+using Spine.Unity;
 using UnityEngine;
 
 namespace XRProject.Boss
@@ -20,6 +22,7 @@ namespace XRProject.Boss
         public float AttackDuration;
         public float AttackClearDuration;
         public BossLazerController LazerController;
+        public SkeletonAnimation Ani;
     }
 
     public abstract class BaseBossAction : IAction
@@ -122,31 +125,40 @@ namespace XRProject.Boss
             return null;
         }
 
-        protected Sequence DoColoring(int start, int end, Color color, float duration)
+        protected float HorizontalPlay(int index, Vector2 targetPos, LazerType type)
         {
-            Sequence sequence1 = DOTween.Sequence();
             var lazer = BaseData.LazerController;
-            for (int i = start; i <= end; i++)
-            {
-                sequence1.Join(lazer.SetLineColorTween(i, color, duration));
-            }
+            Vector2 rightCenter = GetSidePoint(Vector2.right, BaseData.BoxSize.x);
+            var points = GetTwoPoint(rightCenter, Vector2.right, BaseData.BoxSize.y);
 
-            return sequence1;
-        }
-        
-        protected YieldInstruction DoCoAttackColoring(int start, int end)
-        {
-            return DoColoring(start, end, Color.red,BaseData.CoAttackDuration).WaitForCompletion();
-        }
-        protected YieldInstruction DoAttackColoring(int start, int end)
-        {
-            return DoColoring(start, end, Color.yellow,BaseData.AttackDuration).WaitForCompletion();
-        }
-        protected YieldInstruction DoClearColoring(int start, int end)
-        {
-            return DoColoring(start, end, Color.clear,BaseData.AttackClearDuration).WaitForCompletion();
+
+            var delta = GetInverseDelta(points.Item1.y, points.Item2.y, targetPos.y);
+
+            Vector2 startPos = GetInPointFromDelta(points.Item1, points.Item2, delta);
+            float duration = lazer.Play(index, startPos, DirectionType.Horizontal, type);
+
+            return duration;
         }
 
+        protected float VerticalPlay(int index, Vector2 targetPos, LazerType type)
+        {
+            var lazer = BaseData.LazerController;
+            Vector2 upCenter = GetSidePoint(Vector2.up, BaseData.BoxSize.y);
+            var points = GetTwoPoint(upCenter, Vector2.up, BaseData.BoxSize.x);
+            var delta = GetInverseDelta(points.Item1.x, points.Item2.x, targetPos.x);
+            
+            Vector2 startPos = GetInPointFromDelta(points.Item1, points.Item2, delta);
+            
+            float duration = lazer.Play(index, startPos, DirectionType.Vertical, type);
+
+            return duration;
+        }
+
+        protected YieldInstruction PlayMerge(params float[] durations)
+        {
+            float duration = durations.Max();
+            return new WaitForSeconds(duration);
+        }
         public virtual void Begin()
         {
         }

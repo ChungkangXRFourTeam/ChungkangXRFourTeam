@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2811102752869859664}
-  m_Layer: 0
-  m_Name: P_boss_danger
+  m_Layer: 13
+  m_Name: P_boss_danger_horizontal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 1037889527065632912}
   - component: {fileID: 5672104547374724335}
   - component: {fileID: 1688424273914446451}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Particle System (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -319,7 +319,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 100
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -372,7 +372,7 @@ ParticleSystem:
     startSizeY:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 4
+      scalar: 30
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -4887,7 +4887,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -4929,7 +4929,7 @@ GameObject:
   - component: {fileID: 405363061908876979}
   - component: {fileID: 7741676995827495718}
   - component: {fileID: 7107947091402357737}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Particle System (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4945,7 +4945,7 @@ Transform:
   m_GameObject: {fileID: 8057869610903287304}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 6.2264194, y: 0.413, z: -4.252281}
+  m_LocalPosition: {x: -50.1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5206,7 +5206,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 100
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -5259,7 +5259,7 @@ ParticleSystem:
     startSizeY:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 4
+      scalar: 30
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -5312,7 +5312,7 @@ ParticleSystem:
     startSizeZ:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -9774,7 +9774,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace XRProject.Boss
 {
@@ -20,11 +21,14 @@ namespace XRProject.Boss
         [SerializeField] private VerticalLazerData _verticalLazerData;
         [SerializeField] private TopBottomLazerData _topBottomLazerData;
         [SerializeField] private MovementActionData _movementData;
+        [FormerlySerializedAs("_dropVaultBossActionData")] [SerializeField] private DropBoltBossActionData dropBoltBossActionData;
 
         private void Awake()
         {
             CurrentHP = MaxHp;
-            _battleTrack = BossPatternFactory.CompletionBattleTrack(transform, this);
+            _battleTrack = BossPatternFactory.CompletionPatternPhase1(transform, this);
+            //_battleTrack = BossPatternFactory.MeleeTestTrack(transform, this);
+            //_battleTrack = BossPatternFactory.LazerTestTrack(transform, this);
             _battlePlayer = new TrackPlayer();
             _battlePlayer.Play(_battleTrack);
 
@@ -81,6 +85,7 @@ namespace XRProject.Boss
         public TopBottomLazerData TopBottomLazerData => _topBottomLazerData;
         public MovementActionData MovementActionData => _movementData;
         public BaseLazerActionData BaseLazerData => baseLazerActionData;
+        public DropBoltBossActionData DropBoltBossActionData => dropBoltBossActionData;
         private InteractionController _interaction;
 
         public InteractionController Interaction

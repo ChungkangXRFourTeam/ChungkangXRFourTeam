@@ -76,7 +76,7 @@ namespace XRProject.Boss
             if (playerTransform == false) yield break;
 
             float timer = 0f;
-            while (timer <= 2f)
+            while (timer <= 1f)
             {
                 timer += Time.deltaTime;
                 var dir = playerTransform.position - _data.hands[_index].position;
@@ -88,7 +88,6 @@ namespace XRProject.Boss
             
             //yield return GotoPlayerHat(_data.hands[_index], playerTransform.position);
             yield return AttackPlayer(_data.hands[_index]);
-            yield return GotoHandPosition(_data.hands[_index], _data.handPos[_index]);
         }
         
         public YieldInstruction GotoHandPosition(Transform hand, Vector2 pos)
@@ -123,12 +122,19 @@ namespace XRProject.Boss
                     hand
                         .DOMove(targetPoint, _data._handAttackDuration)
                         .SetEase(_data.HandAttackEase)
-                )
-                .AppendInterval(0.75f)
+                );
+                
+            var s2 = DOTween.Sequence();
+                s2.AppendInterval(0.75f)
                 .Append(hand
                     .DOMove(prevPoint, _data._handMoveDuration)
                     .SetEase(_data.HandMoveEase)
-                );
+                )
+                .AppendCallback(() =>
+                {
+                    GotoHandPosition(_data.hands[_index], _data.handPos[_index]);
+                });
+                
             return s.WaitForCompletion();
         }
 

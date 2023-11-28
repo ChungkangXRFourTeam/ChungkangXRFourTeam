@@ -12,43 +12,40 @@ namespace XRProject.Boss
 
             List<IAction> actionList = new List<IAction>()
             {
-                new StarBossAction(transform, ingredients),
                 new TopBottomBossAction(transform, ingredients),
-                new VerticalBossAction(transform, ingredients),
+                new TopBottomBossAction(transform, ingredients),
+                new TopBottomBossAction(transform, ingredients),
+                new TopBottomBossAction(transform, ingredients),
+                new TopBottomBossAction(transform, ingredients),
+                new VerticalBossAction(transform, ingredients, true),
+                new VerticalBossAction(transform, ingredients, false),
+                new VerticalBossAction(transform, ingredients, true),
+                new VerticalBossAction(transform, ingredients, false),
+                new VerticalBossAction(transform, ingredients, true),
             };
-
+            
             cTrack
-                .AddAction(actionList[Random.Range(0, actionList.Count)])
-                .AddAction(new DelayAction(1f))
-                .AddAction(actionList[Random.Range(0, actionList.Count)])
-                .AddAction(new DelayAction(1f))
-                .AddAction(actionList[Random.Range(0, actionList.Count)])
-                .AddAction(new DelayAction(1f))
-                .AddAction(actionList[Random.Range(0, actionList.Count)])
-                .AddAction(new DelayAction(1f))
-                .AddAction(actionList[Random.Range(0, actionList.Count)])
-                .AddAction(new DelayAction(1f))
-                .AddAction(actionList[Random.Range(0, actionList.Count)])
-                .AddAction(new DelayAction(1f))
-                .AddAction(actionList[Random.Range(0, actionList.Count)])
-                .AddAction(new DelayAction(1f))
-                .AddAction(actionList[Random.Range(0, actionList.Count)])
-                .AddAction(new DelayAction(1f))
-                
-                
                 .AddAction(new MeleePositionAction(ingredients))
-                .AddAction(new MeleeAction(transform, ingredients, 0))
-                .AddAction(new MeleeAction(transform, ingredients, 1))
+                
+                .AddAction(actionList[Random.Range(0, actionList.Count)])
+                .AddAction(new DelayAction(0.5f))
+                .AddAction(actionList[Random.Range(0, actionList.Count)])
+                .AddAction(new DelayAction(0.5f))
+                .AddAction(actionList[Random.Range(0, actionList.Count)])
+                .AddAction(new DelayAction(0.5f))
+                .AddAction(actionList[Random.Range(0, actionList.Count)])
+                .AddAction(new DelayAction(0.5f))
                 
                 .AddAction(new MeleeAction(transform, ingredients, 0))
-                .AddAction(new MeleeAction(transform, ingredients, 1))
+                .AddAction(new DropBoltBossAction(transform, ingredients))
+                .AddAction(new DelayAction(0.1f))
                 
-                .AddAction(new MeleeAction(transform, ingredients, 0))
                 .AddAction(new MeleeAction(transform, ingredients, 1))
-                
-                .AddAction(new MeleeAction(transform, ingredients, 0))
-                .AddAction(new MeleeAction(transform, ingredients, 1))
+                .AddAction(new DropBoltBossAction(transform, ingredients))
+                .AddAction(new DelayAction(0.1f))
                 ;
+
+            cTrack.Predicate = new RepeatPredicate() { Index = 1 };
             
             return cTrack;
         }
