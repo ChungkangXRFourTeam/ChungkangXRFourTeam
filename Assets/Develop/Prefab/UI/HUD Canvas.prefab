@@ -112,7 +112,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4577350642024277184}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -157,6 +157,18 @@ PrefabInstance:
       value: 683
       objectReference: {fileID: 0}
     - target: {fileID: 1027471074592851285, guid: 433ae8de13b532340b689ab686eebb5d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.31285158
+      objectReference: {fileID: 0}
+    - target: {fileID: 1027471074592851285, guid: 433ae8de13b532340b689ab686eebb5d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.31285158
+      objectReference: {fileID: 0}
+    - target: {fileID: 1027471074592851285, guid: 433ae8de13b532340b689ab686eebb5d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.31285158
+      objectReference: {fileID: 0}
+    - target: {fileID: 1027471074592851285, guid: 433ae8de13b532340b689ab686eebb5d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -190,7 +202,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1027471074592851285, guid: 433ae8de13b532340b689ab686eebb5d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -273.69
+      value: -241
       objectReference: {fileID: 0}
     - target: {fileID: 1027471074592851285, guid: 433ae8de13b532340b689ab686eebb5d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -264,15 +276,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1977582338104982506, guid: fe5c39462cdbb3a4da918edf4aeba776, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 0.82322
       objectReference: {fileID: 0}
     - target: {fileID: 1977582338104982506, guid: fe5c39462cdbb3a4da918edf4aeba776, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 0.82322
       objectReference: {fileID: 0}
     - target: {fileID: 1977582338104982506, guid: fe5c39462cdbb3a4da918edf4aeba776, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 0.82322
       objectReference: {fileID: 0}
     - target: {fileID: 1977582338104982506, guid: fe5c39462cdbb3a4da918edf4aeba776, type: 3}
       propertyPath: m_LocalPosition.x
