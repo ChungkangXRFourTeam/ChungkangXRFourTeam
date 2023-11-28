@@ -116,15 +116,18 @@ public class PlayerAnimationState : MonoBehaviour
 
             if (enemy.Properties == EActorPropertiesType.None)
             {
+                #if UNITY_EDITOR
+                Debug.LogError("속성이 none이 적에게 공격을 시도했습니다.");
+                #endif
                 damage = _playerController.MeleeAttackData.NotEqualPropertiesDamage;
             }
             else if (_playerController.Properties == enemy.Properties)
             {
-                damage = _playerController.MeleeAttackData.NotEqualPropertiesDamage;
+                damage = _playerController.MeleeAttackData.EqualPropertiesDamage;
             }
             else
             {
-                damage = _playerController.MeleeAttackData.EqualPropertiesDamage;
+                damage = _playerController.MeleeAttackData.NotEqualPropertiesDamage;
             }
         }
 
