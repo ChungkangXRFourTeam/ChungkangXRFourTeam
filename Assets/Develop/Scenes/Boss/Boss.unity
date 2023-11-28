@@ -2248,6 +2248,70 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss
       objectReference: {fileID: 0}
+    - target: {fileID: 5739454434935435994, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7472675181284963186, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7739876753430436977, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: _animationName
+      value: Boss_Thunder_end
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: _meleeData._attackDelay
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: _topBottomLazerData.OffsetTop
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: _verticalLazerData.Interation
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: _meleeData._handWarningDuration
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: dropBoltBossActionData.Offset.y
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: _topBottomLazerData.OffsetBottom
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: dropBoltBossActionData.DropInterval
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: dropBoltBossActionData.MaxDropCount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: dropBoltBossActionData.BoltPrototypes.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: dropBoltBossActionData.BoltPrototypes.Array.data[0]
+      value: 
+      objectReference: {fileID: 4539018146855869099, guid: 02a54bcc7c4256f459428e8b4493170d, type: 3}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: dropBoltBossActionData.BoltPrototypes.Array.data[1]
+      value: 
+      objectReference: {fileID: 4246159619002135473, guid: 6abb94ec8b832c349bfdeee5a6885069, type: 3}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: dropBoltBossActionData.BoltPrototypes.Array.data[2]
+      value: 
+      objectReference: {fileID: 5478560802672657370, guid: 407aadc2f3768214f81017c421582e68, type: 3}
+    - target: {fileID: 8912840835220638324, guid: 1d70ed6c5eeb5cf43a2938361f13ee0a, type: 3}
+      propertyPath: dropBoltBossActionData.BoltPrototypes.Array.data[3]
+      value: 
+      objectReference: {fileID: 5127100719149114433, guid: ce9c7803c44893d4997ef42c79720650, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
