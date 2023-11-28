@@ -40,7 +40,6 @@ public class EventFadeChanger : MonoBehaviour
         GameObject fadeObj = Resources.Load<GameObject>("Prefab/FadeObject"); 
         _fadeObject = Instantiate(fadeObj); 
         _fadeObject .transform.GetComponentInChildren<CanvasGroup>().alpha = 0;
-        _fadeObject.SetActive(false);
     }
     
 
@@ -74,7 +73,6 @@ public class EventFadeChanger : MonoBehaviour
         _fadeObject = Instantiate(fadeObj);
         Fade_img = _fadeObject.transform.GetComponentInChildren<CanvasGroup>();
         Fade_img.alpha = 0;
-        _fadeObject.SetActive(false);
     }
     
 }

@@ -560,7 +560,7 @@ GameObject:
   - component: {fileID: 3232833519561906154}
   m_Layer: 7
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -597,6 +597,7 @@ MonoBehaviour:
   _data: {fileID: 11400000, guid: 6fde3fe9792c7c24d9bbcf4c812bdc84, type: 2}
   _isThrowable: 1
   _properties: 0
+  _enemyType: 0
   _bodyChanger:
     _pairs: []
   _effectImage: {fileID: 8929238629399507731}
@@ -693,6 +694,7 @@ MonoBehaviour:
   actorState: {fileID: 6913457350608606688}
   _image: {fileID: 3451748762963194981}
   _canvas: {fileID: 3375075364366439600}
+  _duration: 0
 --- !u!114 &808929621619883787
 MonoBehaviour:
   m_ObjectHideFlags: 0

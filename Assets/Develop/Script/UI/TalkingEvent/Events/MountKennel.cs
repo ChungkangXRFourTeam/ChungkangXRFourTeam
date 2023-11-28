@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using Unity.Mathematics;
 using UnityEngine.SceneManagement;
+using Spine.Unity;
 
 public class MountKennelEvent : ITalkingEvent
 {
@@ -12,6 +13,8 @@ public class MountKennelEvent : ITalkingEvent
     private GameObject _kennel;
     private GameObject _upWall;
 
+    private SkeletonAnimation _kennelAnimation;
+    
     private CinemachineVirtualCamera _virtualCamera;
 
     private Vector2 _kennelPos;
@@ -23,7 +26,7 @@ public class MountKennelEvent : ITalkingEvent
     private Rigidbody2D _playerRigid;
     private Rigidbody2D _kennelRigid;
 
-    private PlayerAnimationController _playerAnimationController;
+    private PlayerEventAnimationController _playerEventAnimationController;
 
     public MountKennelEvent(string sceneName)
     {
@@ -51,13 +54,16 @@ public class MountKennelEvent : ITalkingEvent
         
         _player = GameObject.FindWithTag("Player");
         _kennel = GameObject.FindWithTag("Kennel");
+        
+        _player.transform.rotation = Quaternion.identity;
 
         _kennelPos = _kennel.transform.position;
         _kennelEnd = GameObject.Find("KennelEnd").transform.position;
         _playerRigid = _player.GetComponent<Rigidbody2D>();
         _kennelRigid = _kennel.GetComponent<Rigidbody2D>();
 
-        _playerAnimationController = _player.GetComponent<PlayerAnimationController>();
+        _kennelAnimation = _kennel.GetComponent<SkeletonAnimation>();
+        _playerEventAnimationController = _player.GetComponent<PlayerEventAnimationController>();
 
         await UniTask.Yield();
     }
@@ -65,30 +71,42 @@ public class MountKennelEvent : ITalkingEvent
     public async UniTask OnEventStart()
     {
         await UniTask.Delay(TimeSpan.FromSeconds(Time.deltaTime));
+        _playerEventAnimationController.EnableEventAnimatorController();
         
         await MoveToPosition(_player, _kennelPos, 0.1F);
     }
 
     public async UniTask OnEvent()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(1.0f));
-        
-        //_virtualCamera.Follow = null;
         _kennelRigid.bodyType = RigidbodyType2D.Kinematic;
         _playerRigid.bodyType = RigidbodyType2D.Kinematic;
+        Transform kennelPivot = _kennel.transform.GetChild(1);
+        
+        
+        _player.transform.rotation = Quaternion.Euler(new Vector3(0,0,180));
+        _playerRigid.excludeLayers = Physics2D.AllLayers - (1 << 6 | 1 << 17);
+        _kennelRigid.excludeLayers = Physics2D.AllLayers - (1 << 6 | 1 << 17);
         
         _virtualCameraConfiner.m_ConfineScreenEdges = false;
-        _playerAnimationController.SetState(new PAniState()
+        _playerEventAnimationController.PlayEventAnim(EventAnimationName.FALLING_DASH);
+
+        _kennelAnimation.AnimationName = "Up";
+        float floatingTime = 1.0f;
+        while (floatingTime > 0f)
         {
-            State = EPCAniState.Falling_Dash,
-            Rotation = Quaternion.Euler(0,0,-180),
-            Restart = false
-        });
+            floatingTime -= Time.unscaledDeltaTime;
+            _kennelRigid.position += Vector2.up * Time.unscaledDeltaTime;
+            _playerRigid.position = kennelPivot.position;
+            await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
+        }
         
+        //_virtualCamera.Follow = null;
+        kennelPivot = _kennel.transform.GetChild(0);
+        _player.transform.position = kennelPivot.position;
         while (Mathf.Abs(_kennelEnd.y - _kennel.transform.position.y) >= 5f)
         {
             _kennelRigid.position += Vector2.up * 5f;
-            _playerRigid.position += Vector2.up * 5f;
+            _playerRigid.position = kennelPivot.position;
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
         
@@ -122,12 +140,8 @@ public class MountKennelEvent : ITalkingEvent
     {
         Vector2 dir = target.transform.position.x - posistion.x > 0 ? Vector2.left : Vector2.right;
         float fliped = dir.x > 0 ? 180 : 0;
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Run,
-            Rotation = Quaternion.Euler(0,fliped,0),
-            Restart = false
-        });
+        _playerEventAnimationController.PlayEventAnim(EventAnimationName.RUN);
+        _player.transform.rotation = Quaternion.Euler(new Vector3(0,fliped,0));
         while (Mathf.Abs(target.transform.position.x - posistion.x) >= 0.1f)
         {
             if (target.CompareTag("Player"))
@@ -136,12 +150,7 @@ public class MountKennelEvent : ITalkingEvent
         }
         
         target.transform.Rotate(0,0,0);
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Idle,
-            Rotation = Quaternion.identity,
-            Restart = false
-        });
+        _playerEventAnimationController.PlayEventAnim(EventAnimationName.IDLE);
     }
 
     public bool IsInvalid()
