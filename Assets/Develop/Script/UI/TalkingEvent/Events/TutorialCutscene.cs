@@ -303,7 +303,10 @@ public class TutorialCutscene : ITalkingEvent
 
 
             }
-        
+
+        _player.transform.rotation = Quaternion.identity;
+
+        _player.transform.rotation = Quaternion.Euler(0, 180, 0);
         EventFadeChanger.Instance.FadeOut(0.3f);
 
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha <= 0f);

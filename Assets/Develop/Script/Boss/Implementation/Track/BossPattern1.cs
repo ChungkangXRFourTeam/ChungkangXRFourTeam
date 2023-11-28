@@ -15,14 +15,14 @@ namespace XRProject.Boss
                 .AddAction(new MeleePositionAction(ingredients))
                 
                 
-               //.AddAction(new VerticalBossAction(transform, ingredients, true))
-               //.AddAction(new DelayAction(speed))
-               // .AddAction(new VerticalBossAction(transform, ingredients, false))
-               //.AddAction(new DelayAction(speed))
-               // .AddAction(new VerticalBossAction(transform, ingredients, true))
-               //.AddAction(new DelayAction(speed))
-               // .AddAction(new VerticalBossAction(transform, ingredients, false))
-               // .AddAction(new DelayAction(speed))
+               .AddAction(new VerticalBossAction(transform, ingredients, true))
+               .AddAction(new DelayAction(speed))
+                .AddAction(new VerticalBossAction(transform, ingredients, false))
+               .AddAction(new DelayAction(speed))
+                .AddAction(new VerticalBossAction(transform, ingredients, true))
+               .AddAction(new DelayAction(speed))
+                .AddAction(new VerticalBossAction(transform, ingredients, false))
+                .AddAction(new DelayAction(speed))
                 
                .AddAction(new MeleeAction(transform, ingredients, 0))
                .AddAction(new DropBoltBossAction(transform, ingredients))
