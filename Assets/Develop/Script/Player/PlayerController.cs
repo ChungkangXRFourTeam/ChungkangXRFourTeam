@@ -240,6 +240,8 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             State = EPCAniState.Death
         });
 
+        DOTween.Kill(_hitKey);
+        GetComponent<SpriteRenderer>().color = Color.white;
         TalkingEventManager.Instance.InvokeCurrentEvent(new DeathEvent()).Forget();
     }
 
@@ -258,7 +260,9 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
         //    Position = transform.position
         //});
 
+        if (CurrentHP <= 0f) return;
         DOTween.Kill(_hitKey);
+        GetComponent<SpriteRenderer>().color = Color.white;
         GetComponent<SpriteRenderer>()?.DOColor(Color.gray, 0.125f).SetLoops(8, LoopType.Yoyo).SetEase(Ease.InOutSine).SetId(_hitKey);
     }
 

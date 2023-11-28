@@ -152,12 +152,12 @@ TextureImporter:
       name: Actor_Player_Death_0
       rect:
         serializedVersion: 2
-        x: 746
-        y: 5141
+        x: 739
+        y: 5148
         width: 1062
         height: 1061
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -177,8 +177,8 @@ TextureImporter:
         y: 5149
         width: 1323
         height: 836
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -191,78 +191,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Actor_Player_Death_2
-      rect:
-        serializedVersion: 2
-        x: 5376
-        y: 5148
-        width: 1060
-        height: 810
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a674446bcef32994d8768dc674aa8662
-      internalID: -1311307080
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Actor_Player_Death_5
-      rect:
-        serializedVersion: 2
-        x: 5245
-        y: 2939
-        width: 1258
-        height: 758
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 90dd7635179a9c643bb818c644680e6a
-      internalID: -1206085473
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Actor_Player_Death_3
-      rect:
-        serializedVersion: 2
-        x: 736
-        y: 2948
-        width: 1291
-        height: 782
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3070f243de7856641b60434f085894b0
-      internalID: 2091592663
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Actor_Player_Death_4
       rect:
         serializedVersion: 2
-        x: 2782
-        y: 2947
-        width: 1500
-        height: 679
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 5369
+        y: 5148
+        width: 1060
+        height: 816
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -278,12 +215,12 @@ TextureImporter:
       name: Actor_Player_Death_6
       rect:
         serializedVersion: 2
-        x: 465
-        y: 734
-        width: 1665
-        height: 305
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 5230
+        y: 2946
+        width: 1258
+        height: 758
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -291,6 +228,69 @@ TextureImporter:
       bones: []
       spriteID: 0ee6c36fb7561e24f9e821051d3f6702
       internalID: -56272495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Death_8
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 2948
+        width: 1290
+        height: 781
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e20ec97db30c355419e4c6546cd7c8eb
+      internalID: -1947832194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Death_10
+      rect:
+        serializedVersion: 2
+        x: 2782
+        y: 2947
+        width: 1500
+        height: 679
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c5774e3620b38e459ca660718951c49
+      internalID: -1533547578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Actor_Player_Death_11
+      rect:
+        serializedVersion: 2
+        x: 465
+        y: 734
+        width: 1665
+        height: 305
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a76b2d158eee334ca505dc35536e6d1
+      internalID: -1311027433
       vertices: []
       indices: 
       edges: []
@@ -308,11 +308,15 @@ TextureImporter:
     nameFileIdTable:
       Actor_Player_Death_0: -811840701
       Actor_Player_Death_1: -1233710813
+      Actor_Player_Death_10: -1533547578
+      Actor_Player_Death_11: -1311027433
       Actor_Player_Death_2: -1311307080
       Actor_Player_Death_3: 2091592663
       Actor_Player_Death_4: 863440198
       Actor_Player_Death_5: -1206085473
       Actor_Player_Death_6: -56272495
+      Actor_Player_Death_7: -1430882090
+      Actor_Player_Death_8: -1947832194
       Actor_Player_Death_9: -619173721
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
