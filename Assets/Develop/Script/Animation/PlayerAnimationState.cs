@@ -72,7 +72,7 @@ public class PlayerAnimationState : MonoBehaviour
         if (i == 1)
         {
             Hit(data.SlashEffectOffsetHit1, data.SlashHitRadiusHit1);
-            //Effect(data.SlashEffectOffsetHit1, data.SlashEffectScale1, "player/");
+           // Effect(data.SlashEffectOffsetHit1, data.SlashEffectScale1, "player/attack1");
         }
         else if (i == 2)
         {

@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     [SerializeField] private LineRenderer _traceLineRenderer;
     [SerializeField] private InteractionController _interaction;
     [SerializeField] private PlayerAnimationController _aniController;
+    [SerializeField] private ParticleSystem _vignettte;
     
     [Header("can edit this, it is behaviour related data of player")]
     /* datas */
@@ -176,8 +177,24 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             ;
 
         _stateExecutor = StateExecutor.Create(stateContainer, fsmBlackboard);
+
+        ChangedHp += DoVignette;
+        
+        _vignettte.Stop();
     }
 
+    private void DoVignette(IBActorLife life, float bh, float ch)
+    {
+        if (ch <= 3f)
+        {
+            if(_vignettte.isPlaying == false)
+                _vignettte.Play();
+        }
+        else
+        {
+            _vignettte.Stop();
+        }
+    }
     private void Update()
     {
         if (IsDestroyed) return;
@@ -216,6 +233,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
         if (IsDestroyed) return;
 
         IsDestroyed = true;
+        _vignettte.Stop();
         
         _aniController.SetState(new PAniState()
         {
@@ -229,6 +247,7 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
     {
     }
 
+    private object _hitKey = new();
     public void DoHit(BaseContractInfo caller, float damage)
     {
         CurrentHP -= damage;
@@ -238,6 +257,9 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
             EffectKey = "actor/knockbackHit",
             Position = transform.position
         });
+
+        DOTween.Kill(_hitKey);
+        GetComponent<SpriteRenderer>()?.DOColor(Color.gray, 0.125f).SetLoops(8, LoopType.Yoyo).SetEase(Ease.InOutSine).SetId(_hitKey);
     }
 
     public void SetPropertiesCount(BaseContractInfo caller, int count)

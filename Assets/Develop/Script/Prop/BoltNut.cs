@@ -46,6 +46,11 @@ public class BoltNut : MonoBehaviour, IBActorThrowable
             {
                 if(_swingDirty)
                     _knockbackCount++;
+                EffectManager.ImmediateCommand(new EffectCommand()
+                {
+                    EffectKey = "boss/spark",
+                    Position = transform.position
+                });
             }
         };
         Interaction.OnContractActor += info =>
@@ -66,11 +71,6 @@ public class BoltNut : MonoBehaviour, IBActorThrowable
     {
         _isdestry = true;
         Destroy(gameObject);
-        EffectManager.ImmediateCommand(new EffectCommand()
-        {
-            EffectKey = "actor/knockbackHitOrange",
-            Position = transform.position
-        });
         DOTween.Kill(this);
     }
 

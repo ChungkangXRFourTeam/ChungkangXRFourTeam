@@ -153,7 +153,7 @@ namespace XRProject.Boss
                         .SetEase(_data.HandAttackEase)
                 )
                 .AppendCallback(() =>{
-                        VirtualCameraShaker.Instance.CameraShake(1.5f, 10f, 100f);
+                        VirtualCameraShaker.Instance.CameraShake(1.5f, 5f, 10f);
                         EffectManager.ImmediateCommand(new EffectCommand()
                         {
                             EffectKey = "boss/meleeAttack",

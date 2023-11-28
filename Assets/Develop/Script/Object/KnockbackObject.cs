@@ -93,7 +93,8 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive, IBObjectKnock
         {
             key = "actor/knockbackHitWater";
         }
-        
+
+        if (info.Transform.GetComponent<BoltNut>()) return;
         EffectManager.ImmediateCommand(new EffectCommand
         {
             EffectKey = key,
