@@ -6,11 +6,18 @@ namespace XRProject.Boss
 {
     public class NextPattern : ITrackPredicate
     {
+        private int _index;
+        
         private bool _goNext;
         
         public NextPattern()
         {
             _goNext = false;
+        }
+
+        public void SetLoopBegin(int index)
+        {
+            
         }
 
         public void TriggerNextPhase()

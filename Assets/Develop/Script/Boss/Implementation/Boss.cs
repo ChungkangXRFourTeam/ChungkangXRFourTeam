@@ -29,7 +29,7 @@ namespace XRProject.Boss
         {
             CurrentHP = MaxHp;
             
-            _battleTrack = BossPatternFactory.CompletionPatternPhase1(transform, this);
+            _battleTrack = BossPatternFactory.CompletionPhase(transform, this);
             //_battleTrack = BossPatternFactory.MeleeTestTrack(transform, this);
             //_battleTrack = BossPatternFactory.LazerTestTrack(transform, this);
             _battlePlayer = new TrackPlayer();

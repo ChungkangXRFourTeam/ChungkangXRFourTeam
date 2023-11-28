@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -179,6 +180,8 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
 
     private void Update()
     {
+        if (IsDestroyed) return;
+        
         _stateExecutor.Execute();
         
         /*
@@ -213,7 +216,17 @@ public class PlayerController : MonoBehaviour, IBActorProperties, IBActorHit, IB
         if (IsDestroyed) return;
 
         IsDestroyed = true;
-        Destroy(gameObject);
+        
+        _aniController.SetState(new PAniState()
+        {
+            State = EPCAniState.Death
+        });
+
+        TalkingEventManager.Instance.InvokeCurrentEvent(new DeathEvent()).Forget();
+    }
+
+    private void OnEndDeath()
+    {
     }
 
     public void DoHit(BaseContractInfo caller, float damage)

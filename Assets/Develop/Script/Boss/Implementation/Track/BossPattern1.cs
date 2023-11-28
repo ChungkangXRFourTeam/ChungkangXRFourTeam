@@ -10,7 +10,7 @@ namespace XRProject.Boss
         {
             var cTrack = new Track();
 
-            float speed = 0.05f;
+            float speed = 0.01f;
             cTrack
                 .AddAction(new MeleePositionAction(ingredients))
                 

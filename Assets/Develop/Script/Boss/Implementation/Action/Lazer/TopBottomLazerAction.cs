@@ -15,7 +15,9 @@ namespace XRProject.Boss
     public class TopBottomLazerData
     {
         public float OffsetTop;
+        public float OffsetTop2;
         public float OffsetBottom;
+        public float OffsetBottom2;
     }
     
     public class TopBottomBossAction : BaseBossAction
@@ -62,11 +64,15 @@ namespace XRProject.Boss
             
             yield return PlayMerge(
                 HorizontalPlay(0, top + Vector2.down * _data.OffsetTop, LazerType.Danger),
-                HorizontalPlay(1, bottom + Vector2.up * _data.OffsetBottom , LazerType.Danger)
+                HorizontalPlay(1, top + Vector2.down * _data.OffsetTop2, LazerType.Danger),
+                HorizontalPlay(2, bottom + Vector2.up * _data.OffsetBottom, LazerType.Danger),
+                HorizontalPlay(3, bottom + Vector2.up * _data.OffsetBottom2, LazerType.Danger)
             );
             yield return PlayMerge(
                 HorizontalPlay(0, top + Vector2.down * _data.OffsetTop, LazerType.Lazer),
-                HorizontalPlay(1, bottom + Vector2.up * _data.OffsetBottom, LazerType.Lazer)
+                HorizontalPlay(1, top + Vector2.down * _data.OffsetTop2, LazerType.Lazer),
+                HorizontalPlay(2, bottom + Vector2.up * _data.OffsetBottom, LazerType.Lazer),
+                HorizontalPlay(3, bottom + Vector2.up * _data.OffsetBottom2, LazerType.Lazer)
             );
             BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_end", false);
             _meleeData.hands[0].GetComponentInChildren<SkeletonAnimation>().AnimationState

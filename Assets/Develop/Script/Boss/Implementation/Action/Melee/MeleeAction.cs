@@ -87,13 +87,14 @@ namespace XRProject.Boss
             _meleeData.hands[1].GetComponentInChildren<SkeletonAnimation>().AnimationState
                 .SetAnimation(0, "Boss_Right_Hand_Smash", false);
 
-            yield return DOTween.Sequence()
-                    .Join(_meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, _meleeData.angle), 0.5f))
-                    .Join(_meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -_meleeData.angle), 0.5f))
+            //yield return
+                DOTween.Sequence()
+                    .Join(_meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, _meleeData.angle), 0.25f))
+                    .Join(_meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -_meleeData.angle), 0.25f))
                     .WaitForCompletion()
                 ;
             
-            yield return new WaitForSeconds(0.667f);
+            //yield return new WaitForSeconds(0.367f);
 
             float timer = 0f;
             while (timer <= 1f)

@@ -86,7 +86,7 @@ namespace XRProject.Boss
         }
 
 
-        public static Track CompletionPatternPhase1(Transform transform, IPatternFactoryIngredient ingredient)
+        public static Track CompletionPhase(Transform transform, IPatternFactoryIngredient ingredient)
         {
             Track parentTrack = new Track();
 

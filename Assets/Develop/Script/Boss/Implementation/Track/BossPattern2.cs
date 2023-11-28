@@ -25,7 +25,7 @@ namespace XRProject.Boss
             };
             
             cTrack
-                .AddAction(new MeleePositionAction(ingredients))
+                //.AddAction(new MeleePositionAction(ingredients))
                 
                 .AddAction(actionList[Random.Range(0, actionList.Count)])
                 .AddAction(new DelayAction(0.5f))

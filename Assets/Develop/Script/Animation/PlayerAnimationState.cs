@@ -111,6 +111,8 @@ public class PlayerAnimationState : MonoBehaviour
     }
     private void LateUpdate()
     {
+        if (_playerController.IsDestroyed) return;
+        
         if (_lateGrabState)
         {
             _lateGrabState = false;

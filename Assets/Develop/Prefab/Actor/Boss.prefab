@@ -601,7 +601,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &1544996439691404456
 MonoBehaviour:
@@ -1336,7 +1336,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &6051827875249290478
 MonoBehaviour:
@@ -1499,7 +1499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mapDoor: {fileID: 0}
-  _hp: 20
+  _hp: 10
   baseLazerActionData:
     CenterOffset: {x: 0, y: -0.61}
     BoxSize: {x: 46.9, y: 25.2}
@@ -1514,8 +1514,8 @@ MonoBehaviour:
     _handMoveDuration: 1
     _handHatMoveSpeed: 100
     _handAttackDuration: 0.2
-    _handWarningDuration: 0.5
-    _attackDelay: 0.1
+    _handWarningDuration: 0.1
+    _attackDelay: 0
     hands:
     - {fileID: 4306593755217117790}
     - {fileID: 7107046302335182248}
@@ -1530,10 +1530,12 @@ MonoBehaviour:
     EffectAttackOffset: {x: 0, y: 0}
     angle: 19.68
   _verticalLazerData:
-    Interation: 6
+    Interation: 10
   _topBottomLazerData:
     OffsetTop: 7
+    OffsetTop2: 16
     OffsetBottom: 2
+    OffsetBottom2: 10
   _movementData:
     TraceMiniumDistance: 10
     TraceDuration: 0.1
