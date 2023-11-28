@@ -39,8 +39,10 @@ namespace XRProject.Boss
 
             
             BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Start", false);
+            BaseData.Ani.AnimationState.AddAnimation(0, "Boss_Thunder_Ing", true, 0f);
+            
             _meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, BaseData.angle), 0.5f);
-            yield return _meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -BaseData.angle), 0.5f);
+            _meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -BaseData.angle), 0.5f);
             _meleeData.hands[0].GetComponentInChildren<BossHandInteracter>().SetEffectPlay(true);
             _meleeData.hands[1].GetComponentInChildren<BossHandInteracter>().SetEffectPlay(true);
             
@@ -49,8 +51,7 @@ namespace XRProject.Boss
             _meleeData.hands[1].GetComponentInChildren<SkeletonAnimation>().AnimationState
                 .SetAnimation(0, "Boss_Rights_Hand_Thunder_Start", false);
             
-            yield return new WaitForSeconds(1.533f);
-            BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Ing", true);
+            yield return new WaitForSeconds(0.65f);
             
             _meleeData.hands[0].GetComponentInChildren<SkeletonAnimation>().AnimationState
                 .SetAnimation(0, "Boss_Rights_Hand_Thunder_Ing", true);
@@ -91,7 +92,7 @@ namespace XRProject.Boss
             
             _meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, 0f), 0.5f);
             yield return _meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, 0f), 0.5f);
-            yield return new WaitForSeconds(2.667f);
+            yield return new WaitForSeconds(1.667f);
         }
 
     }

@@ -45,6 +45,7 @@ namespace XRProject.Boss
             
 
             BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Start", false);
+            BaseData.Ani.AnimationState.AddAnimation(0, "Boss_Thunder_Ing", true, 0f);
             
             _meleeData.hands[0].GetComponentInChildren<SkeletonAnimation>().AnimationState
                 .SetAnimation(0, "Boss_Rights_Hand_Thunder_Start", false);
@@ -52,9 +53,11 @@ namespace XRProject.Boss
                 .SetAnimation(0, "Boss_Rights_Hand_Thunder_Start", false);
             
             _meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, BaseData.angle), 0.5f);
-            yield return _meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -BaseData.angle), 0.5f);
+            _meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -BaseData.angle), 0.5f);
+            _meleeData.hands[0].GetComponentInChildren<BossHandInteracter>().SetEffectPlay(true);
+            _meleeData.hands[1].GetComponentInChildren<BossHandInteracter>().SetEffectPlay(true);
             
-            yield return new WaitForSeconds(1.533f);
+            yield return new WaitForSeconds(0.65f);
             BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Ing", true);
             
             _meleeData.hands[0].GetComponentInChildren<SkeletonAnimation>().AnimationState
@@ -81,8 +84,10 @@ namespace XRProject.Boss
                 .SetAnimation(0, "Boss_Rights_Hand_Thunder_End", false);
             
             _meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, 0f), 0.5f);
-            yield return _meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, 0f), 0.5f);
-            yield return new WaitForSeconds(2.667f);
+            _meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, 0f), 0.5f);
+            _meleeData.hands[0].GetComponentInChildren<BossHandInteracter>().SetEffectPlay(false);
+            _meleeData.hands[1].GetComponentInChildren<BossHandInteracter>().SetEffectPlay(false);
+            yield return new WaitForSeconds(1.667f);
         }
 
     }

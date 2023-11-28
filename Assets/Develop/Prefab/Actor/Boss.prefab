@@ -1499,7 +1499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mapDoor: {fileID: 0}
-  _hp: 10
+  _hp: 50
   baseLazerActionData:
     CenterOffset: {x: 0, y: -0.61}
     BoxSize: {x: 46.9, y: 25.2}
@@ -1546,7 +1546,7 @@ MonoBehaviour:
     BodyRender: {fileID: 6133083272817388216}
   dropBoltBossActionData:
     DropInterval: 0.1
-    MaxDropCount: 10
+    MaxDropCount: 5
     BoltPrototypes:
     - {fileID: 4539018146855869099, guid: 02a54bcc7c4256f459428e8b4493170d, type: 3}
     - {fileID: 4246159619002135473, guid: 6abb94ec8b832c349bfdeee5a6885069, type: 3}
