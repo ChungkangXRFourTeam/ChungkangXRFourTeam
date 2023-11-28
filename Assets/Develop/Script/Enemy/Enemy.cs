@@ -285,6 +285,11 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
         }
     }
 
+    private void OnDestroy()
+    {
+        GameObject.Find("MonsterCountManager").SendMessage("ChangeMonsterCount");
+    }
+
     private void OnContractObject(ObjectContractInfo info)
     {
         if (info.TryGetBehaviour(out IBObjectKnockback knockback))

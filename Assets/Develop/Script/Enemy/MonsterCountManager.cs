@@ -22,7 +22,12 @@ public class MonsterCountManager : MonoBehaviour
     private void ChangeMonsterCount()
     {
         _monsterCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        Debug.Log(_monsterCount);
         if (_monsterCount == 0)
-            Instantiate(_kennelPrefab, _spawnPoint.position ,quaternion.identity);
+        {
+            GameObject kennel = Instantiate(_kennelPrefab, _spawnPoint.position ,quaternion.identity);
+            Debug.Log(kennel.name);
+        }
+        
     }
 }

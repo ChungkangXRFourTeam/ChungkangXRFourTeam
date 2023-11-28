@@ -56,10 +56,12 @@ public class ParallaxLayer : MonoBehaviour
     private Vector2 _rightWall;
     private Vector2 _upWall;
     private Vector2 _downWall;
-    
+
+    private GameObject _player;
     
     private void Awake()
     {
+        _player = GameObject.FindWithTag("Player");
         _renderer = GetComponent<SpriteRenderer>();
         _virtualCameraController = GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineCameraControll>();
         _virtualCamera = GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineVirtualCamera>();
@@ -125,23 +127,38 @@ public class ParallaxLayer : MonoBehaviour
     }
     public void MoveX(float delta)
     {
-        Vector3 newPos = transform.position;
-        newPos.x -= delta * _horizontalFactor;
-
-        if (isOverable||(_leftPoint.position.x > _leftWall.x && delta > 0) || (_rightPoint.position.x < _rightWall.x && delta < 0))
+        if (_player.transform.position.y < _upWall.y)
         {
-            transform.position = newPos;
+            Vector3 newPos = transform.position;
+            newPos.x -= delta * _horizontalFactor;
+
+            if (isOverable||(_leftPoint.position.x > _leftWall.x && delta > 0) || (_rightPoint.position.x < _rightWall.x && delta < 0))
+            {
+                transform.position = newPos;
+            }
+        }
+        else
+        {
+            transform.position = transform.position;
         }
     }
     
     public void MoveY(float delta)
     {
-        Vector3 newPos = transform.localPosition;
-        newPos.y -= delta * _verticalFactor;
-        
-        if(isOverable||((_upPoint.position.y < _upWall.y && delta < 0) || (_downPoint.position.y > _downWall.y && delta > 0))
-           ) 
-            transform.position = newPos;
+        if (_player.transform.position.y < _upWall.y)
+        {
+            Vector3 newPos = transform.localPosition;
+            newPos.y -= delta * _verticalFactor;
+
+            if (isOverable || ((_upPoint.position.y < _upWall.y && delta < 0) ||
+                               (_downPoint.position.y > _downWall.y && delta > 0))
+               )
+                transform.position = newPos;
+        }
+        else
+        {
+            transform.position = transform.position;
+        }
     }
 
     private void Update()

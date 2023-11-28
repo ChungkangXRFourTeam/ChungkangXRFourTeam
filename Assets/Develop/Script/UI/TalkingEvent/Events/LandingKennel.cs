@@ -5,6 +5,7 @@ using Cinemachine;
 using Unity.Mathematics;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using Spine.Unity;
 using TMPro;
 using UnityEngine.InputSystem;
 
@@ -15,7 +16,7 @@ public class LandingKennelEvent : ITalkingEvent
     private GameObject _kennel;
     private GameObject _upWall;
 
-    private SpriteRenderer _kennelRenderer;
+    private SkeletonAnimation _kennelAnimation;
     private CinemachineVirtualCamera _virtualCamera;
     private CinemachineFramingTransposer _cinemachineFramingTransposer;
     private CinemachineConfiner _cinemachineConfiner;
@@ -67,7 +68,8 @@ public class LandingKennelEvent : ITalkingEvent
         _player = GameObject.FindWithTag("Player");
         _playerPanel = GameObject.FindGameObjectWithTag("Player").GetComponent<TalkingPanelInfo>();
         _kennel = GameObject.FindWithTag("Kennel");
-        _kennelRenderer = _kennel.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
+        _kennelAnimation = _kennel.GetComponent<SkeletonAnimation>();
+        _kennelAnimation.AnimationName = "Down";
         _kennelPos = _kennel.transform.position;
         _playerRigid = _player.GetComponent<Rigidbody2D>();
         _kennelRigid = _kennel.GetComponent<Rigidbody2D>();
@@ -96,9 +98,9 @@ public class LandingKennelEvent : ITalkingEvent
     public async UniTask OnEvent()
     {
         await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
-        
 
-        _player.transform.rotation = quaternion.Euler(0, 0, 0);
+
+        _player.transform.rotation = quaternion.identity;
         
         _playerRigid.bodyType = RigidbodyType2D.Dynamic;
         _kennelRigid.bodyType = RigidbodyType2D.Dynamic;
@@ -109,9 +111,10 @@ public class LandingKennelEvent : ITalkingEvent
         _kennelRigid.excludeLayers = 0;
         
         _eventAnimationController.PlayEventAnim(EventAnimationName.FALLING_LAND);
-
+        _kennelAnimation.AnimationName = "None";
         await UniTask.Delay(TimeSpan.FromSeconds(0.7f));
 
+        
         await MoveToPosition(_player, new Vector2(_player.transform.position.x + 5, 0),0.1f);
         
         await UniTask.Yield();
@@ -120,15 +123,22 @@ public class LandingKennelEvent : ITalkingEvent
     
     public async UniTask OnEventEnd()
     {
-        Color kennelColor = _kennelRenderer.color;
-        
-        
-        while (_kennelRenderer.color.a >= 0)
+        _kennelRigid.excludeLayers = Physics2D.AllLayers - (1 << 6 | 1 << 17);
+        _kennelRigid.bodyType = RigidbodyType2D.Static;
+        _kennelAnimation.AnimationName = "Up";
+        float floatingTime = 1.0f;
+        while (floatingTime > 0f)
         {
-            _kennelRenderer.color = new Color(kennelColor.r, kennelColor.g, kennelColor.b, _kennelRenderer.color.a - 0.05f);
+            floatingTime -= Time.unscaledDeltaTime;
+            _kennelRigid.position += Vector2.up * Time.unscaledDeltaTime;
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
-        
+        while (Mathf.Abs(_kennelEnd.y - _kennel.transform.position.y) >= 5f)
+        {
+            _kennelRigid.position += Vector2.up * 5f;
+            await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
+        }
+
 
         InputAction action = InputManager.GetTalkEventAction("NextText");
 
@@ -152,7 +162,7 @@ public class LandingKennelEvent : ITalkingEvent
         _cinemachineFramingTransposer.m_YDamping = 1;
         
         startPos.gameObject.SetActive(false);
-        _kennel.SetActive(false);
+        GameObject.Destroy(_kennel);
         
         _eventAnimationController.DisableEventAnimatorController();
         InputManager.Instance.DisableTalkEventAction();
@@ -164,6 +174,7 @@ public class LandingKennelEvent : ITalkingEvent
     {
         Vector2 dir = target.transform.position.x - posistion.x > 0 ? Vector2.left : Vector2.right;
         float fliped = dir.x > 0 ? 180 : 0;
+        _player.transform.rotation = Quaternion.Euler(0,fliped,0);
         _eventAnimationController.PlayEventAnim(EventAnimationName.RUN);
         while (Mathf.Abs(target.transform.position.x - posistion.x) >= 0.1f)
         {
