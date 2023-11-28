@@ -223,14 +223,29 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
         if (_isDestroyed) return;
         
         _executor.Execute();
+
+        if (_physicsStrategy.IsSwingState == false)
+        {
+            _knockbackCount = 0;
+        }
     }
 
-
+    private int _knockbackCount = 0;
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Wall"))
         {
             _physicsStrategy.OnDetectBlock();
+            _knockbackCount = 0;
+        }
+        else if (other.gameObject.CompareTag("KnockbackObject"))
+        {
+            _knockbackCount++;
+
+            if (_knockbackCount >= 20)
+            {
+                CurrentHP = 0;
+            }
         }
     }
     private void OnTriggerExit2D(Collider2D other)
@@ -288,7 +303,7 @@ public class Enemy : MonoBehaviour, IBActorLife, IBActorProperties, IBActorHit, 
 
     private void OnDestroy()
     {
-        GameObject.Find("MonsterCountManager").SendMessage("ChangeMonsterCount");
+        GameObject.Find("MonsterCountManager")?.SendMessage("ChangeMonsterCount");
     }
 
     private void OnContractObject(ObjectContractInfo info)
