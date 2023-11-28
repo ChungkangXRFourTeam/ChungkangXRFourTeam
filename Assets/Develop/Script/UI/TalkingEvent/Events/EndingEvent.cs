@@ -59,6 +59,9 @@ public class EndingEvent : ITalkingEvent
         _player = GameObject.FindGameObjectWithTag("Player");
         _observer = GameObject.FindGameObjectWithTag("Boss");
 
+        _playerPanel = _player.GetComponent<TalkingPanelInfo>();
+        _targetPanel = _observer.GetComponent<TalkingPanelInfo>();
+
         _eventAnimationController = _player.GetComponent<PlayerEventAnimationController>();
         _eventAnimationController.EnableEventAnimatorController();
         _player.transform.Rotate(0,180,0);

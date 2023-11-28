@@ -9,6 +9,7 @@ using Cysharp.Threading.Tasks;
 
 public class EventFadeChanger : MonoBehaviour
 {
+    private static GameObject _fadeObject;
     public CanvasGroup Fade_img;
     
     public static EventFadeChanger Instance {
@@ -18,8 +19,9 @@ public class EventFadeChanger : MonoBehaviour
     }
     private static EventFadeChanger _instance;
 
-    private void Awake()
+    private void Start()
     {
+        Fade_img = _fadeObject.transform.GetComponentInChildren<CanvasGroup>();
         SceneManager.sceneLoaded += OnSceneChanged;
     }
     
@@ -35,15 +37,16 @@ public class EventFadeChanger : MonoBehaviour
         _instance = new GameObject("[EventFadeChanger]").AddComponent<EventFadeChanger>();
         DontDestroyOnLoad(_instance.gameObject);
         
-        GameObject fadeObj = Resources.Load<GameObject>("Prefab/FadeObject");
-        GameObject fade = Instantiate(fadeObj);
-        fade.transform.GetComponentInChildren<CanvasGroup>().alpha = 0;
-        DontDestroyOnLoad(fade);
-
+        GameObject fadeObj = Resources.Load<GameObject>("Prefab/FadeObject"); 
+        _fadeObject = Instantiate(fadeObj); 
+        _fadeObject .transform.GetComponentInChildren<CanvasGroup>().alpha = 0;
+        _fadeObject.SetActive(false);
     }
     
 
-    public void FadeIn(float duration,float value = 1.0f, string sceneName = null){
+    public void FadeIn(float duration,float value = 1.0f, string sceneName = null)
+    { 
+        _fadeObject.SetActive(true);
         Fade_img.DOFade(value, duration)
             .OnStart(()=>{
                 Fade_img.blocksRaycasts = true; //아래 레이캐스트 막기
@@ -57,6 +60,8 @@ public class EventFadeChanger : MonoBehaviour
 
     public void FadeOut(float duration)
     {
+        if (!_fadeObject.activeSelf)
+            _fadeObject.SetActive(true);
         Fade_img.DOFade(0, duration)
             .OnComplete(()=>{
                 Fade_img.blocksRaycasts = false;
@@ -65,7 +70,11 @@ public class EventFadeChanger : MonoBehaviour
 
     public void OnSceneChanged(Scene scene, LoadSceneMode mode)
     {
-        Fade_img = GameObject.FindWithTag("Fade").GetComponent<CanvasGroup>();
+        GameObject fadeObj = Resources.Load<GameObject>("Prefab/FadeObject"); 
+        _fadeObject = Instantiate(fadeObj);
+        Fade_img = _fadeObject.transform.GetComponentInChildren<CanvasGroup>();
+        Fade_img.alpha = 0;
+        _fadeObject.SetActive(false);
     }
     
 }
