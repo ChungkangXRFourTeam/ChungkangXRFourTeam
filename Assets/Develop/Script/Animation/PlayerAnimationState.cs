@@ -165,8 +165,10 @@ public class PlayerAnimationState : MonoBehaviour
 
     private void OnDestroy()
     {
-        _grabAction.started -= OnGrabAction;
-        _swingAction.canceled -= OnSwingAction;
+        if(_grabAction != null)
+            _grabAction.started -= OnGrabAction;
+        if(_swingAction != null)
+            _swingAction.canceled -= OnSwingAction;
     }
 
     private void SetState(State state)
