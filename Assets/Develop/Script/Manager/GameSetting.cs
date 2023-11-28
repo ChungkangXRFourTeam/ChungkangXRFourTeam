@@ -18,6 +18,7 @@ public class GameSetting : MonoBehaviour
         TalkingEventManager.Init();
         TypingSystem.Init();
         
+        
         Application.targetFrameRate = 60;
     }
 
@@ -51,6 +52,7 @@ public class GameSetting : MonoBehaviour
 
     }
 
+    public static int GameCount = 1;
     public bool _isGravityDown;
     public bool IsGravityDown
     {

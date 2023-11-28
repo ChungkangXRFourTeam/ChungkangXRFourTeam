@@ -10,6 +10,7 @@ using Cysharp.Threading.Tasks;
 public class EventFadeChanger : MonoBehaviour
 {
     private static GameObject _fadeObject;
+    private static GameObject _fadeText;
     public CanvasGroup Fade_img;
     
     public static EventFadeChanger Instance {
@@ -40,6 +41,9 @@ public class EventFadeChanger : MonoBehaviour
         GameObject fadeObj = Resources.Load<GameObject>("Prefab/FadeObject"); 
         _fadeObject = Instantiate(fadeObj); 
         _fadeObject .transform.GetComponentInChildren<CanvasGroup>().alpha = 0;
+        _fadeText = GameObject.FindWithTag("FadeText");
+        _fadeText.GetComponent<CanvasGroup>().alpha = 0;
+
     }
     
 
@@ -69,10 +73,13 @@ public class EventFadeChanger : MonoBehaviour
 
     public void OnSceneChanged(Scene scene, LoadSceneMode mode)
     {
-        GameObject fadeObj = Resources.Load<GameObject>("Prefab/FadeObject"); 
-        _fadeObject = Instantiate(fadeObj);
-        Fade_img = _fadeObject.transform.GetComponentInChildren<CanvasGroup>();
-        Fade_img.alpha = 0;
+        if (!GameObject.FindWithTag("Fade"))
+        {
+            GameObject fadeObj = Resources.Load<GameObject>("Prefab/FadeObject");
+            _fadeObject = Instantiate(fadeObj);
+            Fade_img = _fadeObject.transform.GetComponentInChildren<CanvasGroup>();
+            Fade_img.alpha = 0;
+        }
     }
     
 }
