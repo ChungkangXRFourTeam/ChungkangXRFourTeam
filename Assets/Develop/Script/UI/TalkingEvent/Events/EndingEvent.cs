@@ -36,7 +36,7 @@ public class EndingEvent : ITalkingEvent
     private Transform startPos;
     private PolygonCollider2D _confiner;
 
-    private PlayerAnimationController _playerAnimationController;
+    private PlayerEventAnimationController _eventAnimationController;
     
     protected List<Dictionary<string, object>> _eventTexts;
     protected TalkingPanelInfo _playerPanel;
@@ -47,9 +47,25 @@ public class EndingEvent : ITalkingEvent
     
     public async UniTask OnEventBefore()
     {
-
+        _scriptPath += "Ending/FinalEnd1";
+        _eventTexts = CSVReader.Read(_scriptPath);
+        _comments = new List<string>();
+        for (int i = 0; i < _eventTexts.Count; i++)
+        {
+            _comments.Add(_eventTexts[i][EventTextType.Content.ToString()].ToString());
+        }
+        _textCount = 0;
+        
         _player = GameObject.FindGameObjectWithTag("Player");
         _observer = GameObject.FindGameObjectWithTag("Boss");
+
+        _playerPanel = _player.GetComponent<TalkingPanelInfo>();
+        _targetPanel = _observer.GetComponent<TalkingPanelInfo>();
+
+        _eventAnimationController = _player.GetComponent<PlayerEventAnimationController>();
+        _eventAnimationController.EnableEventAnimatorController();
+        _player.transform.Rotate(0,180,0);
+        _eventAnimationController.PlayEventAnim(EventAnimationName.IDLE);
         
         await UniTask.Yield();
     }
@@ -107,25 +123,12 @@ public class EndingEvent : ITalkingEvent
         Vector2 dir = target.transform.position.x - posistion.x > 0 ? Vector2.left : Vector2.right;
         
         float fliped = dir.x > 0 ? 180 : 0;
-        
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Run,
-            Rotation = Quaternion.Euler(0,fliped,0),
-            Restart = true
-        });
         while (Mathf.Abs(target.transform.position.x - posistion.x) >= 0.1f)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
         
         target.transform.Rotate(0,0,0);
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Idle,
-            Rotation = Quaternion.identity,
-            Restart = false
-        });
     }
 
     public bool IsInvalid()
