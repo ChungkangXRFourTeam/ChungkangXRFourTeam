@@ -15,7 +15,6 @@ public class HpUi : MonoBehaviour
     private IBActorLife _life;
     private void Awake()
     {
-        _canvas.SetActive(true);
         _life = actorState.GetComponent<IBActorLife>();
         if (_life != null)
         {
