@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class HpUi : MonoBehaviour
     [SerializeField] private GameObject actorState;
     [SerializeField] private Image _image;
     [SerializeField] private GameObject _canvas;
+    [SerializeField] private float _duration;
 
     private IBActorLife _life;
     private void Awake()
@@ -23,6 +25,7 @@ public class HpUi : MonoBehaviour
 
     private void OnChangedHp(IBActorLife actorLife, float prevHp, float currentHp)
     {
-        _image.fillAmount = currentHp / actorLife.MaxHp;
+        DOTween.Kill(this);
+        _image.DOFillAmount(currentHp / actorLife.MaxHp, _duration).SetId(this);
     }
 }

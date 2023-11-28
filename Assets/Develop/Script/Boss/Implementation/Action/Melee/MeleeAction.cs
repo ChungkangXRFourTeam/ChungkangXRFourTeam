@@ -26,6 +26,8 @@ namespace XRProject.Boss
         public Ease HandAttackEase;
         public Ease HandWarningEase;
         public Vector2 WarningPointOffset;
+        public Vector2 AttackOffset;
+        public Vector2 EffectAttackOffset;
         public float angle = 19.68f;
     }
 
@@ -76,11 +78,6 @@ namespace XRProject.Boss
             yield return GotoHandPosition(_data.hands[_index], _data.handPos[_index]);
             yield return new WaitForSeconds(_data._attackDelay);
 
-            yield return DOTween.Sequence()
-                    .Join(_meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, _meleeData.angle), 0.5f))
-                    .Join(_meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -_meleeData.angle), 0.5f))
-                    .WaitForCompletion()
-                ;
             
             var playerTransform = GetPlayerOrNull();
             if (playerTransform == false) yield break;
@@ -90,7 +87,13 @@ namespace XRProject.Boss
             _meleeData.hands[1].GetComponentInChildren<SkeletonAnimation>().AnimationState
                 .SetAnimation(0, "Boss_Right_Hand_Smash", false);
 
-            yield return new WaitForSeconds(3.667f);
+            yield return DOTween.Sequence()
+                    .Join(_meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, _meleeData.angle), 0.5f))
+                    .Join(_meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -_meleeData.angle), 0.5f))
+                    .WaitForCompletion()
+                ;
+            
+            yield return new WaitForSeconds(0.667f);
 
             float timer = 0f;
             while (timer <= 1f)
@@ -137,16 +140,26 @@ namespace XRProject.Boss
                 )
                 .AppendCallback(() =>
                 {
-                    if (hand.TryGetComponent(out BossHandInteracter handInter))
+                    var com = hand.GetComponentInChildren<BossHandInteracter>();
+                    if (com)
                     {
-                        handInter.Attack();
+                        com.Attack();
                     }
                 })
                 .Append(
                     hand
-                        .DOMove(targetPoint, _data._handAttackDuration)
+                        .DOMove(targetPoint + _data.AttackOffset, _data._handAttackDuration)
                         .SetEase(_data.HandAttackEase)
-                );
+                )
+                .AppendCallback(() =>{
+                        VirtualCameraShaker.Instance.CameraShake(1.5f, 10f, 100f);
+                        EffectManager.ImmediateCommand(new EffectCommand()
+                        {
+                            EffectKey = "boss/meleeAttack",
+                            Position = targetPoint + _data.EffectAttackOffset
+                        });
+                    }
+                    );
                 
             var s2 = DOTween.Sequence();
                 s2.AppendInterval(0.75f)

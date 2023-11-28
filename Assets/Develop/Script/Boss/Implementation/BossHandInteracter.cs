@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-[RequireComponent(typeof(InteractionController), typeof(BoxCollider2D))]
+[RequireComponent(typeof(InteractionController))]
 public class BossHandInteracter : MonoBehaviour
 {
+    [SerializeField] private ParticleSystem _effect;
     private InteractionController _interaction;
     private BoxCollider2D _col;
     private ParticleSystem _particle;
@@ -14,7 +15,7 @@ public class BossHandInteracter : MonoBehaviour
     private void Awake()
     {
         _interaction = GetComponent<InteractionController>();
-        _col = GetComponent<BoxCollider2D>();
+        _col = GetComponentInChildren<BoxCollider2D>();
         _particle = GetComponentInChildren<ParticleSystem>();
 
         _interaction.SetContractInfo(
@@ -22,6 +23,8 @@ public class BossHandInteracter : MonoBehaviour
         );
 
         _interaction.OnContractActor += OnContractActor;
+
+        SetEffectPlay(false);
     }
 
     public void SetCollision(bool value)
@@ -39,6 +42,20 @@ public class BossHandInteracter : MonoBehaviour
             isAttacked = false;
             SetCollision(false);
         }).SetId(this);
+    }
+
+    public void SetEffectPlay(bool value)
+    {
+        if(value)
+        {
+            _effect.gameObject.SetActive(true);   
+            _effect.Play();
+        }
+        else
+        {
+            _effect.gameObject.SetActive(false);   
+            _effect.Stop();
+        }
     }
 
     private void OnContractActor(ActorContractInfo info)

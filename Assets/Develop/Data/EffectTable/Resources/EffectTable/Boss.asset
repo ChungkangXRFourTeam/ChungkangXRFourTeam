@@ -9,12 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69d771db6a55b6d439c8a763aa5d9a9e, type: 3}
-  m_Name: SampleSwingAttack
+  m_Script: {fileID: 11500000, guid: f4b0edf8d1432d54cb4dd96aee53334c, type: 3}
+  m_Name: Boss
   m_EditorClassIdentifier: 
-  _swingForce: 60
-  _minmumCloseDistance: 2
-  _timeScale: 0.15
-  _grabDistance: 5
-  _coolTime: 0.5
-  _grabOffset: {x: -2.4, y: 0.74}
+  _tableKey: boss
+  _table:
+  - Key: meleeAttack
+    Effect: {fileID: 4060921307212534799, guid: 49f3cf916965fd14ca92aceaa9a1dce9, type: 3}

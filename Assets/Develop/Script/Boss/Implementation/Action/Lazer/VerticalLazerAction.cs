@@ -37,10 +37,10 @@ namespace XRProject.Boss
             var lazer = BaseData.LazerController;
             if (playerTransform == false) yield break;
 
-            yield return _meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, BaseData.angle), 0.5f);
-            yield return _meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -BaseData.angle), 0.5f);
             
             BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Start", false);
+            _meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, BaseData.angle), 0.5f);
+            yield return _meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -BaseData.angle), 0.5f);
             
             _meleeData.hands[0].GetComponentInChildren<SkeletonAnimation>().AnimationState
                 .SetAnimation(0, "Boss_Rights_Hand_Thunder_Start", false);
@@ -84,6 +84,9 @@ namespace XRProject.Boss
                 .SetAnimation(0, "Boss_Rights_Hand_Thunder_End", false);
             _meleeData.hands[1].GetComponentInChildren<SkeletonAnimation>().AnimationState
                 .SetAnimation(0, "Boss_Rights_Hand_Thunder_End", false);
+            
+            _meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, 0f), 0.5f);
+            yield return _meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, 0f), 0.5f);
             yield return new WaitForSeconds(2.667f);
         }
 
