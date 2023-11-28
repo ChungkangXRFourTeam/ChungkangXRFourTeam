@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
+using Spine.Unity;
 using UnityEngine;
 
 namespace XRProject.Boss
@@ -20,11 +22,13 @@ namespace XRProject.Boss
     {
         private VerticalLazerData _data;
         private bool _dirty;
+        private MeleeData _meleeData;
         
         public VerticalBossAction(Transform transform, IPatternFactoryIngredient ingredient, bool dirty) : base(transform, ingredient.BaseLazerData)
         {
             _data = ingredient.VerticalLazerData;
             _dirty = dirty;
+            _meleeData = ingredient.MeleeData;
         }
 
         public override IEnumerator EValuate()
@@ -33,9 +37,23 @@ namespace XRProject.Boss
             var lazer = BaseData.LazerController;
             if (playerTransform == false) yield break;
 
+            yield return _meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, BaseData.angle), 0.5f);
+            yield return _meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -BaseData.angle), 0.5f);
+            
             BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Start", false);
+            
+            _meleeData.hands[0].GetComponentInChildren<SkeletonAnimation>().AnimationState
+                .SetAnimation(0, "Boss_Rights_Hand_Thunder_Start", false);
+            _meleeData.hands[1].GetComponentInChildren<SkeletonAnimation>().AnimationState
+                .SetAnimation(0, "Boss_Rights_Hand_Thunder_Start", false);
+            
             yield return new WaitForSeconds(1.533f);
             BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_Ing", true);
+            
+            _meleeData.hands[0].GetComponentInChildren<SkeletonAnimation>().AnimationState
+                .SetAnimation(0, "Boss_Rights_Hand_Thunder_Ing", true);
+            _meleeData.hands[1].GetComponentInChildren<SkeletonAnimation>().AnimationState
+                .SetAnimation(0, "Boss_Rights_Hand_Thunder_Ing", true);
             
             Vector2 targetPos = playerTransform.position;
 
@@ -62,6 +80,10 @@ namespace XRProject.Boss
             }
             yield return PlayMerge(arr.ToArray());
             BaseData.Ani.AnimationState.SetAnimation(0, "Boss_Thunder_end", false);
+            _meleeData.hands[0].GetComponentInChildren<SkeletonAnimation>().AnimationState
+                .SetAnimation(0, "Boss_Rights_Hand_Thunder_End", false);
+            _meleeData.hands[1].GetComponentInChildren<SkeletonAnimation>().AnimationState
+                .SetAnimation(0, "Boss_Rights_Hand_Thunder_End", false);
             yield return new WaitForSeconds(2.667f);
         }
 

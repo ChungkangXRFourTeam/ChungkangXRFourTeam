@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using XRProject.Boss;
 using XRProject.Helper;
 
 [RequireComponent(typeof(InteractionController),typeof(Rigidbody2D), typeof(BoxCollider2D))]
@@ -47,8 +48,30 @@ public class BoltNut : MonoBehaviour, IBActorThrowable
                     _knockbackCount++;
             }
         };
+        Interaction.OnContractActor += info =>
+        {
+            if (_swingDirty == false) return;
+            
+            if (info.Transform.TryGetComponent<Boss>(out var boss))
+            {
+                boss.DoHit(Interaction.ContractInfo, 1f);
+                DoDestroy();
+            }
+        };
 
         _gravity = _rigid.gravityScale;
+    }
+
+    private void DoDestroy()
+    {
+        _isdestry = true;
+        Destroy(gameObject);
+        EffectManager.ImmediateCommand(new EffectCommand()
+        {
+            EffectKey = "actor/knockbackHitOrange",
+            Position = transform.position
+        });
+        DOTween.Kill(this);
     }
 
     private bool _isdestry;
@@ -58,11 +81,10 @@ public class BoltNut : MonoBehaviour, IBActorThrowable
         if (_dTimer >= 5f && fsad == false)
         {
             fsad = true;
-            GetComponent<SpriteRenderer>().DOColor(Color.gray, 0.2f).SetLoops(10, LoopType.Yoyo).SetEase(Ease.InOutSine)
+            GetComponent<SpriteRenderer>().DOColor(Color.gray, 0.2f).SetLoops(10, LoopType.Yoyo).SetEase(Ease.InOutSine).SetId(this)
                 .OnComplete(() =>
                 {
-                    _isdestry = true;
-                    Destroy(gameObject);
+                    DoDestroy();
                 });
         }
         else
@@ -93,7 +115,6 @@ public class BoltNut : MonoBehaviour, IBActorThrowable
     public bool IsThrowable => true;
     public void Throw(ActorContractInfo info)
     {
-        print("throw");
         _swingDirty = true;
     }
 }

@@ -18,6 +18,7 @@ namespace XRProject.Boss
         public Vector2 UpOffset;
         public Vector2 DownOffset;
         public Ease Ease;
+        public Transform BodyRender;
     }
     
     public class MovementAction : IAction
@@ -47,8 +48,8 @@ namespace XRProject.Boss
             // goto up
             while (true)
             {
-                yield return _transform.DOMove(UpPoint, _data.FloatingDuration).SetEase(_data.Ease).WaitForCompletion();
-                yield return _transform.DOMove(DownPoint, _data.FloatingDuration).SetEase(_data.Ease).WaitForCompletion();
+                yield return _data.BodyRender.transform.DOMove(UpPoint, _data.FloatingDuration).SetEase(_data.Ease).WaitForCompletion();
+                yield return _data.BodyRender.transform.DOMove(DownPoint, _data.FloatingDuration).SetEase(_data.Ease).WaitForCompletion();
             }
         }
 

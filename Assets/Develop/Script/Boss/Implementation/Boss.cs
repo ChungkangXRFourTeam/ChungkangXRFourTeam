@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -15,6 +16,7 @@ namespace XRProject.Boss
         private TrackPlayer _movementPlayer;
         private TrackPlayer _patternTranslationPlayer;
 
+        [SerializeField] private SkeletonAnimation _mapDoor;
         [SerializeField] private float _hp;
         [SerializeField] private BaseLazerActionData baseLazerActionData;
         [SerializeField] private MeleeData _meleeData;

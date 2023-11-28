@@ -23,6 +23,7 @@ namespace XRProject.Boss
         public float AttackClearDuration;
         public BossLazerController LazerController;
         public SkeletonAnimation Ani;
+        public float angle = 38.06f;
     }
 
     public abstract class BaseBossAction : IAction
@@ -35,7 +36,6 @@ namespace XRProject.Boss
             this.transform = transform;
             BaseData = baseData;
         }
-
         protected Vector2 GetSidePoint(Vector2 normal, float length)
         {
             return (Vector2)transform.position + BaseData.CenterOffset + normal * length;

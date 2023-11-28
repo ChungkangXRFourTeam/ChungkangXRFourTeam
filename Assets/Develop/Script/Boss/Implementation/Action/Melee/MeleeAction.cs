@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -25,6 +26,7 @@ namespace XRProject.Boss
         public Ease HandAttackEase;
         public Ease HandWarningEase;
         public Vector2 WarningPointOffset;
+        public float angle = 19.68f;
     }
 
 
@@ -58,6 +60,7 @@ namespace XRProject.Boss
     public class MeleeAction : BaseBossAction
     {
         private MeleeData _data;
+        private MeleeData _meleeData;
         private Transform _transform;
         private int _index;
         public MeleeAction(Transform transform,IPatternFactoryIngredient ingredient, int index) : base(transform, ingredient.BaseLazerData)
@@ -65,15 +68,29 @@ namespace XRProject.Boss
             _transform = transform;
             _data = ingredient.MeleeData;
             _index = index;
+            _meleeData = ingredient.MeleeData;
         }
 
         public override IEnumerator EValuate()
         {
             yield return GotoHandPosition(_data.hands[_index], _data.handPos[_index]);
             yield return new WaitForSeconds(_data._attackDelay);
-                
+
+            yield return DOTween.Sequence()
+                    .Join(_meleeData.hands[0].DORotateQuaternion(Quaternion.Euler(0f, 0f, _meleeData.angle), 0.5f))
+                    .Join(_meleeData.hands[1].DORotateQuaternion(Quaternion.Euler(0f, 0f, -_meleeData.angle), 0.5f))
+                    .WaitForCompletion()
+                ;
+            
             var playerTransform = GetPlayerOrNull();
             if (playerTransform == false) yield break;
+            
+            _meleeData.hands[0].GetComponentInChildren<SkeletonAnimation>().AnimationState
+                .SetAnimation(0, "Boss_Right_Hand_Smash", false);
+            _meleeData.hands[1].GetComponentInChildren<SkeletonAnimation>().AnimationState
+                .SetAnimation(0, "Boss_Right_Hand_Smash", false);
+
+            yield return new WaitForSeconds(3.667f);
 
             float timer = 0f;
             while (timer <= 1f)
@@ -118,6 +135,13 @@ namespace XRProject.Boss
                         .DOMove(warningPoint, _data._handWarningDuration)
                         .SetEase(_data.HandWarningEase)
                 )
+                .AppendCallback(() =>
+                {
+                    if (hand.TryGetComponent(out BossHandInteracter handInter))
+                    {
+                        handInter.Attack();
+                    }
+                })
                 .Append(
                     hand
                         .DOMove(targetPoint, _data._handAttackDuration)
