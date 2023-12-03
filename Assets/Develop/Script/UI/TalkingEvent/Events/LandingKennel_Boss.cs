@@ -194,7 +194,10 @@ public class LandingKennelBossEvent : ITalkingEvent
             EventFadeChanger.Instance.FadeOut(1.0f);
             
             await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha <= 0f);
-            
+            _playerEventAnimationController.DisableEventAnimatorController();
+            GameObject fade = GameObject.FindWithTag("Fade");
+            fade.GetComponent<Image>().color = Color.black;
+
         }
         
         await UniTask.Yield();
