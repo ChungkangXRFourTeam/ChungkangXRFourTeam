@@ -16,10 +16,14 @@ public class LandingKennelEvent : ITalkingEvent
     private GameObject _kennel;
     private GameObject _upWall;
 
+    private GameObject[] _enemy;
+    
     private SkeletonAnimation _kennelAnimation;
     private CinemachineVirtualCamera _virtualCamera;
     private CinemachineFramingTransposer _cinemachineFramingTransposer;
     private CinemachineConfiner _cinemachineConfiner;
+
+    private Parallax _parallax;
     
     private Vector2 _kennelPos;
     private Vector2 _kennelEnd;
@@ -40,15 +44,19 @@ public class LandingKennelEvent : ITalkingEvent
     
     public async UniTask OnEventBefore()
     {
+        _parallax = GameObject.Find("Parallax").GetComponent<Parallax>();
+        _parallax.SetThemeStarted(false);
         string sceneName = SceneManager.GetActiveScene().name;
-        if (sceneName == "ThemeA_1" || sceneName == "ThemeB_1")
-            _scriptPath += "Other/FirstMapEntry";
-        _eventTexts = CSVReader.Read(_scriptPath);
         _comments = new List<string>();
-        
-        for (int i = 0; i < _eventTexts.Count; i++)
+        if (sceneName == "ThemeA_1" || sceneName == "ThemeB_1")
         {
-            _comments.Add(_eventTexts[i][EventTextType.Content.ToString()].ToString());
+            _scriptPath += "Other/FirstMapEntry";
+            _eventTexts = CSVReader.Read(_scriptPath);
+        
+            for (int i = 0; i < _eventTexts.Count; i++)
+            {
+                _comments.Add(_eventTexts[i][EventTextType.Content.ToString()].ToString());
+            }
         }
         
         await UniTask.Delay(TimeSpan.FromSeconds(Time.deltaTime));
@@ -76,6 +84,13 @@ public class LandingKennelEvent : ITalkingEvent
 
         _eventAnimationController = _player.GetComponent<PlayerEventAnimationController>();
         _eventAnimationController.EnableEventAnimatorController();
+
+        _enemy = GameObject.FindGameObjectsWithTag("Enemy");
+
+        for (int i = 0; i < _enemy.Length; i++)
+        {
+            _enemy[i].SetActive(false);
+        }
 
         await UniTask.Yield();
     }
@@ -133,16 +148,17 @@ public class LandingKennelEvent : ITalkingEvent
             _kennelRigid.position += Vector2.up * Time.unscaledDeltaTime;
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
+        /*
         while (Mathf.Abs(_kennelEnd.y - _kennel.transform.position.y) >= 5f)
         {
             _kennelRigid.position += Vector2.up * 5f;
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
-
+*/
 
         InputAction action = InputManager.GetTalkEventAction("NextText");
-
-        if (action != null)
+        
+        if (action != null && _comments.Count != 0)
         {
             string[] contents = _comments.ToArray();
             _playerPanel._panel.SetActive(true);
@@ -152,18 +168,30 @@ public class LandingKennelEvent : ITalkingEvent
         
             await UniTask.WaitUntil(() => TypingSystem.Instance.isTypingEnd);
             _playerPanel._endButton.SetActive(true);
+            
+                    
+            await UniTask.WaitUntil(() => action.WasPressedThisFrame());
+            _playerPanel._panel.SetActive(false);
+            
+            
         }
-        
-        await UniTask.WaitUntil(() => action.WasPressedThisFrame());
-        _playerPanel._panel.SetActive(false);
         
         await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
         
         _cinemachineFramingTransposer.m_YDamping = 1;
         
+        EventFadeChanger.Instance.FadeIn(0.5f);
+
+        await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1f);
         startPos.gameObject.SetActive(false);
+        for (int i = 0; i < _enemy.Length; i++)
+        {
+            _enemy[i].SetActive(true);
+        }
         GameObject.Destroy(_kennel);
-        
+        EventFadeChanger.Instance.FadeOut(0.5f);
+        await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha <= 0f);
+        _parallax.SetThemeStarted(true);
         _eventAnimationController.DisableEventAnimatorController();
         InputManager.Instance.DisableTalkEventAction();
         InputManager.Instance.InitMainGameAction();

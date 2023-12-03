@@ -19,7 +19,7 @@ public class MonsterCountManager : MonoBehaviour
     private void Awake()
     {
         ChangeMonsterCount();
-        _kennel = GameObject.FindWithTag("Kennel");
+        _kennel = GameObject.Find("Cage");
         
         _kennel.SetActive(false);
     }
@@ -27,7 +27,6 @@ public class MonsterCountManager : MonoBehaviour
     private void ChangeMonsterCount()
     {
         _monsterCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
-        Debug.Log(_monsterCount);
         if (_monsterCount == 0)
         {
             _kennel.SetActive(true);

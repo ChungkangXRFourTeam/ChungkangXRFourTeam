@@ -47,7 +47,7 @@ public class MountKennelEvent : ITalkingEvent
         {
             if (paths[i].y > 35f)
             {
-                paths[i] = new Vector2(paths[i].x,120);
+                paths[i] = new Vector2(paths[i].x,300);
             }
         }
         _confiner.SetPath(0,paths);
