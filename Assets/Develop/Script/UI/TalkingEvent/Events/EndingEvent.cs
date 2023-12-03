@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Threading;
+using Spine.Unity;
 using TMPro;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -22,12 +23,16 @@ public class EndingEvent : ITalkingEvent
     private GameObject _boss;
     private GameObject _sceneChangeImage;
     private Image _fadeImage;
+    private GameObject _hud;
+    private GameObject _dark;
 
+    private Transform _endingObject;
     private Rigidbody2D _playerRigid;
     
     private GameObject _observerDead;
 
     private GameObject _endingCanvas;
+    private Transform _endFade;
     private GameObject _image00;
     private GameObject _image01;
     private GameObject _image02;
@@ -39,8 +44,7 @@ public class EndingEvent : ITalkingEvent
     private Transform _imagePos02;
     private Transform _imagePos04;
 
-    private GameObject _leftDoor;
-    private GameObject _rightDoor;
+    private SkeletonAnimation _door;
         
     private TalkingPanelInfo _nonTargetPanel;
 
@@ -70,21 +74,23 @@ public class EndingEvent : ITalkingEvent
     
     public async UniTask OnEventBefore()
     {
-        
-        _leftDoor = GameObject.Find("Door_L");
-        _rightDoor = GameObject.Find("Door_R");
-        
-        _observerDead = GameObject.Find("EndingObject").transform.GetChild(1).gameObject;
-        _endingCanvas = GameObject.Find("EndingCanvas");
-        _image00 = _endingCanvas.transform.GetChild(0).gameObject;
-        _image01 = _endingCanvas.transform.GetChild(1).gameObject;
-        _image02 = _endingCanvas.transform.GetChild(2).gameObject;
-        _image03 = _endingCanvas.transform.GetChild(3).gameObject;
-        _image04 = _endingCanvas.transform.GetChild(4).gameObject;
+        _dark = GameObject.Find("Dark");
+        _hud = GameObject.Find("HUD Canvas");
+        _door = GameObject.Find("Door").GetComponent<SkeletonAnimation>();
+        _endingObject = GameObject.Find("Boss").transform.Find("EndingObject");
+        _endingObject.gameObject.SetActive(true);
+        _observerDead = _endingObject.GetChild(1).gameObject;
+        _endingCanvas = _endingObject.Find("EndingCanvas").gameObject;
+        _endFade = _endingCanvas.transform.Find("FadeObject");
+        _image00 = _endFade.GetChild(0).gameObject;
+        _image01 = _endFade.GetChild(1).gameObject;
+        _image02 = _endFade.GetChild(2).gameObject;
+        _image03 = _endFade.GetChild(3).gameObject;
+        _image04 = _endingCanvas.transform.Find("04").gameObject;
         _image05 = _endingCanvas.transform.Find("05").gameObject;
-        _imagePos00 = _endingCanvas.transform.GetChild(5).transform.GetChild(0);
-        _imagePos02 = _endingCanvas.transform.GetChild(5).transform.GetChild(1);
-        _imagePos04 = _endingCanvas.transform.GetChild(5).transform.GetChild(2);
+        _imagePos00 = _endingCanvas.transform.GetChild(2).transform.GetChild(0);
+        _imagePos02 = _endingCanvas.transform.GetChild(2).transform.GetChild(1);
+        _imagePos04 = _endingCanvas.transform.GetChild(2).transform.GetChild(2);
         InputManager.Instance.DisableMainGameAction();
         InputManager.Instance.InitTalkEventAction();
         _scriptPath += "Ending/FinalEnd1";
@@ -97,6 +103,11 @@ public class EndingEvent : ITalkingEvent
         _textCount = 0;
         
         _player = GameObject.FindGameObjectWithTag("Player");
+        
+        _eventAnimationController = _player.GetComponent<PlayerEventAnimationController>();
+        _eventAnimationController.PlayEventAnim(EventAnimationName.IDLE);
+        _eventAnimationController.EnableEventAnimatorController();
+        
         _observer = GameObject.Find("EndingObject").transform.GetChild(2).gameObject;
         _fadeImage = GameObject.FindGameObjectWithTag("Fade").GetComponent<Image>();
         _fadeImage.color = Color.white;
@@ -105,11 +116,6 @@ public class EndingEvent : ITalkingEvent
         _targetPanel = _observer.GetComponent<TalkingPanelInfo>();
 
         _playerRigid = _player.GetComponent<Rigidbody2D>();
-
-        _eventAnimationController = _player.GetComponent<PlayerEventAnimationController>();
-        _eventAnimationController.EnableEventAnimatorController();
-        _player.transform.Rotate(0,180,0);
-        _eventAnimationController.PlayEventAnim(EventAnimationName.IDLE);
         
         _observer.SetActive(false);
         _observerDead.SetActive(false);
@@ -122,6 +128,12 @@ public class EndingEvent : ITalkingEvent
         _fadeImage.color = Color.black;
         EventFadeChanger.Instance.FadeIn(0.5f);
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1);
+        
+        _player.transform.rotation = Quaternion.identity;
+        _player.transform.rotation = Quaternion.Euler(0, 180, 0);
+        _player.transform.position = GameObject.Find("GameEndPos").transform.position;
+        _hud.SetActive(false);
+        
         _observer.SetActive(true);
         EventFadeChanger.Instance.FadeOut(0.5f);
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha <= 0);
@@ -176,12 +188,21 @@ public class EndingEvent : ITalkingEvent
             _image03.SetActive(true);
             
             await UniTask.WaitUntil(() => action.WasPressedThisFrame());
+
+            CanvasGroup imageFade = _endFade.gameObject.GetComponent<CanvasGroup>();
+            
             
             EventFadeChanger.Instance.FadeIn(0.5f);
 
             _fadeImage.color = Color.black;
 
+            while (imageFade.alpha > 0)
+            {
+                imageFade.alpha -= Time.unscaledDeltaTime * 2;
+                await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
+            }
             await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1f);
+            _dark.SetActive(false);
             _observerDead.SetActive(true);
             _observer.SetActive(false);
             _image00.SetActive(false);
@@ -231,16 +252,9 @@ public class EndingEvent : ITalkingEvent
                 await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
             }
 
-            float openDoorTime = 1.5f;
-            while (openDoorTime > 0)
-            {
-                openDoorTime -= Time.unscaledDeltaTime;
-                _rightDoor.transform.position += Vector3.right * 0.33f;
-                _leftDoor.transform.position += Vector3.left * 0.33f;
-                
-                await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
-                
-            }
+            _door.AnimationName = "animation";
+
+            await UniTask.WaitUntil(() => _door.AnimationState.GetCurrent(0).IsComplete);
 
             _fadeImage.color = Color.white;
             
@@ -275,7 +289,7 @@ public class EndingEvent : ITalkingEvent
 
             result.allowSceneActivation = false;
             
-            ClosePanel("None");
+            _nonTargetPanel._panel.SetActive(false);
             
             while (_fadeImage.color.r > 0)
             {

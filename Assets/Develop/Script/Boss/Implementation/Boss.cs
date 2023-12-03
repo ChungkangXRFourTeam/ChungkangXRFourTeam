@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Spine.Unity;
 using UnityEngine;
@@ -140,7 +141,11 @@ namespace XRProject.Boss
         public event Action<IBActorLife, float, float> ChangedHp;
         public void Die()
         {
-            gameObject.SetActive(false);
+            for (int i = 0; i < 7; i++)
+            {
+                transform.parent.transform.GetChild(i).gameObject.SetActive(false);
+            }
+            TalkingEventManager.Instance.InvokeCurrentEvent(new EndingEvent()).Forget();
         }
     }
 }
