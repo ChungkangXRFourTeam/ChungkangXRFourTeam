@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
@@ -19,6 +20,7 @@ public class DescriptionEvent3 : ITalkingEvent
     private TalkingPanelInfo _playerPanel;
     private TalkingPanelInfo _targetPanel;
     private GameObject _observer;
+    private GameObject _player;
     private Animator _playerAnim;
     private string _scriptPath = "EventTextScript/";
     private  List<string> _comments;
@@ -29,6 +31,7 @@ public class DescriptionEvent3 : ITalkingEvent
     
     public async UniTask OnEventBefore()
     {
+        _player = GameObject.FindWithTag("Player");
         _playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         _playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _observer = GameObject.FindGameObjectWithTag("Observer");
@@ -58,6 +61,8 @@ public class DescriptionEvent3 : ITalkingEvent
         
         EventFadeChanger.Instance.FadeIn(0.3f);
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1.0f);
+        _player.transform.rotation = Quaternion.identity;
+        _player.transform.rotation = Quaternion.Euler(0,180,0);
         _observer.SetActive(true);
         await UniTask.Yield();
         
@@ -67,6 +72,7 @@ public class DescriptionEvent3 : ITalkingEvent
     public async UniTask OnEvent()
     {
         Vector2 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
+        await UniTask.Delay(TimeSpan.FromSeconds(1.0f));
         _observer.transform.position = new Vector2(playerPos.x + 9f, playerPos.y + 7.5f);
         EventFadeChanger.Instance.FadeOut(0.7f);
         InputAction action = InputManager.GetTalkEventAction("NextText");

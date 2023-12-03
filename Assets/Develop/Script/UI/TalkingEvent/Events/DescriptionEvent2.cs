@@ -20,6 +20,7 @@ public class DescriptionEvent2 : ITalkingEvent
     private TalkingPanelInfo _targetPanel;
     private GameObject _observer;
     private Animator _playerAnim;
+    private GameObject _player;
     private string _scriptPath = "EventTextScript/";
     private  List<string> _comments;
     private int _textCount;
@@ -29,6 +30,7 @@ public class DescriptionEvent2 : ITalkingEvent
     
     public async UniTask OnEventBefore()
     {
+        _player = GameObject.FindWithTag("Player");
         _playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         _playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _observer = GameObject.FindGameObjectWithTag("Observer");
@@ -55,6 +57,9 @@ public class DescriptionEvent2 : ITalkingEvent
     {
         InputManager.Instance.DisableMainGameAction();
         InputManager.Instance.InitTalkEventAction();
+        
+        _player.transform.rotation = Quaternion.identity;
+        _player.transform.rotation = Quaternion.Euler(0,180,0);
         
         Rigidbody2D playerRigid = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
         await UniTask.WaitUntil(() => playerRigid.velocity.y <= 0);
