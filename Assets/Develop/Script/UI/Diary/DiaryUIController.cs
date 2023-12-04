@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -15,16 +16,24 @@ public class DiaryUIController : MonoBehaviour, IUIController
 
 
     private UIManager _manager;
-    private LinkedList<int> _collectedPages = new();
-    private LinkedListNode<int> _currentNode;
+    private static LinkedList<int> _collectedPages = new();
+    private static LinkedListNode<int> _currentNode;
+
+    private static DiaryUIController _controller;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+    private static void Init()
+    {
+        _collectedPages = new();
+        _currentNode = null;
+    }
     private void Awake()
     {
         _table = CSVReader.Read(CSV_PATH);
-        DontDestroyOnLoad(gameObject);
 
         _manager = GameObject.Find("UIManager")?.GetComponent<UIManager>();
     }
-    
+
     public bool IsEnabled
     {
         get => gameObject.activeSelf;
