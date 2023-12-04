@@ -113,12 +113,12 @@ TextureImporter:
       name: Actor_Player_Hit_01_0
       rect:
         serializedVersion: 2
-        x: 866
-        y: 2922
-        width: 847
-        height: 801
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 0
+        y: 2200
+        width: 2201
+        height: 2200
+      alignment: 9
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -134,12 +134,12 @@ TextureImporter:
       name: Actor_Player_Hit_01_1
       rect:
         serializedVersion: 2
-        x: 2996
-        y: 2949
-        width: 1023
-        height: 665
+        x: 2201
+        y: 2200
+        width: 2201
+        height: 2200
       alignment: 9
-      pivot: {x: 0.34428817, y: 0.0019013599}
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -155,12 +155,12 @@ TextureImporter:
       name: Actor_Player_Hit_01_2
       rect:
         serializedVersion: 2
-        x: 5213
-        y: 3094
-        width: 4
-        height: 4
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 4402
+        y: 2200
+        width: 2201
+        height: 2200
+      alignment: 9
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -176,12 +176,12 @@ TextureImporter:
       name: Actor_Player_Hit_01_3
       rect:
         serializedVersion: 2
-        x: 5214
-        y: 2949
-        width: 1006
-        height: 665
+        x: 0
+        y: 0
+        width: 2201
+        height: 2200
       alignment: 9
-      pivot: {x: 0.33663014, y: 0.0038023526}
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -194,64 +194,22 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Actor_Player_Hit_01_5
+      name: Actor_Player_Hit_01_4
       rect:
         serializedVersion: 2
-        x: 2633
-        y: 614
-        width: 1517
-        height: 880
+        x: 2201
+        y: 0
+        width: 2201
+        height: 2200
       alignment: 9
-      pivot: {x: 0.41066337, y: 0.11978108}
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b52877d3f45073246a12b3ad8a6f1178
-      internalID: -1371982954
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Actor_Player_Hit_01_6
-      rect:
-        serializedVersion: 2
-        x: 291
-        y: 680
-        width: 1637
-        height: 695
-      alignment: 9
-      pivot: {x: 0.47499678, y: 0.09893992}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5b7505c862f328c4b886ed644595a2c9
-      internalID: -837245068
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Actor_Player_Hit_01_7
-      rect:
-        serializedVersion: 2
-        x: 1920
-        y: 1100
-        width: 9
-        height: 15
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9881c37787577b74ebd2875721beccef
-      internalID: -1084848839
+      spriteID: aabcce5e7e89e3d4d923c8a80ee8cf73
+      internalID: 2097127625
       vertices: []
       indices: 
       edges: []
@@ -272,9 +230,6 @@ TextureImporter:
       Actor_Player_Hit_01_2: 174701698
       Actor_Player_Hit_01_3: -128946747
       Actor_Player_Hit_01_4: 2097127625
-      Actor_Player_Hit_01_5: -1371982954
-      Actor_Player_Hit_01_6: -837245068
-      Actor_Player_Hit_01_7: -1084848839
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -100,6 +101,16 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive, IBObjectKnock
             EffectKey = key,
             Position = info.Transform.position
         });
+    }
+
+    private void OnCollisionStay2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Player") &&
+            other.gameObject.TryGetComponent(out InteractionController interaction) &&
+            Interaction.ContractInfo is ActorContractInfo)
+        {
+            OnContractActor(Interaction.ContractInfo as ActorContractInfo);
+        }
     }
 
     private void DoKnockback(ActorContractInfo info)
