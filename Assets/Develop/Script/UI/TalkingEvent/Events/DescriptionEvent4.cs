@@ -18,6 +18,7 @@ public class DescriptionEvent4 : ITalkingEvent
     private PlayerController _playerController;
     private TalkingPanelInfo _playerPanel;
     private TalkingPanelInfo _targetPanel;
+    private GameObject _player;
     private GameObject _observer;
     private GameObject _upWall;
     private Animator _playerAnim;
@@ -30,8 +31,9 @@ public class DescriptionEvent4 : ITalkingEvent
     
     public async UniTask OnEventBefore()
     {
-        _playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-        _playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
+        _player = GameObject.FindWithTag("Player");
+        _playerController = _player.GetComponent<PlayerController>();
+        _playerAnim = _player.GetComponent<Animator>();
         _observer = GameObject.FindGameObjectWithTag("Observer");
         _scriptPath += "Opning/DescriptionText4";
         _eventTexts = CSVReader.Read(_scriptPath);
@@ -53,6 +55,9 @@ public class DescriptionEvent4 : ITalkingEvent
     {
         InputManager.Instance.DisableMainGameAction();
         InputManager.Instance.InitTalkEventAction();
+        
+        _player.transform.rotation = Quaternion.identity;
+        _player.transform.rotation = Quaternion.Euler(0,180,0);
         
         Rigidbody2D playerRigid = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
         await UniTask.WaitUntil(() => playerRigid.velocity.y == 0);

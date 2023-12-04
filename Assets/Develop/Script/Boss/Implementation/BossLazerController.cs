@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -53,6 +54,11 @@ namespace XRProject.Boss
             effectTransform.gameObject.SetActive(true);
             var system = effectTransform.GetComponentInChildren<ParticleSystem>();
             system.Play();
+            if (TalkingEventManager.Instance._isElectricFirstCasting)
+            {
+                TalkingEventManager.Instance.InvokeCurrentEvent(new BossPhaseAndDescriptionEvent("FirstElectricAttack")).Forget();
+                TalkingEventManager.Instance._isElectricFirstCasting = false;
+            }
             return system.main.duration;
         }
         public float PlayDanger(int index, Vector2 pos, DirectionType type)

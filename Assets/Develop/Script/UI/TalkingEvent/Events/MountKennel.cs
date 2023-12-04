@@ -47,7 +47,7 @@ public class MountKennelEvent : ITalkingEvent
         {
             if (paths[i].y > 35f)
             {
-                paths[i] = new Vector2(paths[i].x,120);
+                paths[i] = new Vector2(paths[i].x,300);
             }
         }
         _confiner.SetPath(0,paths);
@@ -124,7 +124,8 @@ public class MountKennelEvent : ITalkingEvent
             await UniTask.Delay(TimeSpan.FromSeconds(Time.fixedTime));
             
         }
-        TalkingEventManager._isEventEnd = true;
+
+        TalkingEventManager.Instance._isEventEnd = true;
 
         await UniTask.Yield();
 

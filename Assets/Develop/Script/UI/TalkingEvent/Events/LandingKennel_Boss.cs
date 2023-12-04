@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class LandingKennelBossEvent : ITalkingEvent
 {
@@ -17,7 +18,7 @@ public class LandingKennelBossEvent : ITalkingEvent
     private GameObject _observer;
     private GameObject _boss;
     private GameObject _sceneChangeImage;
-
+    private GameObject _door;
     private SpriteRenderer _kennelRenderer;
     private CinemachineVirtualCamera _virtualCamera;
     private CinemachineFramingTransposer _cinemachineFramingTransposer;
@@ -37,6 +38,7 @@ public class LandingKennelBossEvent : ITalkingEvent
     private Rigidbody2D _kennelRigid;
 
     private PlayerAnimationController _playerAnimationController;
+    private PlayerEventAnimationController _playerEventAnimationController;
     
     protected List<Dictionary<string, object>> _eventTexts;
     protected TalkingPanelInfo _playerPanel;
@@ -63,8 +65,7 @@ public class LandingKennelBossEvent : ITalkingEvent
         _confiner = GameObject.Find("Confiner").GetComponent<PolygonCollider2D>();
         _cinemachineConfiner.m_BoundingShape2D = null;
         _cinemachineFramingTransposer.m_YDamping = 0;
-        
-        _sceneChangeImage = GameObject.Find("SceneChangeImage");
+        _sceneChangeImage = GameObject.Find("SceneChange");
         _upWall = GameObject.Find("UpWall");
         _boss = GameObject.FindWithTag("Boss");
         _boss.SetActive(false);
@@ -75,6 +76,8 @@ public class LandingKennelBossEvent : ITalkingEvent
         
         _player = GameObject.FindWithTag("Player");
         _observer = GameObject.FindWithTag("Observer");
+
+        _playerEventAnimationController = _player.GetComponent<PlayerEventAnimationController>();
         
         _observerBezier = _observer.GetComponent<BezierTransform>();
         _playerBezier = _player.GetComponent<BezierTransform>();
@@ -82,17 +85,21 @@ public class LandingKennelBossEvent : ITalkingEvent
         _playerPanel = GameObject.FindGameObjectWithTag("Player").GetComponent<TalkingPanelInfo>();
         _targetPanel = GameObject.FindWithTag("Observer").GetComponent<TalkingPanelInfo>();
         _kennel = GameObject.FindWithTag("Kennel");
-        _kennelRenderer = _kennel.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
         _kennelPos = _kennel.transform.position;
         _playerRigid = _player.GetComponent<Rigidbody2D>();
         _kennelRigid = _kennel.GetComponent<Rigidbody2D>();
 
         _playerAnimationController = _player.GetComponent<PlayerAnimationController>();
+        _door = GameObject.Find("Door");
+        _door.SetActive(false);
 
         _playerBezier.simulated = true;
         _playerBezier.enabled = false;
         _observerBezier.simulated = true;
         _observerBezier.enabled = false;
+        
+        GameObject fade = GameObject.FindWithTag("Fade");
+        fade.GetComponent<Image>().color = Color.white;
         
 
         await UniTask.Yield();
@@ -100,14 +107,10 @@ public class LandingKennelBossEvent : ITalkingEvent
 
     public async UniTask OnEventStart()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(Time.deltaTime));
+        _playerEventAnimationController.EnableEventAnimatorController();
+        _playerEventAnimationController.PlayEventAnim(EventAnimationName.FALLING_DASH);
         
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Falling_Dash,
-            Rotation = Quaternion.Euler(0,0,0),
-            Restart = true
-        });
+        await UniTask.Delay(TimeSpan.FromSeconds(Time.deltaTime));
         
         _playerRigid.excludeLayers = Physics2D.AllLayers - (1 << 6 | 1 << 17);
         _kennelRigid.excludeLayers = Physics2D.AllLayers - (1 << 6 | 1 << 17);
@@ -124,7 +127,6 @@ public class LandingKennelBossEvent : ITalkingEvent
         
 
         _player.transform.rotation = quaternion.Euler(0, 0, 0);
-        
         _playerRigid.bodyType = RigidbodyType2D.Dynamic;
         _kennelRigid.bodyType = RigidbodyType2D.Dynamic;
         await UniTask.WaitUntil(() => _player.transform.position.y < startPos.position.y + 5f);
@@ -134,18 +136,15 @@ public class LandingKennelBossEvent : ITalkingEvent
         _kennelRigid.excludeLayers = 0;
         
         _sceneChangeImage.SetActive(false);
+        _door.SetActive(true);
         
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Landing_Dash,
-            Rotation = Quaternion.Euler(0,180,0),
-            Restart = true
-        });
+        _playerEventAnimationController.PlayEventAnim(EventAnimationName.FALLING_LAND);
 
         await UniTask.Delay(TimeSpan.FromSeconds(0.7f));
 
         await MoveToPosition(_player, new Vector2(_player.transform.position.x + 5, 0),0.1f);
         
+        /*
         Color kennelColor = _kennelRenderer.color;
         
         
@@ -154,6 +153,7 @@ public class LandingKennelBossEvent : ITalkingEvent
             _kennelRenderer.color = new Color(kennelColor.r, kennelColor.g, kennelColor.b, _kennelRenderer.color.a - 0.05f);
             await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
         }
+        */
         _kennel.SetActive(false);
 
         InputAction action = InputManager.GetTalkEventAction("NextText");
@@ -174,6 +174,7 @@ public class LandingKennelBossEvent : ITalkingEvent
                     _observerBezier.enabled = true;
                     _playerBezier.enabled = true;
                     _playerRigid.simulated = false;
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
                     _observerBezier.startAnimation();
                     await UniTask.Delay(TimeSpan.FromSeconds(0.23f));
                     _playerBezier.startAnimation();
@@ -181,7 +182,6 @@ public class LandingKennelBossEvent : ITalkingEvent
                     _playerRigid.simulated = true;
                 }
             }
-            
             EventFadeChanger.Instance.FadeIn(2.0f);
             
             await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1.0f);
@@ -192,7 +192,10 @@ public class LandingKennelBossEvent : ITalkingEvent
             EventFadeChanger.Instance.FadeOut(1.0f);
             
             await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha <= 0f);
-            
+            _playerEventAnimationController.DisableEventAnimatorController();
+            GameObject fade = GameObject.FindWithTag("Fade");
+            fade.GetComponent<Image>().color = Color.black;
+
         }
         
         await UniTask.Yield();
@@ -221,12 +224,8 @@ public class LandingKennelBossEvent : ITalkingEvent
     {
         Vector2 dir = target.transform.position.x - posistion.x > 0 ? Vector2.left : Vector2.right;
         float fliped = dir.x > 0 ? 180 : 0;
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Run,
-            Rotation = Quaternion.Euler(0,fliped,0),
-            Restart = true
-        });
+        _player.transform.rotation = Quaternion.Euler(0,fliped,0);
+        _playerEventAnimationController.PlayEventAnim(EventAnimationName.RUN);
         while (Mathf.Abs(target.transform.position.x - posistion.x) >= 0.1f)
         {
             if (target.CompareTag("Player"))
@@ -235,12 +234,7 @@ public class LandingKennelBossEvent : ITalkingEvent
         }
         
         target.transform.Rotate(0,0,0);
-        _playerAnimationController.SetState(new PAniState()
-        {
-            State = EPCAniState.Idle,
-            Rotation = Quaternion.identity,
-            Restart = false
-        });
+        _playerEventAnimationController.PlayEventAnim(EventAnimationName.IDLE);
     }
 
     public bool IsInvalid()

@@ -1,13 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 public class TalkingEventManager : MonoBehaviour
 {
-    public static bool _isEventEnd;
+    private CancellationTokenSource cancel = new CancellationTokenSource();
+    public bool _isEventEnd;
+    public bool _isElectricFirstCasting = true;
+    public bool _isMeleeFirstCasting = true;
     private static TalkingEventManager _instance = null;
 
     
@@ -23,7 +27,12 @@ public class TalkingEventManager : MonoBehaviour
         }
     }
 
-   public static void Init()
+    private void Awake()
+    {
+        _isEventEnd = true;
+    }
+
+    public static void Init()
     {
         if (_instance)
         {
@@ -33,7 +42,6 @@ public class TalkingEventManager : MonoBehaviour
 
         _instance = new GameObject("[FadeEventChanger]").AddComponent<TalkingEventManager>();
         DontDestroyOnLoad(_instance.gameObject);
-        _isEventEnd = true;
     }
     
     public async UniTask InvokeCurrentEvent(ITalkingEvent sceneEvent)

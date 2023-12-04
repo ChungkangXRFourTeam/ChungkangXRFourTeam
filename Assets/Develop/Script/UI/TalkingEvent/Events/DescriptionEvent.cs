@@ -19,6 +19,7 @@ public class DescriptionEvent : ITalkingEvent
     private TalkingPanelInfo _playerPanel;
     private TalkingPanelInfo _targetPanel;
     private GameObject _observer;
+    private GameObject _player;
     private Animator _playerAnim;
     private string _scriptPath = "EventTextScript/";
     private  List<string> _comments;
@@ -29,6 +30,7 @@ public class DescriptionEvent : ITalkingEvent
     
     public async UniTask OnEventBefore()
     {
+        _player = GameObject.FindWithTag("Player");
         _playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
         _playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
         _observer = GameObject.FindGameObjectWithTag("Observer");
@@ -57,6 +59,10 @@ public class DescriptionEvent : ITalkingEvent
         InputManager.Instance.InitTalkEventAction();
         _targetPanel._panel.SetActive(false);
         _playerPanel._panel.SetActive(false);
+        
+        _player.transform.rotation = Quaternion.identity;
+        _player.transform.rotation = Quaternion.Euler(0,180,0);
+        
         EventFadeChanger.Instance.FadeIn(0.3f);
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1.0f);
         _observer.SetActive(true);

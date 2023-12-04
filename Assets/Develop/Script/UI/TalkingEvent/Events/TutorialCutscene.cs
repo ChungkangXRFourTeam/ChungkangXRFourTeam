@@ -38,7 +38,7 @@ public class TutorialCutscene : ITalkingEvent
     private Rigidbody2D _playerRigid;
     private PlayerEventAnimationController _eventAnimationController;
 
-    private float _imageScrollSpeed = 5.0f;
+    private float _imageScrollSpeed = 10.0f;
 
     private Volume _eyeVolume;
     private VolumeProfile _eyeVolumeProfile;
@@ -145,8 +145,8 @@ public class TutorialCutscene : ITalkingEvent
 
             for (int i = 0; i < _cartoons.Count; i++)
             {
-                float total = 1f;
-                float time = 1f;
+                float total = 0.5f;
+                float time = 0.5f;
 
                 while (time > 0)
                 {
@@ -163,8 +163,8 @@ public class TutorialCutscene : ITalkingEvent
                             CanvasGroup cartoonFade_1 = _cartoons[1].gameObject.GetComponent<CanvasGroup>();
                             while (cartoonFade_0.alpha > 0)
                             {
-                                cartoonFade_0.alpha -= Time.unscaledDeltaTime;
-                                cartoonFade_1.alpha += Time.unscaledDeltaTime;
+                                cartoonFade_0.alpha -= Time.unscaledDeltaTime * 5f;
+                                cartoonFade_1.alpha += Time.unscaledDeltaTime * 5f;
                                 await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
                             }
                             time = 0;
@@ -190,7 +190,7 @@ public class TutorialCutscene : ITalkingEvent
                             CanvasGroup cartoonFade_8 = _cartoons[8].gameObject.GetComponent<CanvasGroup>();
                             while (cartoonFade_8.alpha < 1)
                             {
-                                cartoonFade_8.alpha += Time.unscaledDeltaTime;
+                                cartoonFade_8.alpha += Time.unscaledDeltaTime * 5f;
                                 await UniTask.Delay(TimeSpan.FromSeconds(Time.unscaledDeltaTime));
                             }
                             time = 0;

@@ -24,7 +24,7 @@ public class PlayerMoveStrategy : IStrategy
     {
         if (_inputLock) return Vector2.zero;
 
-        if (TalkingEventManager.Instance && !TalkingEventManager._isEventEnd)
+        if (TalkingEventManager.Instance && !TalkingEventManager.Instance._isEventEnd)
             dir = Vector2.zero;
         
         return dir * _data.MovementSpeed;

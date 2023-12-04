@@ -13,6 +13,7 @@ public class Parallax : MonoBehaviour
     private GameObject _virtualCameraObject;
     private CinemachineVirtualCamera _virtualCamera;
     private ParallaxCamera _parallaxCamera;
+    public bool themeStarted;
     [SerializeField] private List<ParallaxLayer> _parallaxLayers;
 
     private void Awake()
@@ -48,7 +49,7 @@ public class Parallax : MonoBehaviour
 
     void Move(float deltaX, float deltaY)
     {
-        if(_parallaxLayers.Count!= 0)
+        if(_parallaxLayers.Count!= 0 && themeStarted)
         for (int i = 0; i < _parallaxLayers.Count; i++)
         {
             _parallaxLayers[i].MoveX(deltaX);
@@ -68,6 +69,11 @@ public class Parallax : MonoBehaviour
                 _parallaxLayers.Add( component);
             }
         }
+    }
+
+    public void SetThemeStarted(bool state)
+    {
+        themeStarted = state;
     }
 
 }

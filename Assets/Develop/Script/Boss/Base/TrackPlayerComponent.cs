@@ -172,6 +172,12 @@ namespace XRProject.Boss
                 {
                     while (true)
                     {
+                        //이벤트 연출 진행동안에는 보스의 행동을 수행하지 못하게 제한함 23/12/04 12:18 서범석
+                        if (!TalkingEventManager.Instance._isEventEnd)
+                        {
+                            yield return new WaitForSeconds(Time.unscaledDeltaTime);
+                            continue;
+                        }
                         var temp = _context ?? inAction.Item.EValuate();
                         if (_context == null)
                         {
