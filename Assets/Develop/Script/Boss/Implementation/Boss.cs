@@ -132,6 +132,11 @@ namespace XRProject.Boss
                 _currentHp = value;
                 ChangedHp?.Invoke(this, backup, _currentHp);
                 
+                if (_currentHp == 1f)
+                {
+                    TalkingEventManager.Instance.InvokeCurrentEvent(new BossPhaseAndDescriptionEvent("After1Phase")).Forget();
+                }
+                
                 if (_currentHp <= 0f)
                 {
                     Die();

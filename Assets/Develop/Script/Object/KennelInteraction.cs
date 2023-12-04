@@ -18,7 +18,7 @@ public class KennelInteraction : MonoBehaviour
     private void OnTriggerStay2D(Collider2D other)
     {
         if (_interactionAction.WasPressedThisFrame() && other.CompareTag("Player")
-            && TalkingEventManager._isEventEnd)
+            && TalkingEventManager.Instance._isEventEnd)
         {
             string nextStage = String.Empty;
             switch (SceneManager.GetActiveScene().name)

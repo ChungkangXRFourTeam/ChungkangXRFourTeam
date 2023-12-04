@@ -17,7 +17,7 @@ public class EventStarter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (TalkingEventManager._isEventEnd && other.CompareTag("Player"))
+        if (TalkingEventManager.Instance._isEventEnd && other.CompareTag("Player"))
         {
             switch (_eventName)
             {

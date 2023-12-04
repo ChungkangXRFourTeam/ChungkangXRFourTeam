@@ -65,7 +65,6 @@ public class LandingKennelBossEvent : ITalkingEvent
         _confiner = GameObject.Find("Confiner").GetComponent<PolygonCollider2D>();
         _cinemachineConfiner.m_BoundingShape2D = null;
         _cinemachineFramingTransposer.m_YDamping = 0;
-        
         _sceneChangeImage = GameObject.Find("SceneChange");
         _upWall = GameObject.Find("UpWall");
         _boss = GameObject.FindWithTag("Boss");
@@ -128,7 +127,6 @@ public class LandingKennelBossEvent : ITalkingEvent
         
 
         _player.transform.rotation = quaternion.Euler(0, 0, 0);
-        
         _playerRigid.bodyType = RigidbodyType2D.Dynamic;
         _kennelRigid.bodyType = RigidbodyType2D.Dynamic;
         await UniTask.WaitUntil(() => _player.transform.position.y < startPos.position.y + 5f);

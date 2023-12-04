@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Spine.Unity;
 using UnityEngine;
@@ -65,6 +66,7 @@ namespace XRProject.Boss
         private MeleeData _meleeData;
         private Transform _transform;
         private int _index;
+        
         public MeleeAction(Transform transform,IPatternFactoryIngredient ingredient, int index) : base(transform, ingredient.BaseLazerData)
         {
             _transform = transform;
@@ -109,6 +111,12 @@ namespace XRProject.Boss
             
             //yield return GotoPlayerHat(_data.hands[_index], playerTransform.position);
             yield return AttackPlayer(_data.hands[_index]);
+            
+            if (TalkingEventManager.Instance._isMeleeFirstCasting)
+            {
+                TalkingEventManager.Instance.InvokeCurrentEvent(new BossPhaseAndDescriptionEvent("FirstPhysicAttack")).Forget();
+                TalkingEventManager.Instance._isMeleeFirstCasting = false;
+            }
         }
         
         public YieldInstruction GotoHandPosition(Transform hand, Vector2 pos)

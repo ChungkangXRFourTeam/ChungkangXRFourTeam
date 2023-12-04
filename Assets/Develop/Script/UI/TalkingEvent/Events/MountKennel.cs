@@ -124,7 +124,8 @@ public class MountKennelEvent : ITalkingEvent
             await UniTask.Delay(TimeSpan.FromSeconds(Time.fixedTime));
             
         }
-        TalkingEventManager._isEventEnd = true;
+
+        TalkingEventManager.Instance._isEventEnd = true;
 
         await UniTask.Yield();
 
