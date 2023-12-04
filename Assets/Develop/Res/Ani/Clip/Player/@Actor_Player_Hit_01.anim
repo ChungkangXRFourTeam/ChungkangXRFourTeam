@@ -21,13 +21,15 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: -843466300, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
+      value: {fileID: -1682032661, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
     - time: 0.083333336
-      value: {fileID: -128946747, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
+      value: {fileID: -843466300, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
     - time: 0.16666667
-      value: {fileID: -1371982954, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
+      value: {fileID: 174701698, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
     - time: 0.25
-      value: {fileID: -837245068, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
+      value: {fileID: -128946747, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
+    - time: 0.33333334
+      value: {fileID: 2097127625, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -50,16 +52,17 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
+    - {fileID: -1682032661, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
     - {fileID: -843466300, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
+    - {fileID: 174701698, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
     - {fileID: -128946747, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
-    - {fileID: -1371982954, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
-    - {fileID: -837245068, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
+    - {fileID: 2097127625, guid: 4450d89fefddebf48ae8e56e8da77008, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.33333334
+    m_StopTime: 0.4166667
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -86,17 +89,17 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.25
-    functionName: OnHitEnd
-    data: 
-    objectReferenceParameter: {fileID: 2374883332254647771, guid: 36874bf08433b774c8061fc1091657e1, type: 3}
-    floatParameter: 0
-    intParameter: 2
-    messageOptions: 0
-  - time: 0.25
+  - time: 0.33333334
     functionName: OnHitTimingBegin
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 1
+    messageOptions: 0
+  - time: 0.33333334
+    functionName: OnHitEnd
+    data: 
+    objectReferenceParameter: {fileID: 2374883332254647771, guid: 36874bf08433b774c8061fc1091657e1, type: 3}
+    floatParameter: 0
+    intParameter: 2
     messageOptions: 0

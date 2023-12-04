@@ -17,6 +17,8 @@ namespace XRProject.Boss
         private TrackPlayer _movementPlayer;
         private TrackPlayer _patternTranslationPlayer;
 
+        private bool _eventStop;
+
         [SerializeField] private SkeletonAnimation _mapDoor;
         [SerializeField] private float _hp;
         [SerializeField] private BaseLazerActionData baseLazerActionData;
@@ -55,6 +57,11 @@ namespace XRProject.Boss
                 float value = current / (MaxHp <= 0f ? 1f : MaxHp);
                 if (value < 0.5f)
                 {
+                    TalkingEventManager.Instance.InvokeCurrentEvent(new BossMiddleEvent(baseLazerActionData.Ani,
+                        (v) =>
+                        {
+                            _battlePlayer.ActionList.Paused = v;
+                        }));
                     BaseLazerData.NextTrigger.TriggerNextPhase();
                 }
             };
