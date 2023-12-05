@@ -2072,6 +2072,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TutorialLayer
       objectReference: {fileID: 0}
+    - target: {fileID: 3867488256695753639, guid: 220c5ca663ee2b04eb6a1138e6cae6eb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4087308646813145420, guid: 220c5ca663ee2b04eb6a1138e6cae6eb, type: 3}
       propertyPath: m_LocalBounds.m_Center.x
       value: -1.0014501
@@ -5082,7 +5086,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1457666227}
   m_Layer: 0
-  m_Name: environment_effect
+  m_Name: Enviorment_effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

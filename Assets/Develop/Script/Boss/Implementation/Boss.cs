@@ -143,7 +143,7 @@ namespace XRProject.Boss
                 _currentHp = value;
                 ChangedHp?.Invoke(this, backup, _currentHp);
                 
-                if (Mathf.Approximately(_currentHp , 1f))
+                if (Mathf.Approximately(_currentHp , 20f))
                 {
                     TalkingEventManager.Instance.InvokeCurrentEvent(new BossPhaseAndDescriptionEvent("After1Phase")).Forget();
                 }

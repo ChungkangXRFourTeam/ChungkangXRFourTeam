@@ -29,6 +29,9 @@ public class TutorialCutscene : ITalkingEvent
     private Vector2 _image2Dest; 
     private Vector2 _image1Start; 
     private Vector2 _image2Start;
+
+    private GameObject _enviorment;
+    private GameObject _tutoLayer;
     
     private GameObject _eyeBlack;
     private Vector2 _eyeBlackStart;
@@ -56,6 +59,8 @@ public class TutorialCutscene : ITalkingEvent
     private string[] contents;
     public async UniTask OnEventBefore()
     {
+        _tutoLayer = GameObject.Find("TutorialLayer");
+        _enviorment = GameObject.Find("Enviorment_effect");
         _hudCanvasGroup = GameObject.Find("HUD Canvas").GetComponent<CanvasGroup>();
         _player = GameObject.FindGameObjectWithTag("Player");
         EventFadeChanger.Instance.FadeOut(1);
@@ -107,6 +112,9 @@ public class TutorialCutscene : ITalkingEvent
         
         _eyeBlackStart = GameObject.Find("BlurPanel").transform.Find("EyeBlackStart").position;
         _eyeBlackEnd = GameObject.Find("BlurPanel").transform.Find("EyeBlackEnd").position;
+        
+        _tutoLayer.SetActive(false);
+        _enviorment.SetActive(false);
         
         _nonTargetPanel._panel.SetActive(false);
         
@@ -220,6 +228,7 @@ public class TutorialCutscene : ITalkingEvent
             _cartoons[i].gameObject.SetActive(false);
         }
         
+        
         EventFadeChanger.Instance.FadeOut(2.0f);
         await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha <= 0);
         
@@ -295,6 +304,10 @@ public class TutorialCutscene : ITalkingEvent
                 EventFadeChanger.Instance.FadeIn(0.3f);
 
                 await UniTask.WaitUntil(() => EventFadeChanger.Instance.Fade_img.alpha >= 1f);
+                
+                        
+                _tutoLayer.SetActive(true);
+                _enviorment.SetActive(true);
                 
                 GameObject.Find("BlurPanel").SetActive(false);
             }
