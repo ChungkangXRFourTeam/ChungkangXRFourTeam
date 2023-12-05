@@ -52,19 +52,23 @@ namespace XRProject.Boss
             StartCoroutine(CoUpdate());
 
 
-            ChangedHp += (life, prev, current) =>
+            ChangedHp += OnHalfHp;
+        }
+
+        private void OnHalfHp(IBActorLife life, float prev, float current)
+        {
+            float value = current / (MaxHp <= 0f ? 1f : MaxHp);
+            if (value < 0.5f)
             {
-                float value = current / (MaxHp <= 0f ? 1f : MaxHp);
-                if (value < 0.5f)
-                {
-                    TalkingEventManager.Instance.InvokeCurrentEvent(new BossMiddleEvent(baseLazerActionData.Ani,
-                        (v) =>
-                        {
-                            _battlePlayer.ActionList.Paused = v;
-                        }));
-                    BaseLazerData.NextTrigger.TriggerNextPhase();
-                }
-            };
+                TalkingEventManager.Instance.InvokeCurrentEvent(new BossMiddleEvent(baseLazerActionData.Ani,
+                    (v) =>
+                    {
+                        _battlePlayer.ActionList.Paused = v;
+                    }));
+                BaseLazerData.NextTrigger.TriggerNextPhase();
+
+                ChangedHp -= OnHalfHp;
+            }
         }
 
         private IEnumerator CoUpdate()
@@ -139,7 +143,7 @@ namespace XRProject.Boss
                 _currentHp = value;
                 ChangedHp?.Invoke(this, backup, _currentHp);
                 
-                if (_currentHp == 1f)
+                if (Mathf.Approximately(_currentHp , 1f))
                 {
                     TalkingEventManager.Instance.InvokeCurrentEvent(new BossPhaseAndDescriptionEvent("After1Phase")).Forget();
                 }
