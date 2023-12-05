@@ -107,9 +107,9 @@ public class KnockbackObject : MonoBehaviour, IBObjectInteractive, IBObjectKnock
     {
         if (other.gameObject.CompareTag("Player") &&
             other.gameObject.TryGetComponent(out InteractionController interaction) &&
-            Interaction.ContractInfo is ActorContractInfo)
+            interaction.ContractInfo is ActorContractInfo info)
         {
-            OnContractActor(Interaction.ContractInfo as ActorContractInfo);
+            OnContractActor(info);
         }
     }
 
